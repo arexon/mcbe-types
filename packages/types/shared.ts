@@ -24,13 +24,13 @@ type NamespacedClass = {
 @SerClass({ transparent: "collection" })
 export class NamespacedContainer<
   T extends NamespacedClass,
-  I extends InstanceType<T> = InstanceType<T>,
+  TInstance extends InstanceType<T> = InstanceType<T>,
 > {
   // TODO(@arexon): Make this field private.
   @SerField()
-  collection: Record<string, I>;
+  collection: Record<string, TInstance>;
 
-  constructor(collection: I[]) {
+  constructor(collection: TInstance[]) {
     this.collection = {};
     for (const value of collection) {
       const key = value.constructor.namespace as string;
@@ -41,7 +41,7 @@ export class NamespacedContainer<
     }
   }
 
-  add(value: I): this {
+  add(value: TInstance): this {
     const key = value.constructor.namespace as string;
     if (this.collection[key] !== undefined) {
       throw new DuplicateComponentError(key);
