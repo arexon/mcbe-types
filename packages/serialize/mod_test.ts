@@ -99,3 +99,52 @@ Deno.test("serialization with transparency", () => {
     "should serialize entire object since field does not match default value",
   );
 });
+
+Deno.test("serialization with custom overrides", () => {
+  @SerClass()
+  class Foo {
+    @SerField({ custom: (a) => `extra_thing:${a}` })
+    a: string;
+
+    constructor() {
+      this.a = "apple";
+    }
+  }
+
+  assertEquals(JSON.stringify(new Foo()), `{"a":"extra_thing:apple"}`);
+});
+
+Deno.test("serialization with transparency and custom overrides", () => {
+  @SerClass({ transparent: "a" })
+  class Foo {
+    @SerField({ custom: (a) => `extra_thing:${a}` })
+    a: string;
+
+    constructor() {
+      this.a = "apple";
+    }
+  }
+
+  assertEquals(JSON.stringify(new Foo()), `"extra_thing:apple"`);
+});
+
+Deno.test("serialization with transparency, default, and custom overrides", () => {
+  @SerClass({ transparent: "a" })
+  class Foo {
+    @SerField({
+      default: (a) => a === "apple",
+      custom: (a) => `extra_thing:${a}`,
+    })
+    a: string;
+
+    constructor() {
+      this.a = "apple";
+    }
+  }
+
+  const foo = new Foo();
+  assertEquals(JSON.stringify(foo), `"extra_thing:apple"`);
+
+  foo.a = "orange";
+  assertEquals(JSON.stringify(foo), `"extra_thing:orange"`);
+});
