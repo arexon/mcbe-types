@@ -106,7 +106,10 @@ export default {
             if (
               node.id === null ||
               node.abstract ||
-              !node.id.name.endsWith("Component")
+              (
+                !node.id.name.endsWith("Component") &&
+                !node.id.name.endsWith("Trait")
+              )
             ) return;
 
             const namespaceProp = node.body.body.find((
