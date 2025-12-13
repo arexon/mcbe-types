@@ -1,6 +1,7 @@
 {
   "workspace": [
-    "serialize"
+    "serialize",
+    "types"
   ],
   "tasks": {
     "test": "deno test --allow-all --parallel --doc",
