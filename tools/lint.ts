@@ -13,7 +13,7 @@ export default {
               decorators: Deno.lint.Decorator[];
             };
 
-            if (node.id === null) return;
+            if (node.id === null || node.abstract) return;
 
             if (
               !node.decorators.some((decoNode) =>
@@ -103,7 +103,11 @@ export default {
       create(ctx) {
         return {
           ClassDeclaration(node) {
-            if (node.id === null || !node.id.name.endsWith("Component")) return;
+            if (
+              node.id === null ||
+              node.abstract ||
+              !node.id.name.endsWith("Component")
+            ) return;
 
             const namespaceProp = node.body.body.find((
               propNode,
