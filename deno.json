@@ -1,6 +1,7 @@
 {
   "workspace": [
-    "edres"
+    "edres",
+    "types"
   ],
   "tasks": {
     "test": "deno test --allow-all --parallel --doc",
