@@ -9,6 +9,7 @@ export interface SerContext<Value> {
 export interface SerFieldOptions<Value> {
   default?: (value: Value) => boolean;
   custom?: (value: Value) => unknown;
+  rename?: string;
 }
 
 export function SerField<Value>(opts?: SerFieldOptions<Value>): (
@@ -88,11 +89,19 @@ export function SerClass<
           const object: Record<string, unknown> = {};
           for (const field of inspectedFields) {
             let value = this[field.name];
+            let key = toSnakeCase(field.name);
+
             if (field.isDefault) value = undefined;
-            if (field.opts !== undefined && field.opts.custom !== undefined) {
-              value = field.opts.custom(value);
+            if (field.opts !== undefined) {
+              if (field.opts.custom !== undefined) {
+                value = field.opts.custom(value);
+              }
+              if (field.opts.rename !== undefined) {
+                key = field.opts.rename;
+              }
             }
-            object[toSnakeCase(field.name)] = value;
+
+            object[key] = value;
           }
           return object;
         }

@@ -148,3 +148,17 @@ Deno.test("serialization with transparency, default, and custom overrides", () =
   foo.a = "orange";
   assertEquals(JSON.stringify(foo), `"extra_thing:orange"`);
 });
+
+Deno.test("serialization with rename", () => {
+  @SerClass()
+  class Foo {
+    @SerField({ rename: "_a_" })
+    a: string;
+
+    constructor() {
+      this.a = "apple";
+    }
+  }
+
+  assertEquals(JSON.stringify(new Foo()), `{"_a_":"apple"}`);
+});
