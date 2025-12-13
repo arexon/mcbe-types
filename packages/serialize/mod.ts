@@ -1,18 +1,18 @@
 import { toSnakeCase } from "@std/text";
 
-export interface SerContext {
+export interface SerContext<Value> {
   readonly metadata: {
-    fields?: Map<string, SerFieldOptions | undefined>;
+    fields?: Map<string, SerFieldOptions<Value> | undefined>;
   };
 }
 
-export interface SerFieldOptions {
-  default?: () => unknown;
+export interface SerFieldOptions<Value> {
+  default?: (value: Value) => boolean;
 }
 
-export function SerField<Value>(opts?: SerFieldOptions): (
+export function SerField<Value>(opts?: SerFieldOptions<Value>): (
   _target: undefined,
-  ctx: ClassFieldDecoratorContext<unknown, Value> & SerContext,
+  ctx: ClassFieldDecoratorContext<unknown, Value> & SerContext<Value>,
 ) => void {
   return function (_target, ctx) {
     if (ctx.metadata.fields === undefined) {
@@ -40,7 +40,7 @@ export function SerClass<
   classOpts?: SerClassOptions<Field>,
 ): (
   target: T,
-  ctx: ClassDecoratorContext & SerContext,
+  ctx: ClassDecoratorContext & SerContext<unknown>,
 ) => void {
   return function (target, ctx) {
     // TODO: Experiment with generating `Function`.
@@ -48,7 +48,7 @@ export function SerClass<
       value() {
         interface InspectedField {
           name: string;
-          opts?: SerFieldOptions;
+          opts?: SerFieldOptions<unknown>;
           isDefault: boolean;
           isUndefined: boolean;
           isTransparent: boolean;
@@ -62,7 +62,7 @@ export function SerClass<
             opts: fieldOpts,
             isDefault: fieldOpts !== undefined &&
               fieldOpts.default !== undefined &&
-              fieldOpts.default() === this[fieldName],
+              fieldOpts.default(this[fieldName]),
             isUndefined: this[fieldName] === undefined,
             isTransparent: classOpts?.transparent === fieldName,
           }))
