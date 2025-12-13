@@ -2,8 +2,8 @@ import { SerClass, SerField } from "@mcbe/serialize";
 import type { InputProps, NamespacedContainer } from "@mcbe/types/shared";
 
 export type BlockTraits = NamespacedContainer<
-  | PlacementDirectionBlockTrait
-  | PlacementPositionBlockTrait
+  | typeof PlacementDirectionBlockTrait
+  | typeof PlacementPositionBlockTrait
 >;
 
 @SerClass()

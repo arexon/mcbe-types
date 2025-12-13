@@ -11,29 +11,34 @@ export class FormatVersion {
 }
 
 /** This is only meant for {@link NamespacedContainer}. */
-abstract class Namespaced {
-  static namespace: string;
-}
+type NamespacedClass = {
+  // deno-lint-ignore no-explicit-any
+  new (...args: any[]): any;
+  namespace: string;
+};
 
 /**
- * Collection of `T[]` where T defines a namespace.
- * Serializes into an object where the namespace is used the property key for `T`.
+ * Collection of `I[]` where `I` defines a namespace.
+ * Serializes into an object where the namespace is used the property key for `I`.
  */
 @SerClass({ transparent: "collection" })
-export class NamespacedContainer<T extends Namespaced> {
+export class NamespacedContainer<
+  T extends NamespacedClass,
+  I extends InstanceType<T> = InstanceType<T>,
+> {
   @SerField({
     custom: (collection) =>
       collection.map((value) => ({
-        [(value.constructor as typeof Namespaced).namespace]: value,
+        [value.constructor.namespace]: value,
       })),
   })
-  collection: T[];
+  collection: I[];
 
-  constructor(collection: T[]) {
+  constructor(collection: I[]) {
     this.collection = collection;
   }
 
-  add(value: T): this {
+  add(value: I): this {
     this.collection.push(value);
     return this;
   }
