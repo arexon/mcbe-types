@@ -1,5 +1,5 @@
 {
-  "workspace": ["./serialize"],
+  "workspace": ["./packages/*"],
   "tasks": {
     "test": "deno test --allow-all --parallel --doc",
     "ready": "deno task test && deno fmt --check && deno lint"
