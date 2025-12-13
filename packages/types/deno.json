@@ -5,6 +5,7 @@
     "./shared": "./shared.ts",
     "./molang": "./molang.ts",
     "./identifier": "./identifier.ts",
+    "./inventory": "./inventory.ts",
     "./block": "./block/mod.ts"
   }
 }
