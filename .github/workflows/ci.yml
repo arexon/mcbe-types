@@ -1,42 +1,42 @@
 name: ci
 
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
-    contents: read
+  contents: read
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Clone repository
-              uses: actions/checkout@v4
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
 
-            - name: Setup Deno
-              uses: denoland/setup-deno@v2
-              with:
-                  cache: true
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          cache: true
 
-            - name: Run tests
-              run: deno task test
+      - name: Run tests
+        run: deno task test
 
-    lint:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Clone repository
-              uses: actions/checkout@v4
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
 
-            - name: Setup Deno
-              uses: denoland/setup-deno@v2
-              with:
-                  cache: true
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          cache: true
 
-            - name: Format
-              run: deno fmt --check
+      - name: Format
+        run: deno fmt --check
 
-            - name: Lint
-              run: deno lint
+      - name: Lint
+        run: deno lint
