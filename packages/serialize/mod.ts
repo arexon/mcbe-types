@@ -53,7 +53,6 @@ export function SerClass<
           isDefault: boolean;
           isUndefined: boolean;
           isTransparent: boolean;
-          customOverrideCallback?: (value: unknown) => unknown;
         }
         const inspectedFields = ctx
           .metadata
@@ -67,7 +66,6 @@ export function SerClass<
               fieldOpts.default(this[fieldName]),
             isUndefined: this[fieldName] === undefined,
             isTransparent: classOpts?.transparent === fieldName,
-            customOverrideCallback: fieldOpts?.custom,
           }))
           .toArray() ?? [];
 
@@ -81,18 +79,18 @@ export function SerClass<
         ) {
           const inspectedField = inspectedFields
             .find((field) => field.name === classOpts.transparent)!;
-          if (inspectedField.customOverrideCallback !== undefined) {
-            return inspectedField.customOverrideCallback(
-              this[classOpts.transparent],
-            );
-          } else return this[classOpts.transparent];
+          if (
+            inspectedField.opts !== undefined &&
+            inspectedField.opts.custom !== undefined
+          ) return inspectedField.opts.custom(this[classOpts.transparent]);
+          return this[classOpts.transparent];
         } else {
           const object: Record<string, unknown> = {};
           for (const field of inspectedFields) {
             let value = this[field.name];
             if (field.isDefault) value = undefined;
-            if (field.customOverrideCallback !== undefined) {
-              value = field.customOverrideCallback(value);
+            if (field.opts !== undefined && field.opts.custom !== undefined) {
+              value = field.opts.custom(value);
             }
             object[toSnakeCase(field.name)] = value;
           }
