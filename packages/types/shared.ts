@@ -26,24 +26,36 @@ export class NamespacedContainer<
   T extends NamespacedClass,
   I extends InstanceType<T> = InstanceType<T>,
 > {
-  @SerField({
-    custom: (collection) => {
-      const object: Record<string, I> = {};
-      for (const value of collection) {
-        object[value.constructor.namespace] = value;
-      }
-      return object;
-    },
-  })
-  collection: I[];
+  // TODO(@arexon): Make this field private.
+  @SerField()
+  collection: Record<string, I>;
 
   constructor(collection: I[]) {
-    this.collection = collection;
+    this.collection = {};
+    for (const value of collection) {
+      const key = value.constructor.namespace as string;
+      if (this.collection[key] !== undefined) {
+        throw new DuplicateComponentError(key);
+      }
+      this.collection[key] = value;
+    }
   }
 
   add(value: I): this {
-    this.collection.push(value);
+    const key = value.constructor.namespace as string;
+    if (this.collection[key] !== undefined) {
+      throw new DuplicateComponentError(key);
+    }
+    this.collection[key] = value;
     return this;
+  }
+}
+
+// deno-lint-ignore style-guide/class-serialization
+export class DuplicateComponentError extends Error {
+  constructor(componentId: string) {
+    super();
+    this.message = `Found duplicate components with the ID "${componentId}"`;
   }
 }
 
