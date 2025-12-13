@@ -27,10 +27,13 @@ export class NamespacedContainer<
   I extends InstanceType<T> = InstanceType<T>,
 > {
   @SerField({
-    custom: (collection) =>
-      collection.map((value) => ({
-        [value.constructor.namespace]: value,
-      })),
+    custom: (collection) => {
+      const object: Record<string, I> = {};
+      for (const value of collection) {
+        object[value.constructor.namespace] = value;
+      }
+      return object;
+    },
   })
   collection: I[];
 
