@@ -17,10 +17,7 @@ type NamespacedClass = {
   namespace: string;
 };
 
-/**
- * Collection of `I[]` where `I` defines a namespace.
- * Serializes into an object where the namespace is used the property key for `I`.
- */
+/** Collection object of `T` where the keys are derived from the namespace. */
 @SerClass({ transparent: "collection" })
 export class NamespacedContainer<
   T extends NamespacedClass,
