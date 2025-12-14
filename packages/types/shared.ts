@@ -38,12 +38,14 @@ export class NamespacedContainer<
     }
   }
 
-  add(value: TInstance): this {
-    const key = value.constructor.namespace as string;
-    if (this.collection[key] !== undefined) {
-      throw new DuplicateComponentError(key);
+  add(...components: TInstance[]): this {
+    for (const component of components) {
+      const key = component.constructor.namespace as string;
+      if (this.collection[key] !== undefined) {
+        throw new DuplicateComponentError(key);
+      }
+      this.collection[key] = component;
     }
-    this.collection[key] = value;
     return this;
   }
 }
