@@ -78,20 +78,27 @@ export function SerClass<
             field.isDefault
           )
         ) {
-          const inspectedField = inspectedFields
+          const field = inspectedFields
             .find((field) => field.name === classOpts.transparent)!;
           if (
-            inspectedField.opts !== undefined &&
-            inspectedField.opts.custom !== undefined
-          ) return inspectedField.opts.custom(this[classOpts.transparent]);
-          return this[classOpts.transparent];
+            field.opts !== undefined &&
+            field.opts.custom !== undefined
+          ) return field.opts.custom(this[classOpts.transparent]);
+
+          let value = this[classOpts.transparent];
+          if (field.isDefault) value = undefined;
+          else if (value["toJSON"] !== undefined) value = value.toJSON();
+          return value;
         } else {
           const object: Record<string, unknown> = {};
           for (const field of inspectedFields) {
             let value = this[field.name];
+            if (field.isDefault) value = undefined;
+            else if (value !== undefined && value["toJSON"] !== undefined) {
+              value = value.toJSON();
+            }
             let key = toSnakeCase(field.name);
 
-            if (field.isDefault) value = undefined;
             if (field.opts !== undefined) {
               if (field.opts.custom !== undefined) {
                 value = field.opts.custom(value);

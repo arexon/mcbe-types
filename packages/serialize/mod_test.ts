@@ -134,3 +134,51 @@ Deno.test("serialization with rename", () => {
 
   assertEquals(JSON.stringify(new Foo()), `{"_a_":"apple"}`);
 });
+
+Deno.test("nested serialization", () => {
+  @SerClass()
+  class Foo {
+    @SerField()
+    bar: Bar;
+
+    constructor() {
+      this.bar = new Bar();
+    }
+  }
+
+  @SerClass()
+  class Bar {
+    @SerField()
+    a: string;
+
+    constructor() {
+      this.a = "apple";
+    }
+  }
+
+  assertEquals(JSON.stringify(new Foo()), `{"bar":{"a":"apple"}}`);
+});
+
+Deno.test("nested serialization with transparency", () => {
+  @SerClass({ transparent: "bar" })
+  class Foo {
+    @SerField()
+    bar: Bar;
+
+    constructor() {
+      this.bar = new Bar();
+    }
+  }
+
+  @SerClass()
+  class Bar {
+    @SerField()
+    a: string;
+
+    constructor() {
+      this.a = "apple";
+    }
+  }
+
+  assertEquals(JSON.stringify(new Foo()), `{"a":"apple"}`);
+});
