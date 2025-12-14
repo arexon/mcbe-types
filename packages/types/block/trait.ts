@@ -28,7 +28,7 @@ export class PlacementDirectionBlockTrait {
   @SerField()
   enabledStates: PlacementDirectionState[];
 
-  @SerField({ default: (value) => value === 0 })
+  @SerField({ default: () => 0 })
   yRotationOffset: 0 | 90 | 180 | 270;
 
   static namespace: string = "minecraft:placement_direction";

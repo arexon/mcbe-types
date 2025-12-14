@@ -9,7 +9,7 @@ export class InventoryMenuCategory {
   @SerField()
   group?: InventoryItemGroup;
 
-  @SerField({ default: (value) => value === false })
+  @SerField({ default: () => false })
   isHiddenInCommand: boolean;
 
   constructor(

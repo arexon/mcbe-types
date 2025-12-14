@@ -24,7 +24,7 @@ export class BlockDescriptorName {
   @SerField()
   name: Identifier;
 
-  @SerField({ default: (value) => Object.keys(value).length === 0 })
+  @SerField({ default: () => ({}) })
   states: Record<Identifier, BlockState>;
 
   constructor(props: InputProps<BlockDescriptorName, "name", "states">) {

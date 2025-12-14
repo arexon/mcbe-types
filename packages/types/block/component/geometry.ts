@@ -17,7 +17,7 @@ export class GeometryBlockComponent {
   @SerField()
   cullingLayer?: Identifier;
 
-  @SerField({ default: (value) => value === false })
+  @SerField({ default: () => false })
   uvLock: boolean | string[];
 
   static namespace: string = "minecraft:geometry";
