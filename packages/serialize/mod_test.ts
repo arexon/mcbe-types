@@ -82,7 +82,7 @@ Deno.test("serialization with transparency", () => {
 Deno.test("serialization with custom overrides", () => {
   @SerClass()
   class Foo {
-    @SerField({ custom: (a) => `extra_thing:${a}` })
+    @SerField({ custom: (a) => ["extra_thing", a] })
     a: string;
 
     constructor() {
@@ -90,7 +90,7 @@ Deno.test("serialization with custom overrides", () => {
     }
   }
 
-  assertEquals(JSON.stringify(new Foo()), `{"a":"extra_thing:apple"}`);
+  assertEquals(JSON.stringify(new Foo()), `{"a":["extra_thing","apple"]}`);
 });
 
 Deno.test("serialization with transparency and custom overrides", () => {

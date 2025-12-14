@@ -9,7 +9,7 @@ export interface SerContext<This, Name extends keyof This> {
 
 export interface SerFieldOptions<This, Name extends keyof This> {
   default?: () => This[Name];
-  custom?: (value: This[Name]) => This[Name];
+  custom?: (value: This[Name]) => unknown;
   rename?: string;
 }
 
