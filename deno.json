@@ -2,7 +2,7 @@
   "workspace": ["./packages/*"],
   "tasks": {
     "test": "deno test --allow-all --parallel --doc",
-    "ok": "deno task test && deno fmt --check && deno lint"
+    "ok": "deno task test && deno fmt --check && deno lint && deno check"
   },
   "lint": {
     "plugins": ["./tools/lint.ts"]
