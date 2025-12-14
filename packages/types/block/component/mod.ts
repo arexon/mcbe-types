@@ -6,6 +6,7 @@ import type {
   DestructionParticlesBlockComponent,
   DisplayNameBlockComponent,
   FlammableBlockComponent,
+  FrictionBlockComponent,
   GeometryBlockComponent,
   ItemVisualBlockComponent,
   LightDampeningBlockComponent,
@@ -37,6 +38,7 @@ export type BlockComponents = NamespacedContainer<
   | typeof LiquidDetectionBlockComponent
   | typeof LootBlockComponent
   | typeof MapColorBlockComponent
+  | typeof FrictionBlockComponent
 >;
 
 export * from "./breathability.ts";
@@ -48,6 +50,7 @@ export * from "./destructible_by_mining.ts";
 export * from "./destruction_particles.ts";
 export * from "./display_name.ts";
 export * from "./flammable.ts";
+export * from "./friction.ts";
 export * from "./geometry.ts";
 export * from "./item_visual.ts";
 export * from "./light_dampening.ts";
