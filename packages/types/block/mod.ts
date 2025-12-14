@@ -11,6 +11,7 @@ import {
   type DerivedInputProps,
   FormatVersion,
   type InputProps,
+  NamespacedContainer,
 } from "@mcbe/types/shared";
 
 export * from "./component/mod.ts";
@@ -53,21 +54,22 @@ export class ServerBlock {
   @SerField()
   description: BlockDescription;
 
-  @SerField()
+  @SerField({ default: () => new NamespacedContainer([]) })
   components: BlockComponents;
 
-  @SerField()
-  permutations?: BlockPermutation[];
+  @SerField({ default: () => [] })
+  permutations: BlockPermutation[];
 
   constructor(
     props: InputProps<
       ServerBlock,
-      "description" | "components" | "permutations"
+      "description",
+      "components" | "permutations"
     >,
   ) {
     this.description = props.description;
-    this.components = props.components;
-    this.permutations = props.permutations;
+    this.components = props.components ?? new NamespacedContainer([]);
+    this.permutations = props.permutations ?? [];
   }
 }
 
