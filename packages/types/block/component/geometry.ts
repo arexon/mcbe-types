@@ -3,6 +3,8 @@ import type { Identifier } from "@mcbe/types/identifier";
 import type { Molang } from "@mcbe/types/molang";
 import type { InputProps } from "@mcbe/types/shared";
 
+const DEFAULT_CULLING_LAYER = "minecraft:culling_layer.undefined";
+
 @SerClass({ transparent: "identifier" })
 export class GeometryBlockComponent {
   @SerField()
@@ -14,8 +16,8 @@ export class GeometryBlockComponent {
   @SerField()
   culling?: Identifier;
 
-  @SerField()
-  cullingLayer?: Identifier;
+  @SerField({ default: () => DEFAULT_CULLING_LAYER })
+  cullingLayer: Identifier;
 
   @SerField({ default: () => false })
   uvLock: boolean | string[];
@@ -25,14 +27,14 @@ export class GeometryBlockComponent {
   constructor(
     props: InputProps<
       GeometryBlockComponent,
-      "identifier" | "boneVisibility" | "culling" | "cullingLayer",
-      "uvLock"
+      "identifier" | "boneVisibility" | "culling",
+      "uvLock" | "cullingLayer"
     >,
   ) {
     this.identifier = props.identifier;
     this.boneVisibility = props.boneVisibility;
     this.culling = props.culling;
-    this.cullingLayer = props.cullingLayer;
+    this.cullingLayer = props.cullingLayer ?? DEFAULT_CULLING_LAYER;
     this.uvLock = props.uvLock ?? false;
   }
 }
