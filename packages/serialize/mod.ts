@@ -1,4 +1,5 @@
 import { toSnakeCase } from "@std/text";
+import { equal } from "@std/assert";
 
 export interface SerContext<Value> {
   readonly metadata: {
@@ -7,7 +8,7 @@ export interface SerContext<Value> {
 }
 
 export interface SerFieldOptions<Value> {
-  default?: (value: Value) => boolean;
+  default?: Value;
   custom?: (value: Value) => unknown;
   rename?: string;
 }
@@ -64,7 +65,7 @@ export function SerClass<
             opts: fieldOpts,
             isDefault: fieldOpts !== undefined &&
               fieldOpts.default !== undefined &&
-              fieldOpts.default(this[fieldName]),
+              equal(fieldOpts.default, this[fieldName]),
             isUndefined: this[fieldName] === undefined,
             isTransparent: classOpts?.transparent === fieldName,
           }))

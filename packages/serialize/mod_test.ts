@@ -24,12 +24,16 @@ Deno.test("serialization with defaults", () => {
     @SerField()
     a: number;
 
-    @SerField({ default: (value) => value === "hi" })
+    @SerField({ default: "hi" })
     b: string;
+
+    @SerField({ default: ["hi"] })
+    c: string[];
 
     constructor() {
       this.a = 8;
       this.b = "hi";
+      this.c = ["hi"];
     }
   }
 
@@ -41,6 +45,9 @@ Deno.test("serialization with defaults", () => {
 
   foo.b = "hi";
   assertEquals(JSON.stringify(foo), `{"a":8}`);
+
+  foo.c = ["hey"];
+  assertEquals(JSON.stringify(foo), `{"a":8,"c":["hey"]}`);
 });
 
 Deno.test("serialization with transparency", () => {
@@ -52,7 +59,7 @@ Deno.test("serialization with transparency", () => {
     @SerField()
     b?: number;
 
-    @SerField({ default: (value) => value === true })
+    @SerField({ default: true })
     c: boolean;
 
     constructor() {
@@ -104,7 +111,7 @@ Deno.test("serialization with transparency, default, and custom overrides", () =
   @SerClass({ transparent: "a" })
   class Foo {
     @SerField({
-      default: (a) => a === "apple",
+      default: "apple",
       custom: (a) => `extra_thing:${a}`,
     })
     a: string;
