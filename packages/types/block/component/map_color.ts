@@ -1,0 +1,21 @@
+import { SerClass, SerField } from "@mcbe/serialize";
+import type { TintMethod } from "@mcbe/types/block";
+import type { InputProps } from "@mcbe/types/shared";
+
+@SerClass({ transparent: "color" })
+export class MapColorBlockComponent {
+  @SerField()
+  color: string | [number, number, number];
+
+  @SerField()
+  tintMethod?: TintMethod;
+
+  static namespace: string = "minecraft:map_color";
+
+  constructor(
+    props: InputProps<MapColorBlockComponent, "color" | "tintMethod">,
+  ) {
+    this.color = props.color;
+    this.tintMethod = props.tintMethod;
+  }
+}

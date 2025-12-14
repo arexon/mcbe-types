@@ -67,3 +67,8 @@ export type InputProps<
 > =
   & Pick<T, OriginalProps>
   & Partial<Pick<T, OptionalProps>>;
+
+/** Similar to {@link InputProps} but derives the properties from `T`'s constructor `props` parameter. */
+// deno-lint-ignore no-explicit-any
+export type DerivedInputProps<T extends new (...args: any) => any> =
+  ConstructorParameters<T>[0];

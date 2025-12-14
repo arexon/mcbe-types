@@ -6,6 +6,8 @@
     "./molang": "./molang.ts",
     "./identifier": "./identifier.ts",
     "./inventory": "./inventory.ts",
-    "./block": "./block/mod.ts"
+    "./text": "./text.ts",
+    "./block": "./block/mod.ts",
+    "./item": "./item/mod.ts"
   }
 }

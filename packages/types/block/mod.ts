@@ -7,7 +7,11 @@ import type {
 import type { Identifier } from "@mcbe/types/identifier";
 import type { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
-import { FormatVersion, type InputProps } from "@mcbe/types/shared";
+import {
+  type DerivedInputProps,
+  FormatVersion,
+  type InputProps,
+} from "@mcbe/types/shared";
 
 export * from "./component/mod.ts";
 export * from "./descriptor.ts";
@@ -23,19 +27,14 @@ export class BlockDefinition {
 
   constructor(
     formatVersion: FormatVersion,
-    props: ConstructorParameters<typeof ServerBlock>[0],
+    props: DerivedInputProps<typeof ServerBlock>,
   );
-  constructor(
-    props: InputProps<
-      BlockDefinition,
-      "formatVersion" | "block"
-    >,
-  );
+  constructor(props: InputProps<BlockDefinition, "formatVersion" | "block">);
   constructor(
     formatVersionOrProps:
       | FormatVersion
       | InputProps<BlockDefinition, "formatVersion" | "block">,
-    props?: ConstructorParameters<typeof ServerBlock>[0],
+    props?: DerivedInputProps<typeof ServerBlock>,
   ) {
     if (!(formatVersionOrProps instanceof FormatVersion)) {
       this.formatVersion = formatVersionOrProps.formatVersion;
