@@ -24,10 +24,10 @@ Deno.test("serialization with defaults", () => {
     @SerField()
     a: number;
 
-    @SerField({ default: "hi" })
+    @SerField({ default: () => "hi" })
     b: string;
 
-    @SerField({ default: ["hi"] })
+    @SerField({ default: () => ["hi"] })
     c: string[];
 
     constructor() {
@@ -59,7 +59,7 @@ Deno.test("serialization with transparency", () => {
     @SerField()
     b?: number;
 
-    @SerField({ default: true })
+    @SerField({ default: () => true })
     c: boolean;
 
     constructor() {
@@ -111,7 +111,7 @@ Deno.test("serialization with transparency, default, and custom overrides", () =
   @SerClass({ transparent: "a" })
   class Foo {
     @SerField({
-      default: "apple",
+      default: () => "apple",
       custom: (a) => `extra_thing:${a}`,
     })
     a: string;

@@ -8,7 +8,7 @@ export interface SerContext<Value> {
 }
 
 export interface SerFieldOptions<Value> {
-  default?: Value;
+  default?: () => Value;
   custom?: (value: Value) => unknown;
   rename?: string;
 }
@@ -65,7 +65,7 @@ export function SerClass<
             opts: fieldOpts,
             isDefault: fieldOpts !== undefined &&
               fieldOpts.default !== undefined &&
-              equal(fieldOpts.default, this[fieldName]),
+              equal(fieldOpts.default(), this[fieldName]),
             isUndefined: this[fieldName] === undefined,
             isTransparent: classOpts?.transparent === fieldName,
           }))
