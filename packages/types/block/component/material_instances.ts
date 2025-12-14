@@ -44,12 +44,12 @@ export class MaterialInstance {
   constructor(
     props: InputProps<
       MaterialInstance,
-      | "texture"
-      | "alphaMaskedTint"
-      | "faceDimming",
+      "texture",
       | "renderMethod"
       | "tintMethod"
       | "ambientOcclusion"
+      | "alphaMaskedTint"
+      | "faceDimming"
       | "isotropic"
     >,
   ) {
