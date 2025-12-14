@@ -27,7 +27,6 @@ export class CollisionBoxBlockComponent {
   }
 }
 
-// TODO: Look into whether these are required or not.
 @SerClass()
 export class BoundingBox {
   @SerField({ default: () => [-8, 0, -8] })
