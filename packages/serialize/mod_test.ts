@@ -15,11 +15,7 @@ Deno.test("basic serialization", () => {
     }
   }
 
-  assertEquals(
-    JSON.stringify(new Foo()),
-    `{"a":8}`,
-    "should serialize",
-  );
+  assertEquals(JSON.stringify(new Foo()), `{"a":8}`);
 });
 
 Deno.test("serialization with defaults", () => {
@@ -38,25 +34,13 @@ Deno.test("serialization with defaults", () => {
   }
 
   const foo = new Foo();
-  assertEquals(
-    JSON.stringify(foo),
-    `{"a":8}`,
-    "should skip since field is undefined",
-  );
+  assertEquals(JSON.stringify(foo), `{"a":8}`);
 
   foo.b = "hey";
-  assertEquals(
-    JSON.stringify(foo),
-    `{"a":8,"b":"hey"}`,
-    "should not skip since field does not match default value",
-  );
+  assertEquals(JSON.stringify(foo), `{"a":8,"b":"hey"}`);
 
   foo.b = "hi";
-  assertEquals(
-    JSON.stringify(foo),
-    `{"a":8}`,
-    "should skip since field matches default value",
-  );
+  assertEquals(JSON.stringify(foo), `{"a":8}`);
 });
 
 Deno.test("serialization with transparency", () => {
@@ -78,26 +62,14 @@ Deno.test("serialization with transparency", () => {
   }
 
   const foo = new Foo();
-  assertEquals(
-    JSON.stringify(foo),
-    `"apple"`,
-    "should directly serialize field since other fields are undefined",
-  );
+  assertEquals(JSON.stringify(foo), `"apple"`);
 
   foo.b = 3;
-  assertEquals(
-    JSON.stringify(foo),
-    `{"a":"apple","b":3}`,
-    "should serialize entire object since all fields are present",
-  );
+  assertEquals(JSON.stringify(foo), `{"a":"apple","b":3}`);
 
   foo.b = undefined;
   foo.c = false;
-  assertEquals(
-    JSON.stringify(foo),
-    `{"a":"apple","c":false}`,
-    "should serialize entire object since field does not match default value",
-  );
+  assertEquals(JSON.stringify(foo), `{"a":"apple","c":false}`);
 });
 
 Deno.test("serialization with custom overrides", () => {
