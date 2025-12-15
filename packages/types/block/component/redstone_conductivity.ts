@@ -9,7 +9,7 @@ export class RedstoneConductivityBlockComponent {
   @SerField({ default: () => false })
   redstoneConductor: boolean;
 
-  static namespace: string = "minecraft:redstone_conductivity";
+  readonly namespace = "minecraft:redstone_conductivity";
 
   constructor(
     props: InputProps<

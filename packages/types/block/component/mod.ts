@@ -30,41 +30,42 @@ import type {
   TickBlockComponent,
   TransformationBlockComponent,
 } from "@mcbe/types/block";
-import type { NamespacedContainer } from "@mcbe/types/shared";
+import type { CustomComponent, NamespacedContainer } from "@mcbe/types/shared";
 
 export type BlockComponents = NamespacedContainer<
-  | typeof LightDampeningBlockComponent
-  | typeof CollisionBoxBlockComponent
-  | typeof ConnectionRuleBlockComponent
-  | typeof CraftingTableBlockComponent
-  | typeof DestructibleByExplosionBlockComponent
-  | typeof DestructibleByExplosionBlockComponent
-  | typeof DestructionParticlesBlockComponent
-  | typeof FlammableBlockComponent
-  | typeof GeometryBlockComponent
-  | typeof ItemVisualBlockComponent
-  | typeof MaterialInstancesBlockComponent
-  | typeof SelectionBoxBlockComponent
-  | typeof DisplayNameBlockComponent
-  | typeof LightDampeningBlockComponent
-  | typeof LightEmissionBlockComponent
-  | typeof LiquidDetectionBlockComponent
-  | typeof LootBlockComponent
-  | typeof MapColorBlockComponent
-  | typeof FrictionBlockComponent
-  | typeof MovableBlockComponent
-  | typeof PlacementFilterBlockComponent
-  | typeof PrecipitationInteractionsBlockComponent
-  | typeof RedstoneConductivityBlockComponent
-  | typeof ReplaceableBlockComponent
-  | typeof SupportBlockComponent
-  | typeof TransformationBlockComponent
-  | typeof TickBlockComponent
-  | typeof RedstoneProducerBlockComponent
-  | typeof RandomOffsetBlockComponent
-  | typeof FlowerPottableBlockComponent
-  | typeof EntityFallOnBlockComponent
-  | typeof EmbeddedVisualBlockComponent
+  | LightDampeningBlockComponent
+  | CollisionBoxBlockComponent
+  | MapColorBlockComponent
+  | ConnectionRuleBlockComponent
+  | CraftingTableBlockComponent
+  | DestructibleByExplosionBlockComponent
+  | DestructibleByExplosionBlockComponent
+  | DestructionParticlesBlockComponent
+  | FlammableBlockComponent
+  | GeometryBlockComponent
+  | ItemVisualBlockComponent
+  | MaterialInstancesBlockComponent
+  | SelectionBoxBlockComponent
+  | DisplayNameBlockComponent
+  | LightDampeningBlockComponent
+  | LightEmissionBlockComponent
+  | LiquidDetectionBlockComponent
+  | LootBlockComponent
+  | FrictionBlockComponent
+  | MovableBlockComponent
+  | PlacementFilterBlockComponent
+  | PrecipitationInteractionsBlockComponent
+  | RedstoneConductivityBlockComponent
+  | ReplaceableBlockComponent
+  | SupportBlockComponent
+  | TransformationBlockComponent
+  | TickBlockComponent
+  | RedstoneProducerBlockComponent
+  | RandomOffsetBlockComponent
+  | FlowerPottableBlockComponent
+  | EntityFallOnBlockComponent
+  | EmbeddedVisualBlockComponent
+  | CustomComponent
 >;
 
 export * from "./breathability.ts";

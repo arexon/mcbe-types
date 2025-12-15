@@ -22,7 +22,7 @@ export class GeometryBlockComponent {
   @SerField({ default: () => false })
   uvLock: boolean | string[];
 
-  static namespace: string = "minecraft:geometry";
+  readonly namespace = "minecraft:geometry";
 
   constructor(
     props: InputProps<

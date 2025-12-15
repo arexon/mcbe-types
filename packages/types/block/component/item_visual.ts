@@ -13,7 +13,7 @@ export class ItemVisualBlockComponent {
   @SerField()
   materialInstances: MaterialInstancesBlockComponent;
 
-  static namespace: string = "minecraft:item_visual";
+  readonly namespace = "minecraft:item_visual";
 
   constructor(
     props: InputProps<

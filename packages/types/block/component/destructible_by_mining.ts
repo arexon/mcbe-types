@@ -7,7 +7,7 @@ export class DestructibleByMiningBlockComponent {
   @SerField({ default: () => true })
   value: boolean | DestructibleByMining;
 
-  static namespace: string = "minecraft:destructible_by_mining";
+  readonly namespace = "minecraft:destructible_by_mining";
 
   constructor(value: boolean);
   constructor(props: DerivedInputProps<typeof DestructibleByMining>);

@@ -13,7 +13,7 @@ export class DestructionParticlesBlockComponent {
   @SerField()
   tintMethod?: TintMethod;
 
-  static namespace: string = "minecraft:destruction_particles";
+  readonly namespace = "minecraft:destruction_particles";
 
   constructor(
     props: InputProps<

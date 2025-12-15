@@ -5,7 +5,7 @@ export class FrictionBlockComponent {
   @SerField({ default: () => 0.4 })
   value: number;
 
-  static namespace: string = "minecraft:friction";
+  readonly namespace = "minecraft:friction";
 
   constructor(value: number) {
     this.value = value;

@@ -5,7 +5,7 @@ export class LootBlockComponent {
   @SerField()
   path: string;
 
-  static namespace: string = "minecraft:loot";
+  readonly namespace = "minecraft:loot";
 
   constructor(path: string) {
     this.path = path;

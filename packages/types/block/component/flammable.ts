@@ -6,7 +6,7 @@ export class FlammableBlockComponent {
   @SerField({ default: () => true })
   value: boolean | Flammable;
 
-  static namespace: string = "minecraft:flammable";
+  readonly namespace = "minecraft:flammable";
 
   constructor(value: boolean);
   constructor(props: DerivedInputProps<typeof Flammable>);

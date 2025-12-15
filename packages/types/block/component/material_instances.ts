@@ -6,7 +6,7 @@ export class MaterialInstancesBlockComponent {
   @SerField()
   value: Record<string, MaterialInstance>;
 
-  static namespace: string = "minecraft:material_instances";
+  readonly namespace = "minecraft:material_instances";
 
   constructor(value: Record<string, MaterialInstance>) {
     this.value = value;

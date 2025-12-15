@@ -9,7 +9,7 @@ export class PrecipitationInteractionsBlockComponent {
     | "obstruct_rain_accumulate_snow"
     | "none";
 
-  static namespace: string = "minecraft:precipitation_interactions";
+  readonly namespace = "minecraft:precipitation_interactions";
 
   constructor(
     props: InputProps<

@@ -10,7 +10,7 @@ export class CraftingTableBlockComponent {
   @SerField()
   tableName?: LocalizationText;
 
-  static namespace: string = "minecraft:crafting_table";
+  readonly namespace = "minecraft:crafting_table";
 
   constructor(
     props: InputProps<

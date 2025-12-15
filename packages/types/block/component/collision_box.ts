@@ -6,7 +6,7 @@ export class CollisionBoxBlockComponent {
   @SerField({ default: () => true })
   value: boolean | BoundingBox | BoundingBox[];
 
-  static namespace: string = "minecraft:collision_box";
+  readonly namespace = "minecraft:collision_box";
 
   constructor(enable: boolean);
   constructor(props: DerivedInputProps<typeof BoundingBox>);

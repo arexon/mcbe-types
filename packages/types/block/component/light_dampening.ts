@@ -5,7 +5,7 @@ export class LightDampeningBlockComponent {
   @SerField({ default: () => 15 })
   value: number;
 
-  static namespace: string = "minecraft:light_dampening";
+  readonly namespace = "minecraft:light_dampening";
 
   constructor(value: number) {
     this.value = value;

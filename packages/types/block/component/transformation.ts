@@ -18,7 +18,7 @@ export class TransformationBlockComponent {
   @SerField({ default: () => [0, 0, 0] })
   translation: [number, number, number];
 
-  static namespace: string = "minecraft:transformation";
+  readonly namespace = "minecraft:transformation";
 
   constructor(
     props: InputProps<

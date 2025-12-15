@@ -9,7 +9,7 @@ export class MovableBlockComponent {
   @SerField({ default: () => "none" })
   sticky: "none" | "sticky";
 
-  static namespace: string = "minecraft:movable";
+  readonly namespace = "minecraft:movable";
 
   constructor(
     props: InputProps<MovableBlockComponent, "movementType", "sticky">,

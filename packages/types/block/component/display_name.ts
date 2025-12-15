@@ -6,7 +6,7 @@ export class DisplayNameBlockComponent {
   @SerField()
   value: LocalizationText;
 
-  static namespace: string = "minecraft:display_name";
+  readonly namespace = "minecraft:display_name";
 
   constructor(value: LocalizationText) {
     this.value = value;

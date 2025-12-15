@@ -54,7 +54,7 @@ export class ServerBlock {
   @SerField()
   description: BlockDescription;
 
-  @SerField({ default: () => new NamespacedContainer([]) })
+  @SerField({ default: () => new NamespacedContainer() })
   components: BlockComponents;
 
   @SerField({ default: () => [] })
@@ -68,7 +68,7 @@ export class ServerBlock {
     >,
   ) {
     this.description = props.description;
-    this.components = props.components ?? new NamespacedContainer([]);
+    this.components = props.components ?? new NamespacedContainer();
     this.permutations = props.permutations ?? [];
   }
 }

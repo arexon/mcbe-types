@@ -7,7 +7,7 @@ export class PlacementFilterBlockComponent {
   @SerField({ default: () => [] })
   conditions: PlacementFilterCondition[];
 
-  static namespace: string = "minecraft:placement_filter";
+  readonly namespace = "minecraft:placement_filter";
 
   constructor(
     props: InputProps<PlacementFilterBlockComponent, "conditions">,

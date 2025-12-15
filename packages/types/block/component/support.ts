@@ -6,7 +6,7 @@ export class SupportBlockComponent {
   @SerField()
   shape: "fence" | "stair";
 
-  static namespace: string = "minecraft:support";
+  readonly namespace = "minecraft:support";
 
   constructor(props: InputProps<SupportBlockComponent, "shape">) {
     this.shape = props.shape;

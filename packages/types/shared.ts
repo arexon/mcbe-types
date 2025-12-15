@@ -10,41 +10,31 @@ export class FormatVersion {
   }
 }
 
-/** This is only meant for {@link NamespacedContainer}. */
-type NamespacedClass = {
-  // deno-lint-ignore no-explicit-any
-  new (...args: any[]): any;
-  namespace: string;
-};
-
 /** Collection object of `T` where the keys are derived from the namespace. */
 @SerClass({ transparent: "collection" })
-export class NamespacedContainer<
-  T extends NamespacedClass,
-  TInstance extends InstanceType<T> = InstanceType<T>,
-> {
+export class NamespacedContainer<T extends { readonly namespace: string }> {
   // TODO(@arexon): Make this field private.
   @SerField()
-  collection: Record<string, TInstance>;
+  collection: Record<string, T>;
 
-  constructor(collection: TInstance[]) {
+  constructor(...collection: T[]) {
     this.collection = {};
-    for (const value of collection) {
-      const key = value.constructor.namespace as string;
+    for (const comp of collection) {
+      const key = comp.namespace;
       if (this.collection[key] !== undefined) {
         throw new DuplicateComponentError(key);
       }
-      this.collection[key] = value;
+      this.collection[key] = comp;
     }
   }
 
-  add(...components: TInstance[]): this {
-    for (const component of components) {
-      const key = component.constructor.namespace as string;
+  add(...components: T[]): this {
+    for (const comp of components) {
+      const key = comp.namespace;
       if (this.collection[key] !== undefined) {
         throw new DuplicateComponentError(key);
       }
-      this.collection[key] = component;
+      this.collection[key] = comp;
     }
     return this;
   }
@@ -55,6 +45,29 @@ export class DuplicateComponentError extends Error {
   constructor(componentId: string) {
     super();
     this.message = `Found duplicate components with the ID "${componentId}"`;
+  }
+}
+
+@SerClass({ transparent: "value" })
+// deno-lint-ignore style-guide/namespace-property-in-component-class
+export class CustomComponent<
+  // deno-lint-ignore no-explicit-any
+  T extends { readonly _namespace: string } = any,
+  Value = Omit<T, "_namespace">,
+  Namespace extends string = T["_namespace"],
+> {
+  @SerField()
+  value: Value;
+
+  #namespace: Namespace;
+
+  constructor(namespace: Namespace, value: Value) {
+    this.value = value;
+    this.#namespace = namespace;
+  }
+
+  get namespace(): Namespace {
+    return this.#namespace;
   }
 }
 

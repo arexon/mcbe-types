@@ -2,8 +2,8 @@ import { SerClass, SerField } from "@mcbe/serialize";
 import type { InputProps, NamespacedContainer } from "@mcbe/types/shared";
 
 export type BlockTraits = NamespacedContainer<
-  | typeof PlacementDirectionBlockTrait
-  | typeof PlacementPositionBlockTrait
+  | PlacementDirectionBlockTrait
+  | PlacementPositionBlockTrait
 >;
 
 @SerClass()
@@ -11,7 +11,7 @@ export class PlacementPositionBlockTrait {
   @SerField()
   enabledStates: PlacementPositionState[];
 
-  static namespace: string = "minecraft:placement_position";
+  readonly namespace = "minecraft:placement_position";
 
   constructor(props: InputProps<PlacementPositionBlockTrait, "enabledStates">) {
     this.enabledStates = props.enabledStates;
@@ -31,7 +31,7 @@ export class PlacementDirectionBlockTrait {
   @SerField({ default: () => 0 })
   yRotationOffset: 0 | 90 | 180 | 270;
 
-  static namespace: string = "minecraft:placement_direction";
+  readonly namespace = "minecraft:placement_direction";
 
   constructor(
     props: InputProps<
