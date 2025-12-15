@@ -8,10 +8,10 @@ import type { Identifier } from "@mcbe/types/identifier";
 import type { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
 import {
+  Components,
   type DerivedInputProps,
   FormatVersion,
   type InputProps,
-  NamespacedContainer,
 } from "@mcbe/types/shared";
 
 export * from "./component/mod.ts";
@@ -54,7 +54,7 @@ export class ServerBlock {
   @SerField()
   description: BlockDescription;
 
-  @SerField({ default: () => new NamespacedContainer() })
+  @SerField({ default: () => new Components() })
   components: BlockComponents;
 
   @SerField({ default: () => [] })
@@ -68,7 +68,7 @@ export class ServerBlock {
     >,
   ) {
     this.description = props.description;
-    this.components = props.components ?? new NamespacedContainer();
+    this.components = props.components ?? new Components();
     this.permutations = props.permutations ?? [];
   }
 }

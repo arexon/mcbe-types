@@ -30,9 +30,9 @@ import type {
   TickBlockComponent,
   TransformationBlockComponent,
 } from "@mcbe/types/block";
-import type { CustomComponent, NamespacedContainer } from "@mcbe/types/shared";
+import { Components, type CustomComponent } from "@mcbe/types/shared";
 
-export type BlockComponents = NamespacedContainer<
+export type BlockComponent =
   | LightDampeningBlockComponent
   | CollisionBoxBlockComponent
   | MapColorBlockComponent
@@ -65,8 +65,11 @@ export type BlockComponents = NamespacedContainer<
   | FlowerPottableBlockComponent
   | EntityFallOnBlockComponent
   | EmbeddedVisualBlockComponent
-  | CustomComponent
->;
+  | CustomComponent;
+
+// deno-lint-ignore style-guide/class-serialization
+export class BlockComponents<Custom = never>
+  extends Components<BlockComponent, Custom> {}
 
 export * from "./breathability.ts";
 export * from "./collision_box.ts";

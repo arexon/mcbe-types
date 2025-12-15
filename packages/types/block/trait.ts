@@ -1,10 +1,12 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { InputProps, NamespacedContainer } from "@mcbe/types/shared";
+import { Components, type InputProps } from "@mcbe/types/shared";
 
-export type BlockTraits = NamespacedContainer<
+export type BlockTrait =
   | PlacementDirectionBlockTrait
-  | PlacementPositionBlockTrait
->;
+  | PlacementPositionBlockTrait;
+
+// deno-lint-ignore style-guide/class-serialization
+export class BlockTraits extends Components<BlockTrait, never> {}
 
 @SerClass()
 export class PlacementPositionBlockTrait {

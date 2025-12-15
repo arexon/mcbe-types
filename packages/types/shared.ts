@@ -10,33 +10,68 @@ export class FormatVersion {
   }
 }
 
-/** Collection object of `T` where the keys are derived from the namespace. */
-@SerClass({ transparent: "collection" })
-export class NamespacedContainer<T extends { readonly namespace: string }> {
-  // TODO(@arexon): Make this field private.
-  @SerField()
-  collection: Record<string, T>;
+/** Component collection of `T` keyed by the namespace of `T`. */
+@SerClass({ transparent: "value" })
+export class Components<
+  T extends { readonly namespace: string },
+  Custom,
+  Namespaces = Exclude<T, CustomComponent> | Custom extends
+    { readonly namespace: infer N } ? N : never,
+> {
+  #value: Record<string, T> = {};
 
-  constructor(...collection: T[]) {
-    this.collection = {};
-    for (const comp of collection) {
+  get value(): Record<string, T> {
+    return this.#value;
+  }
+
+  constructor(...components: T[]) {
+    for (const comp of components) {
       const key = comp.namespace;
-      if (this.collection[key] !== undefined) {
+      if (this.has(key as Namespaces)) {
         throw new DuplicateComponentError(key);
       }
-      this.collection[key] = comp;
+      this.#value[key] = comp;
     }
   }
 
-  add(...components: T[]): this {
+  add(...components: T[]): void {
     for (const comp of components) {
       const key = comp.namespace;
-      if (this.collection[key] !== undefined) {
+      if (this.has(key as Namespaces)) {
         throw new DuplicateComponentError(key);
       }
-      this.collection[key] = comp;
+      this.#value[key] = comp;
     }
-    return this;
+  }
+
+  remove(namespace: Namespaces): boolean {
+    if (this.has(namespace)) {
+      delete this.#value[namespace as string];
+      return true;
+    }
+    return false;
+  }
+
+  has(namespace: Namespaces): boolean {
+    return this.#value[namespace as string] !== undefined;
+  }
+
+  clear(): void {
+    this.#value = {};
+  }
+
+  [Symbol.iterator](): Iterator<T> {
+    const propNames = Object.getOwnPropertyNames(this.#value);
+    return {
+      next: (): IteratorResult<T> => {
+        const propName = propNames.pop();
+        if (propName !== undefined) {
+          return { value: this.#value[propName]!, done: false };
+        } else {
+          return { value: undefined, done: true };
+        }
+      },
+    };
   }
 }
 
@@ -61,13 +96,13 @@ export class CustomComponent<
 
   #namespace: Namespace;
 
+  get namespace(): Namespace {
+    return this.#namespace;
+  }
+
   constructor(namespace: Namespace, value: Value) {
     this.value = value;
     this.#namespace = namespace;
-  }
-
-  get namespace(): Namespace {
-    return this.#namespace;
   }
 }
 
