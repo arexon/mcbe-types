@@ -40,6 +40,7 @@ export default {
             for (const propNode of node.body.body) {
               if (
                 propNode.type !== "PropertyDefinition" ||
+                propNode.key.type === "PrivateIdentifier" ||
                 propNode.static ||
                 // We don't wanna interfere with `namespace-property-in-component-class`.
                 // This *could* cause problems in the future if we ever end up
@@ -124,14 +125,14 @@ export default {
               return ctx.report({
                 node: node.id,
                 message:
-                  "Component class does not have a `namespace` static property",
+                  "Component class does not have a readonly `namespace` property",
               });
             }
 
-            if (!namespaceProp.static) {
+            if (!namespaceProp.readonly) {
               ctx.report({
                 node: namespaceProp,
-                message: "Component class `namespace` property is not static",
+                message: "Component class `namespace` property is not readonly",
               });
             }
           },

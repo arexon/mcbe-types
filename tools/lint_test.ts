@@ -77,6 +77,8 @@ export class Foo {
 export class Foo {
   @SerField({ default: (value) => value === 1 })
   a;
+
+  #b;
 }
     `,
     [],
@@ -93,7 +95,8 @@ export class FooComponent {}
     [
       {
         id: "style-guide/namespace-property-in-component-class",
-        message: "Component class does not have a `namespace` static property",
+        message:
+          "Component class does not have a readonly `namespace` property",
         hint: undefined,
         range: [26, 38],
         fix: [],
@@ -112,7 +115,7 @@ export class FooComponent {
     [
       {
         id: "style-guide/namespace-property-in-component-class",
-        message: "Component class `namespace` property is not static",
+        message: "Component class `namespace` property is not readonly",
         hint: undefined,
         range: [43, 71],
         fix: [],
@@ -125,7 +128,7 @@ export class FooComponent {
     `
 @SerClass()
 export class FooComponent {
-  static namespace = "minecraft:foo";
+  readonly namespace = "minecraft:foo";
 }
     `,
     [],
