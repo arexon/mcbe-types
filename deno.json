@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true
+  },
   "workspace": ["./packages/*"],
   "tasks": {
     "test": "deno test --allow-all --parallel --doc",

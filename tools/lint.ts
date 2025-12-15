@@ -80,6 +80,7 @@ export default {
               ) {
                 const optsNode = fieldDecoNode.expression.arguments[0];
                 if (
+                  optsNode !== undefined &&
                   optsNode.type === "ObjectExpression" &&
                   optsNode.properties.some((propNode) =>
                     propNode.type === "Property" &&
