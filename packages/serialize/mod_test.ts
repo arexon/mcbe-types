@@ -79,6 +79,17 @@ Deno.test("serialization with transparency", () => {
   assertEquals(JSON.stringify(foo), `{"a":"apple","c":false}`);
 });
 
+Deno.test("serialization with transparency on getter", () => {
+  @SerClass({ transparent: "a" })
+  class Foo {
+    get a(): string {
+      return "apple";
+    }
+  }
+
+  assertEquals(JSON.stringify(new Foo()), `"apple"`);
+});
+
 Deno.test("serialization with custom overrides", () => {
   @SerClass()
   class Foo {

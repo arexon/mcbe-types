@@ -86,12 +86,17 @@ export function SerClass<
         ) {
           const field = inspectedFields
             .find((field) => field.name === classOpts.transparent)!;
+
+          let value = this[classOpts.transparent];
+
+          // This is to allow for cases where the transparent field is a getter.
+          if (field === undefined && value !== undefined) return value;
+
           if (
             field.opts !== undefined &&
             field.opts.custom !== undefined
           ) return field.opts.custom(this[classOpts.transparent]);
 
-          let value = this[classOpts.transparent];
           if (field.isDefault) value = undefined;
           else if (value["toJSON"] !== undefined) value = value.toJSON();
           return value;
