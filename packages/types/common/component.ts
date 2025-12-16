@@ -3,12 +3,7 @@ import type { LocalizationText } from "@mcbe/types/text";
 
 /** Component collection of `T` keyed by the namespace of `T`. */
 @SerClass({ transparent: "value" })
-export class Components<
-  T extends { readonly namespace: string },
-  Custom,
-  Namespaces = Exclude<T, CustomComponent> | Custom extends
-    { readonly namespace: infer N } ? N : never,
-> {
+export class Components<T extends { namespace: string }> {
   #value: Record<string, T> = {};
 
   get value(): Record<string, T> {
@@ -18,7 +13,7 @@ export class Components<
   constructor(...components: T[]) {
     for (const comp of components) {
       const key = comp.namespace;
-      if (this.has(key as Namespaces)) {
+      if (this.has(key)) {
         throw new DuplicateComponentError(key);
       }
       this.#value[key] = comp;
@@ -28,14 +23,14 @@ export class Components<
   add(...components: T[]): void {
     for (const comp of components) {
       const key = comp.namespace;
-      if (this.has(key as Namespaces)) {
+      if (this.has(key)) {
         throw new DuplicateComponentError(key);
       }
       this.#value[key] = comp;
     }
   }
 
-  remove(namespace: Namespaces): boolean {
+  remove(namespace: string): boolean {
     if (this.has(namespace)) {
       delete this.#value[namespace as string];
       return true;
@@ -43,7 +38,7 @@ export class Components<
     return false;
   }
 
-  has(namespace: Namespaces): boolean {
+  has(namespace: string): boolean {
     return this.#value[namespace as string] !== undefined;
   }
 
@@ -86,25 +81,38 @@ export class DisplayNameComponent {
   }
 }
 
-@SerClass({ transparent: "value" })
-// deno-lint-ignore style-guide/namespace-property-in-component-class
+/**
+ * Common custom component for blocks and items.
+ *
+ * @example Usage with custom schema
+ * ```ts
+ * interface PaintableCustomComponent {
+ *   namespace: "custom:paintable";
+ *   params: { colors: string[] };
+ * }
+ *
+ * new CustomComponent<PaintableCustomComponent>("custom:paintable", {
+ *   colors: ["red", "blue"],
+ * });
+ * ```
+ */
+@SerClass({ transparent: "params" })
 export class CustomComponent<
   // deno-lint-ignore no-explicit-any
-  T extends { _namespace: string } = any,
-  Value = Omit<T, "_namespace">,
-  Namespace extends string = T["_namespace"],
+  Schema extends { namespace: string; params: unknown } = any,
+  Namespace extends string = Schema["namespace"],
 > {
   @SerField()
-  value: Value;
+  params: unknown;
 
-  #namespace: Namespace;
+  #namespace: string;
 
-  get namespace(): Namespace {
+  get namespace(): string {
     return this.#namespace;
   }
 
-  constructor(namespace: Namespace, value: Value) {
-    this.value = value;
+  constructor(namespace: Namespace, params: Schema["params"]) {
+    this.params = params;
     this.#namespace = namespace;
   }
 }

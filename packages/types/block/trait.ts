@@ -6,7 +6,7 @@ export type BlockTrait =
   | PlacementPositionBlockTrait;
 
 // deno-lint-ignore style-guide/class-serialization
-export class BlockTraits extends Components<BlockTrait, never> {}
+export class BlockTraits extends Components<BlockTrait> {}
 
 @SerClass()
 export class PlacementPositionBlockTrait {

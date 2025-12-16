@@ -1,14 +1,10 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type {
-  BlockComponents,
-  BlockState,
-  BlockTraits,
-} from "@mcbe/types/block";
 import {
-  Components,
-  type DerivedInputProps,
-  type InputProps,
-} from "@mcbe/types/common";
+  BlockComponents,
+  type BlockState,
+  type BlockTraits,
+} from "@mcbe/types/block";
+import type { DerivedInputProps, InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 import type { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
@@ -55,7 +51,7 @@ export class Block {
   @SerField()
   description: BlockDescription;
 
-  @SerField({ default: () => new Components() })
+  @SerField({ default: () => new BlockComponents() })
   components: BlockComponents;
 
   @SerField({ default: () => [] })
@@ -69,7 +65,7 @@ export class Block {
     >,
   ) {
     this.description = props.description;
-    this.components = props.components ?? new Components();
+    this.components = props.components ?? new BlockComponents();
     this.permutations = props.permutations ?? [];
   }
 }

@@ -71,8 +71,7 @@ export type BlockComponent =
   | CustomComponent;
 
 // deno-lint-ignore style-guide/class-serialization
-export class BlockComponents<Custom = never>
-  extends Components<BlockComponent, Custom> {}
+export class BlockComponents extends Components<BlockComponent> {}
 
 export * from "./breathability.ts";
 export * from "./collision_box.ts";
