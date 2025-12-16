@@ -1,15 +1,15 @@
 import { toSnakeCase } from "@std/text";
 import { equal } from "@std/assert";
 
-export interface SerContext<This, Name extends keyof This> {
+export interface SerContext<Instance, Name extends keyof Instance> {
   readonly metadata: {
-    fields?: Map<string, SerFieldOptions<This, Name> | undefined>;
+    fields?: Map<string, SerFieldOptions<Instance, Name> | undefined>;
   };
 }
 
-export interface SerFieldOptions<This, Name extends keyof This> {
-  default?: () => This[Name];
-  custom?: (value: This[Name]) => unknown;
+export interface SerFieldOptions<Instance, Name extends keyof Instance> {
+  default?: () => Instance[Name];
+  custom?: (value: Instance[Name]) => unknown;
   rename?: string;
 }
 
@@ -32,23 +32,21 @@ export function SerField<This, Name extends keyof This>(
   };
 }
 
-export interface SerClassOptions<T> {
-  transparent?: T;
+export interface SerClassOptions<Field> {
+  transparent?: Field;
 }
 
 export function SerClass<
   // deno-lint-ignore no-explicit-any
   T extends abstract new (...args: any[]) => InstanceType<T>,
-  TInstance extends InstanceType<T>,
+  Instance extends InstanceType<T>,
   Field extends {
     // deno-lint-ignore ban-types
-    [P in keyof TInstance]: TInstance[P] extends Function ? never : P;
-  }[keyof TInstance],
->(
-  classOpts?: SerClassOptions<Field>,
-): (
+    [P in keyof Instance]: Instance[P] extends Function ? never : P;
+  }[keyof Instance],
+>(classOpts?: SerClassOptions<Field>): (
   target: T,
-  ctx: ClassDecoratorContext & SerContext<T, never>,
+  ctx: ClassDecoratorContext & SerContext<Instance, never>,
 ) => void {
   return function (target, ctx) {
     // TODO: Experiment with generating `Function`.
@@ -56,7 +54,7 @@ export function SerClass<
       value() {
         interface InspectedField {
           name: string;
-          opts?: SerFieldOptions<T, never>;
+          opts?: SerFieldOptions<Instance, never>;
           isDefault: boolean;
           isUndefined: boolean;
           isTransparent: boolean;
