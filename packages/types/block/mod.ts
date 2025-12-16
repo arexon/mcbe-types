@@ -15,6 +15,7 @@ import {
 } from "@mcbe/types/shared";
 
 export * from "./component/mod.ts";
+export * from "./culling.ts";
 export * from "./descriptor.ts";
 export * from "./trait.ts";
 
