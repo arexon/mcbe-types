@@ -26,6 +26,7 @@ import type {
   ReplaceableBlockComponent,
   SelectionBoxBlockComponent,
   SupportBlockComponent,
+  TagBlockComponent,
   TickBlockComponent,
   TransformationBlockComponent,
 } from "@mcbe/types/block";
@@ -68,6 +69,7 @@ export type BlockComponent =
   | FlowerPottableBlockComponent
   | EntityFallOnBlockComponent
   | EmbeddedVisualBlockComponent
+  | TagBlockComponent
   | CustomComponent;
 
 // deno-lint-ignore style-guide/class-serialization
@@ -102,5 +104,6 @@ export * from "./redstone_producer.ts";
 export * from "./replaceable.ts";
 export * from "./selection_box.ts";
 export * from "./support.ts";
+export * from "./tag.ts";
 export * from "./tick.ts";
 export * from "./transformation.ts";
