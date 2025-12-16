@@ -87,7 +87,7 @@ export class DuplicateComponentError extends Error {
 // deno-lint-ignore style-guide/namespace-property-in-component-class
 export class CustomComponent<
   // deno-lint-ignore no-explicit-any
-  T extends { readonly _namespace: string } = any,
+  T extends { _namespace: string } = any,
   Value = Omit<T, "_namespace">,
   Namespace extends string = T["_namespace"],
 > {
