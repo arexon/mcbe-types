@@ -1,5 +1,5 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import { Components, type InputProps } from "@mcbe/types/shared";
+import { Components, type InputProps } from "@mcbe/types/common";
 
 export type BlockTrait =
   | PlacementDirectionBlockTrait

@@ -1,6 +1,6 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { InputProps } from "@mcbe/types/shared";
 import type { BlockDescriptor } from "@mcbe/types/block";
+import type { InputProps } from "@mcbe/types/common";
 
 @SerClass()
 export class PlacementFilterBlockComponent {

@@ -1,6 +1,6 @@
 import { SerClass, SerField } from "@mcbe/serialize";
 import { BoundingBox } from "@mcbe/types/block";
-import type { InputProps } from "@mcbe/types/shared";
+import type { InputProps } from "@mcbe/types/common";
 
 @SerClass({ transparent: "value" })
 export class SelectionBoxBlockComponent {

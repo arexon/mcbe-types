@@ -30,7 +30,7 @@ import type {
   TickBlockComponent,
   TransformationBlockComponent,
 } from "@mcbe/types/block";
-import { Components, type CustomComponent } from "@mcbe/types/shared";
+import { Components, type CustomComponent } from "@mcbe/types/common";
 
 export type BlockComponent =
   | LightDampeningBlockComponent

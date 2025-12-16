@@ -1,7 +1,7 @@
 import { SerClass, SerField } from "@mcbe/serialize";
+import type { InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 import type { Molang } from "@mcbe/types/molang";
-import type { InputProps } from "@mcbe/types/shared";
 
 const DEFAULT_CULLING_LAYER = "minecraft:culling_layer.undefined";
 

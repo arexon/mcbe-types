@@ -1,6 +1,7 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { FormatVersion, InputProps } from "@mcbe/types/shared";
+import type { InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
+import type { FormatVersion } from "@mcbe/types/version";
 
 @SerClass()
 export class BlockCulling {

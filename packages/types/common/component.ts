@@ -1,15 +1,5 @@
 import { SerClass, SerField } from "@mcbe/serialize";
 
-@SerClass({ transparent: "version" })
-export class FormatVersion {
-  @SerField()
-  version: string;
-
-  constructor(version: [number, number, number]) {
-    this.version = `${version[0]}.${version[1]}.${version[2]}`;
-  }
-}
-
 /** Component collection of `T` keyed by the namespace of `T`. */
 @SerClass({ transparent: "value" })
 export class Components<
@@ -105,20 +95,3 @@ export class CustomComponent<
     this.#namespace = namespace;
   }
 }
-
-/**
- * Takes the properties of `T` and returns a matching object based on
- * `OriginalProps` and `OptionalProps`.
- */
-export type InputProps<
-  T,
-  OriginalProps extends keyof T,
-  OptionalProps extends Exclude<keyof T, OriginalProps> = never,
-> =
-  & Pick<T, OriginalProps>
-  & Partial<Pick<T, OptionalProps>>;
-
-/** Similar to {@link InputProps} but derives the properties from `T`'s constructor `props` parameter. */
-// deno-lint-ignore no-explicit-any
-export type DerivedInputProps<T extends new (...args: any) => any> =
-  ConstructorParameters<T>[0];

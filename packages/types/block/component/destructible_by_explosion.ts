@@ -1,5 +1,5 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { DerivedInputProps, InputProps } from "@mcbe/types/shared";
+import type { DerivedInputProps, InputProps } from "@mcbe/types/common";
 
 @SerClass()
 export class DestructibleByExplosionBlockComponent {

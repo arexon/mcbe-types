@@ -4,15 +4,15 @@ import type {
   BlockState,
   BlockTraits,
 } from "@mcbe/types/block";
-import type { Identifier } from "@mcbe/types/identifier";
-import type { InventoryMenuCategory } from "@mcbe/types/inventory";
-import type { Molang } from "@mcbe/types/molang";
 import {
   Components,
   type DerivedInputProps,
-  FormatVersion,
   type InputProps,
-} from "@mcbe/types/shared";
+} from "@mcbe/types/common";
+import type { Identifier } from "@mcbe/types/identifier";
+import type { InventoryMenuCategory } from "@mcbe/types/inventory";
+import type { Molang } from "@mcbe/types/molang";
+import { FormatVersion } from "@mcbe/types/version";
 
 export * from "./component/mod.ts";
 export * from "./culling.ts";

@@ -2,11 +2,12 @@
   "name": "@mcbe/types",
   "version": "0.0.1",
   "exports": {
-    "./shared": "./shared.ts",
+    "./common": "./common/mod.ts",
     "./molang": "./molang.ts",
     "./identifier": "./identifier.ts",
     "./inventory": "./inventory.ts",
     "./text": "./text.ts",
+    "./version": "./version.ts",
     "./block": "./block/mod.ts",
     "./item": "./item/mod.ts"
   }

@@ -1,6 +1,6 @@
 import { SerClass, SerField } from "@mcbe/serialize";
+import type { DerivedInputProps, InputProps } from "@mcbe/types/common";
 import type { ItemDescriptor } from "@mcbe/types/item";
-import type { DerivedInputProps, InputProps } from "@mcbe/types/shared";
 
 @SerClass()
 export class DestructibleByMiningBlockComponent {

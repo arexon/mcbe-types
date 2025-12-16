@@ -1,6 +1,6 @@
-import type { Identifier } from "@mcbe/types/identifier";
-import type { InputProps } from "@mcbe/types/shared";
 import { SerClass, SerField } from "@mcbe/serialize";
+import type { InputProps } from "@mcbe/types/common";
+import type { Identifier } from "@mcbe/types/identifier";
 
 export type BlockState = number | boolean | Identifier;
 
