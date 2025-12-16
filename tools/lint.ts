@@ -114,26 +114,22 @@ export default {
               )
             ) return;
 
-            const namespaceProp = node.body.body.find((
-              propNode,
-            ): propNode is Deno.lint.PropertyDefinition =>
-              propNode.type === "PropertyDefinition" &&
+            const hasNamespaceProp = node.body.body.some((propNode) =>
+              (
+                (
+                  propNode.type === "MethodDefinition" &&
+                  propNode.kind === "get"
+                ) ||
+                propNode.type === "PropertyDefinition"
+              ) &&
               propNode.key.type === "Identifier" &&
               propNode.key.name === "namespace"
             );
 
-            if (namespaceProp === undefined) {
+            if (!hasNamespaceProp) {
               return ctx.report({
                 node: node.id,
-                message:
-                  "Component class does not have a readonly `namespace` property",
-              });
-            }
-
-            if (!namespaceProp.readonly) {
-              ctx.report({
-                node: namespaceProp,
-                message: "Component class `namespace` property is not readonly",
+                message: "Component class does not have a `namespace` property",
               });
             }
           },

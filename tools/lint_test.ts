@@ -95,29 +95,9 @@ export class FooComponent {}
     [
       {
         id: "style-guide/namespace-property-in-component-class",
-        message:
-          "Component class does not have a readonly `namespace` property",
+        message: "Component class does not have a `namespace` property",
         hint: undefined,
         range: [26, 38],
-        fix: [],
-      },
-    ],
-  );
-
-  // Bad
-  assertDiagnostics(
-    `
-@SerClass()
-export class FooComponent {
-  namespace = "minecraft:foo";
-}
-    `,
-    [
-      {
-        id: "style-guide/namespace-property-in-component-class",
-        message: "Component class `namespace` property is not readonly",
-        hint: undefined,
-        range: [43, 71],
         fix: [],
       },
     ],
@@ -128,7 +108,20 @@ export class FooComponent {
     `
 @SerClass()
 export class FooComponent {
-  readonly namespace = "minecraft:foo";
+  namespace = "minecraft:foo";
+}
+    `,
+    [],
+  );
+
+  // Good
+  assertDiagnostics(
+    `
+@SerClass()
+export class FooComponent {
+  get namespace() {
+    return "minecraft:foo";
+  }
 }
     `,
     [],
