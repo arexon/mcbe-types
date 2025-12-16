@@ -4,7 +4,6 @@ import type {
   CraftingTableBlockComponent,
   DestructibleByExplosionBlockComponent,
   DestructionParticlesBlockComponent,
-  DisplayNameBlockComponent,
   EmbeddedVisualBlockComponent,
   EntityFallOnBlockComponent,
   FlammableBlockComponent,
@@ -30,7 +29,11 @@ import type {
   TickBlockComponent,
   TransformationBlockComponent,
 } from "@mcbe/types/block";
-import { Components, type CustomComponent } from "@mcbe/types/common";
+import {
+  Components,
+  type CustomComponent,
+  type DisplayNameComponent,
+} from "@mcbe/types/common";
 
 export type BlockComponent =
   | LightDampeningBlockComponent
@@ -46,7 +49,7 @@ export type BlockComponent =
   | ItemVisualBlockComponent
   | MaterialInstancesBlockComponent
   | SelectionBoxBlockComponent
-  | DisplayNameBlockComponent
+  | DisplayNameComponent
   | LightDampeningBlockComponent
   | LightEmissionBlockComponent
   | LiquidDetectionBlockComponent
@@ -78,7 +81,6 @@ export * from "./crafting_table.ts";
 export * from "./destructible_by_explosion.ts";
 export * from "./destructible_by_mining.ts";
 export * from "./destruction_particles.ts";
-export * from "./display_name.ts";
 export * from "./embedded_visual.ts";
 export * from "./entity_fall_on.ts";
 export * from "./flammable.ts";

@@ -1,4 +1,5 @@
 import { SerClass, SerField } from "@mcbe/serialize";
+import type { LocalizationText } from "@mcbe/types/text";
 
 /** Component collection of `T` keyed by the namespace of `T`. */
 @SerClass({ transparent: "value" })
@@ -70,6 +71,18 @@ export class DuplicateComponentError extends Error {
   constructor(componentId: string) {
     super();
     this.message = `Found duplicate components with the ID "${componentId}"`;
+  }
+}
+
+@SerClass({ transparent: "value" })
+export class DisplayNameComponent {
+  @SerField()
+  value: LocalizationText;
+
+  readonly namespace = "minecraft:display_name";
+
+  constructor(value: LocalizationText) {
+    this.value = value;
   }
 }
 
