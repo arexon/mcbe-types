@@ -24,25 +24,25 @@ export class BlockDefinition {
   formatVersion: FormatVersion;
 
   @SerField({ rename: "minecraft:block" })
-  block: ServerBlock;
+  block: Block;
 
   constructor(
     formatVersion: FormatVersion,
-    props: DerivedInputProps<typeof ServerBlock>,
+    props: DerivedInputProps<typeof Block>,
   );
   constructor(props: InputProps<BlockDefinition, "formatVersion" | "block">);
   constructor(
     formatVersionOrProps:
       | FormatVersion
       | InputProps<BlockDefinition, "formatVersion" | "block">,
-    props?: DerivedInputProps<typeof ServerBlock>,
+    props?: DerivedInputProps<typeof Block>,
   ) {
     if (!(formatVersionOrProps instanceof FormatVersion)) {
       this.formatVersion = formatVersionOrProps.formatVersion;
       this.block = formatVersionOrProps.block;
     } else if (props !== undefined) {
       this.formatVersion = formatVersionOrProps;
-      this.block = new ServerBlock(props);
+      this.block = new Block(props);
     } else {
       throw new Error("unreachable");
     }
@@ -50,7 +50,7 @@ export class BlockDefinition {
 }
 
 @SerClass()
-export class ServerBlock {
+export class Block {
   @SerField()
   description: BlockDescription;
 
@@ -62,7 +62,7 @@ export class ServerBlock {
 
   constructor(
     props: InputProps<
-      ServerBlock,
+      Block,
       "description",
       "components" | "permutations"
     >,
