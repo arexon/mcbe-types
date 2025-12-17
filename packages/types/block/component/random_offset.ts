@@ -25,7 +25,9 @@ export class RandomOffsetBlockComponent {
 
 @SerClass()
 export class RandomOffset {
-  @SerField({ custom: ([min, max]) => ({ min, max }) })
+  @SerField({
+    custom: ([min, max]) => ({ value: { min, max }, strategy: "normal" }),
+  })
   range: [number, number];
 
   @SerField()
