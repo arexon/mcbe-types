@@ -10,6 +10,7 @@ import type { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
 import { FormatVersion } from "@mcbe/types/version";
 
+export * from "./client.ts";
 export * from "./component/mod.ts";
 export * from "./culling.ts";
 export * from "./descriptor.ts";
