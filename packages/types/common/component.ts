@@ -32,14 +32,14 @@ export class Components<T extends { namespace: string }> {
 
   remove(namespace: string): boolean {
     if (this.has(namespace)) {
-      delete this.#value[namespace as string];
+      delete this.#value[namespace];
       return true;
     }
     return false;
   }
 
   has(namespace: string): boolean {
-    return this.#value[namespace as string] !== undefined;
+    return Object.hasOwn(this.#value, namespace);
   }
 
   clear(): void {
