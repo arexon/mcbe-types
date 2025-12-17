@@ -15,7 +15,9 @@ export class RedstoneProducerBlockComponent {
   @SerField({ default: () => false })
   transformRelative: boolean;
 
-  readonly namespace = "minecraft:redstone_producer";
+  get namespace(): string {
+    return "minecraft:redstone_producer";
+  }
 
   constructor(
     props: InputProps<

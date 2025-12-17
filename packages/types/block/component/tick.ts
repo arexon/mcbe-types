@@ -9,7 +9,9 @@ export class TickBlockComponent {
   @SerField({ default: () => true })
   looping: boolean;
 
-  readonly namespace = "minecraft:tick";
+  get namespace(): string {
+    return "minecraft:tick";
+  }
 
   constructor(
     props: InputProps<TickBlockComponent, "intervalRange" | "looping">,

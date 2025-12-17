@@ -15,7 +15,9 @@ export class EmbeddedVisualBlockComponent {
   @SerField()
   materialInstances: MaterialInstancesBlockComponent;
 
-  readonly namespace = "minecraft:embedded_visual";
+  get namespace(): string {
+    return "minecraft:embedded_visual";
+  }
 
   constructor(
     props: InputProps<

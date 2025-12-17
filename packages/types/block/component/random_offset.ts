@@ -12,7 +12,9 @@ export class RandomOffsetBlockComponent {
   @SerField()
   z?: RandomOffset;
 
-  readonly namespace = "minecraft:random_offset";
+  get namespace(): string {
+    return "minecraft:random_offset";
+  }
 
   constructor(props: InputProps<RandomOffsetBlockComponent, "x" | "y" | "z">) {
     this.x = props.x;

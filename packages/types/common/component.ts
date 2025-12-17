@@ -74,7 +74,9 @@ export class DisplayNameComponent {
   @SerField()
   value: LocalizationText;
 
-  readonly namespace = "minecraft:display_name";
+  get namespace(): string {
+    return "minecraft:display_name";
+  }
 
   constructor(value: LocalizationText) {
     this.value = value;

@@ -6,7 +6,9 @@ export class LiquidDetectionBlockComponent {
   @SerField()
   detectionRules: LiquidDetectionRule[];
 
-  readonly namespace = "minecraft:liquid_detection";
+  get namespace(): string {
+    return "minecraft:liquid_detection";
+  }
 
   constructor(
     props: InputProps<LiquidDetectionBlockComponent, "detectionRules">,

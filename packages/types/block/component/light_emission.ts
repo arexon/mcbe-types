@@ -5,7 +5,9 @@ export class LightEmissionBlockComponent {
   @SerField({ default: () => 0 })
   value: number;
 
-  readonly namespace = "minecraft:light_emission";
+  get namespace(): string {
+    return "minecraft:light_emission";
+  }
 
   constructor(value: number) {
     this.value = value;

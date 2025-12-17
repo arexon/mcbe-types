@@ -6,7 +6,9 @@ export class EntityFallOnBlockComponent {
   @SerField({ default: () => 1 })
   minFallDistance: number;
 
-  readonly namespace = "minecraft:entity_fall_on";
+  get namespace(): string {
+    return "minecraft:entity_fall_on";
+  }
 
   constructor(
     props: InputProps<EntityFallOnBlockComponent, "minFallDistance">,

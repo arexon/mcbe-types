@@ -10,7 +10,9 @@ export class MapColorBlockComponent {
   @SerField()
   tintMethod?: TintMethod;
 
-  readonly namespace = "minecraft:map_color";
+  get namespace(): string {
+    return "minecraft:map_color";
+  }
 
   constructor(
     props: InputProps<MapColorBlockComponent, "color" | "tintMethod">,

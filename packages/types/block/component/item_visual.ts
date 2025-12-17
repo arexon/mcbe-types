@@ -13,7 +13,9 @@ export class ItemVisualBlockComponent {
   @SerField()
   materialInstances: MaterialInstancesBlockComponent;
 
-  readonly namespace = "minecraft:item_visual";
+  get namespace(): string {
+    return "minecraft:item_visual";
+  }
 
   constructor(
     props: InputProps<

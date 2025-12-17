@@ -5,7 +5,9 @@ export class BreathabilityBlockComponent {
   @SerField({ default: () => "solid" })
   value: "air" | "solid";
 
-  readonly namespace = "minecraft:breathability";
+  get namespace(): string {
+    return "minecraft:breathability";
+  }
 
   constructor(value: BreathabilityBlockComponent["value"]) {
     this.value = value;

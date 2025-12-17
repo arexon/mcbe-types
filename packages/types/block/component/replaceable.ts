@@ -2,5 +2,7 @@ import { SerClass } from "@mcbe/serialize";
 
 @SerClass()
 export class ReplaceableBlockComponent {
-  readonly namespace = "minecraft:replaceable";
+  get namespace(): string {
+    return "minecraft:replaceable";
+  }
 }

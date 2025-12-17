@@ -7,7 +7,9 @@ export class SelectionBoxBlockComponent {
   @SerField({ default: () => true })
   value: boolean | BoundingBox;
 
-  readonly namespace = "minecraft:selection_box";
+  get namespace(): string {
+    return "minecraft:selection_box";
+  }
 
   constructor(enable: boolean);
   constructor(props: InputProps<BoundingBox, "origin" | "size">);

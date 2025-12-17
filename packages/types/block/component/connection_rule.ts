@@ -9,7 +9,9 @@ export class ConnectionRuleBlockComponent {
   @SerField()
   enabledDirections: "north" | "east" | "south" | "west";
 
-  readonly namespace = "minecraft:connection_rule";
+  get namespace(): string {
+    return "minecraft:connection_rule";
+  }
 
   constructor(
     props: InputProps<

@@ -13,7 +13,9 @@ export class PlacementPositionBlockTrait {
   @SerField()
   enabledStates: PlacementPositionState[];
 
-  readonly namespace = "minecraft:placement_position";
+  get namespace(): string {
+    return "minecraft:placement_position";
+  }
 
   constructor(props: InputProps<PlacementPositionBlockTrait, "enabledStates">) {
     this.enabledStates = props.enabledStates;
@@ -33,7 +35,9 @@ export class PlacementDirectionBlockTrait {
   @SerField({ default: () => 0 })
   yRotationOffset: 0 | 90 | 180 | 270;
 
-  readonly namespace = "minecraft:placement_direction";
+  get namespace(): string {
+    return "minecraft:placement_direction";
+  }
 
   constructor(
     props: InputProps<

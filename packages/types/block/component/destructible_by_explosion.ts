@@ -6,7 +6,9 @@ export class DestructibleByExplosionBlockComponent {
   @SerField({ default: () => true })
   value: boolean | DestructibleByExplosion;
 
-  readonly namespace = "minecraft:destructible_by_explosion";
+  get namespace(): string {
+    return "minecraft:destructible_by_explosion";
+  }
 
   constructor(value: boolean);
   constructor(props: DerivedInputProps<typeof DestructibleByExplosion>);
