@@ -93,7 +93,9 @@ Deno.test("serialization with transparency on getter", () => {
 Deno.test("serialization with custom overrides", () => {
   @SerClass()
   class Foo {
-    @SerField({ custom: (a) => ["extra_thing", a] })
+    @SerField({
+      custom: (a) => ({ value: ["extra_thing", a], strategy: "normal" }),
+    })
     a: string;
 
     constructor() {
@@ -102,12 +104,34 @@ Deno.test("serialization with custom overrides", () => {
   }
 
   assertEquals(JSON.stringify(new Foo()), `{"a":["extra_thing","apple"]}`);
+
+  @SerClass()
+  class Bar {
+    @SerField()
+    kind = "apple";
+
+    @SerField({
+      custom: (value) => ({ value, strategy: "merge" }),
+    })
+    data = { amount: 3, consumed: 1 };
+  }
+
+  assertEquals(
+    JSON.stringify(new Bar()),
+    `{"kind":"apple","amount":3,"consumed":1}`,
+  );
 });
 
 Deno.test("serialization with transparency and custom overrides", () => {
   @SerClass({ transparent: "a" })
   class Foo {
-    @SerField({ custom: (a) => `extra_thing:${a}` })
+    @SerField({
+      custom: (a) => ({
+        value: `extra_thing:${a}`,
+        // In this case, this field does nothing since the value is used as the output.
+        strategy: "normal",
+      }),
+    })
     a: string | number;
 
     constructor() {
@@ -123,7 +147,7 @@ Deno.test("serialization with transparency, default, and custom overrides", () =
   class Foo {
     @SerField({
       default: () => "apple",
-      custom: (a) => `extra_thing:${a}`,
+      custom: (a) => ({ value: `extra_thing:${a}`, strategy: "normal" }),
     })
     a: string;
 
@@ -199,4 +223,30 @@ Deno.test("nested serialization with transparency", () => {
   }
 
   assertEquals(JSON.stringify(new Foo()), `{"a":"apple"}`);
+});
+
+Deno.test("nested serialization with custom override", () => {
+  @SerClass()
+  class Foo {
+    @SerField()
+    foo = 1;
+
+    @SerField({ custom: (value) => ({ value, strategy: "merge" }) })
+    bar = [new Bar("apple"), new Bar("orange")];
+  }
+
+  @SerClass()
+  class Bar {
+    @SerField({ rename: "_a_" })
+    a: string;
+
+    constructor(a: string) {
+      this.a = a;
+    }
+  }
+
+  assertEquals(
+    JSON.stringify(new Foo()),
+    `{"0":{"_a_":"apple"},"1":{"_a_":"orange"},"foo":1}`,
+  );
 });

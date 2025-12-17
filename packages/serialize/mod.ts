@@ -1,5 +1,6 @@
 import { toSnakeCase } from "@std/text";
 import { equal } from "@std/assert";
+import { deepMerge } from "@std/collections";
 
 export interface SerContext<Instance, Name extends keyof Instance> {
   readonly metadata: {
@@ -7,10 +8,16 @@ export interface SerContext<Instance, Name extends keyof Instance> {
   };
 }
 
+export interface CustomSerResult {
+  value: unknown;
+  strategy: "normal" | "merge";
+}
+
 export interface SerFieldOptions<Instance, Name extends keyof Instance> {
   default?: () => Instance[Name];
-  custom?: (value: Instance[Name]) => unknown;
+  custom?: (value: Instance[Name]) => CustomSerResult;
   rename?: string;
+  flatten?: Instance[Name] extends Record<string, unknown> ? boolean : never;
 }
 
 export function SerField<This, Name extends keyof This>(
@@ -93,27 +100,38 @@ export function SerClass<
           if (
             field.opts !== undefined &&
             field.opts.custom !== undefined
-          ) return field.opts.custom(this[classOpts.transparent]);
+          ) {
+            const res = field.opts.custom(this[classOpts.transparent]);
+            return res.value;
+          }
 
           if (field.isDefault) value = undefined;
           else if (value["toJSON"] !== undefined) value = value.toJSON();
           return value;
         } else {
-          const object: Record<string, unknown> = {};
+          let object: Record<string, unknown> = {};
           for (const field of inspectedFields) {
             let value = this[field.name];
             if (field.isDefault) value = undefined;
             else if (value !== undefined && value["toJSON"] !== undefined) {
               value = value.toJSON();
             }
+
             let key = toSnakeCase(field.name);
 
             if (field.opts !== undefined) {
-              if (field.opts.custom !== undefined) {
-                value = field.opts.custom(value);
-              }
               if (field.opts.rename !== undefined) {
                 key = field.opts.rename;
+              }
+              if (field.opts.custom !== undefined) {
+                const res = field.opts.custom(value);
+                if (res.strategy === "normal") {
+                  value = res.value;
+                } else if (res.strategy === "merge") {
+                  // deno-lint-ignore no-explicit-any
+                  object = deepMerge(object, res.value as any);
+                  continue;
+                }
               }
             }
 
