@@ -1,5 +1,7 @@
-import { SerClass, SerField } from "@mcbe/serialize";
-import type { LocalizationText } from "@mcbe/types/text";
+import { SerClass } from "@mcbe/serialize";
+
+export * from "./custom.ts";
+export * from "./display_name.ts";
 
 /** Component collection of `T` keyed by the namespace of `T`. */
 @SerClass({ transparent: "value" })
@@ -66,55 +68,5 @@ export class DuplicateComponentError extends Error {
   constructor(componentId: string) {
     super();
     this.message = `Found duplicate components with the ID "${componentId}"`;
-  }
-}
-
-@SerClass({ transparent: "value" })
-export class DisplayNameComponent {
-  @SerField()
-  value: LocalizationText;
-
-  get namespace(): string {
-    return "minecraft:display_name";
-  }
-
-  constructor(value: LocalizationText) {
-    this.value = value;
-  }
-}
-
-/**
- * Common custom component for blocks and items.
- *
- * @example Usage with custom schema
- * ```ts
- * interface PaintableCustomComponent {
- *   namespace: "custom:paintable";
- *   params: { colors: string[] };
- * }
- *
- * new CustomComponent<PaintableCustomComponent>("custom:paintable", {
- *   colors: ["red", "blue"],
- * });
- * ```
- */
-@SerClass({ transparent: "params" })
-export class CustomComponent<
-  // deno-lint-ignore no-explicit-any
-  Schema extends { namespace: string; params: unknown } = any,
-  Namespace extends string = Schema["namespace"],
-> {
-  @SerField()
-  params: unknown;
-
-  #namespace: string;
-
-  get namespace(): string {
-    return this.#namespace;
-  }
-
-  constructor(namespace: Namespace, params: Schema["params"]) {
-    this.params = params;
-    this.#namespace = namespace;
   }
 }

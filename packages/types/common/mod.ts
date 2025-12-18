@@ -1,4 +1,4 @@
-export * from "./component.ts";
+export * from "./component/mod.ts";
 
 /**
  * Takes the properties of `T` and returns a matching object based on
