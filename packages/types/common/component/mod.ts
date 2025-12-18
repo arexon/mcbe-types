@@ -13,13 +13,7 @@ export class Components<T extends { namespace: string }> {
   }
 
   constructor(...components: T[]) {
-    for (const comp of components) {
-      const key = comp.namespace;
-      if (this.has(key)) {
-        throw new DuplicateComponentError(key);
-      }
-      this.#value[key] = comp;
-    }
+    this.add(...components);
   }
 
   add(...components: T[]): void {
