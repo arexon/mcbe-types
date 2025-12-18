@@ -54,7 +54,7 @@ export class Foo {
     `
 @SerClass()
 export class Foo {
-  @SerField({ default: (value) => value === 1 })
+  @SerField({ default: () => 1 })
   a?;
 }
     `,
@@ -64,7 +64,7 @@ export class Foo {
         message:
           "Optional field is defining a default value for serialization with `@SerField`",
         hint: "Make the field required",
-        range: [34, 86],
+        range: [34, 71],
         fix: [],
       },
     ],
@@ -75,7 +75,7 @@ export class Foo {
     `
 @SerClass()
 export class Foo {
-  @SerField({ default: (value) => value === 1 })
+  @SerField({ default: () => 1 })
   a;
 
   #b;
