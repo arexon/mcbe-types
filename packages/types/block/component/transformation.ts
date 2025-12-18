@@ -1,8 +1,8 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 @SerClass()
-export class TransformationBlockComponent {
+export class TransformationBlockComponent implements ComponentNamespace {
   @SerField({ default: () => [0, 0, 0] })
   rotation: [number, number, number];
 

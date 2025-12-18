@@ -1,8 +1,8 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 @SerClass()
-export class LiquidDetectionBlockComponent {
+export class LiquidDetectionBlockComponent implements ComponentNamespace {
   @SerField()
   detectionRules: LiquidDetectionRule[];
 

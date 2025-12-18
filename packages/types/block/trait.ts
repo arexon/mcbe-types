@@ -1,5 +1,9 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import { Components, type InputProps } from "@mcbe/types/common";
+import {
+  type ComponentNamespace,
+  Components,
+  type InputProps,
+} from "@mcbe/types/common";
 
 export type BlockTrait =
   | PlacementDirectionBlockTrait
@@ -9,7 +13,7 @@ export type BlockTrait =
 export class BlockTraits extends Components<BlockTrait> {}
 
 @SerClass()
-export class PlacementPositionBlockTrait {
+export class PlacementPositionBlockTrait implements ComponentNamespace {
   @SerField()
   enabledStates: PlacementPositionState[];
 
@@ -28,7 +32,7 @@ export const enum PlacementPositionState {
 }
 
 @SerClass()
-export class PlacementDirectionBlockTrait {
+export class PlacementDirectionBlockTrait implements ComponentNamespace {
   @SerField()
   enabledStates: PlacementDirectionState[];
 

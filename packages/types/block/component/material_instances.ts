@@ -1,8 +1,8 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 @SerClass({ transparent: "value" })
-export class MaterialInstancesBlockComponent {
+export class MaterialInstancesBlockComponent implements ComponentNamespace {
   @SerField()
   value: Record<string, MaterialInstance>;
 

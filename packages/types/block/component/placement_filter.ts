@@ -1,9 +1,9 @@
 import { SerClass, SerField } from "@mcbe/serialize";
 import type { BlockDescriptor } from "@mcbe/types/block";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 @SerClass()
-export class PlacementFilterBlockComponent {
+export class PlacementFilterBlockComponent implements ComponentNamespace {
   @SerField({ default: () => [] })
   conditions: PlacementFilterCondition[];
 

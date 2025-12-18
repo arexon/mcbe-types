@@ -1,7 +1,8 @@
 import { SerClass, SerField } from "@mcbe/serialize";
+import type { ComponentNamespace } from "@mcbe/types/common";
 
 @SerClass({ transparent: "value" })
-export class LightEmissionBlockComponent {
+export class LightEmissionBlockComponent implements ComponentNamespace {
   @SerField({ default: () => 0 })
   value: number;
 

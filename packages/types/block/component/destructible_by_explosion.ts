@@ -1,8 +1,13 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { DerivedInputProps, InputProps } from "@mcbe/types/common";
+import type {
+  ComponentNamespace,
+  DerivedInputProps,
+  InputProps,
+} from "@mcbe/types/common";
 
 @SerClass()
-export class DestructibleByExplosionBlockComponent {
+export class DestructibleByExplosionBlockComponent
+  implements ComponentNamespace {
   @SerField({ default: () => true })
   value: boolean | DestructibleByExplosion;
 

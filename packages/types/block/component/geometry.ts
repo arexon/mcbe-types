@@ -1,12 +1,12 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 import type { Molang } from "@mcbe/types/molang";
 
 const DEFAULT_CULLING_LAYER = "minecraft:culling_layer.undefined";
 
 @SerClass({ transparent: "identifier" })
-export class GeometryBlockComponent {
+export class GeometryBlockComponent implements ComponentNamespace {
   @SerField()
   identifier: Identifier;
 

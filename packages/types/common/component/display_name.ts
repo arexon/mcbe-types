@@ -1,8 +1,9 @@
 import { SerClass, SerField } from "@mcbe/serialize";
 import type { LocalizationText } from "@mcbe/types/text";
+import type { ComponentNamespace } from "@mcbe/types/common";
 
 @SerClass({ transparent: "value" })
-export class DisplayNameComponent {
+export class DisplayNameComponent implements ComponentNamespace {
   @SerField()
   value: LocalizationText;
 

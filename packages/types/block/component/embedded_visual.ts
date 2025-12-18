@@ -3,12 +3,12 @@ import type {
   GeometryBlockComponent,
   MaterialInstancesBlockComponent,
 } from "@mcbe/types/block";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 // NOTE: Cannot be used in permutations.
 
 @SerClass()
-export class EmbeddedVisualBlockComponent {
+export class EmbeddedVisualBlockComponent implements ComponentNamespace {
   @SerField()
   geometry: GeometryBlockComponent;
 

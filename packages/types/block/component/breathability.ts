@@ -1,7 +1,8 @@
 import { SerClass, SerField } from "@mcbe/serialize";
+import type { ComponentNamespace } from "@mcbe/types/common";
 
 @SerClass({ transparent: "value" })
-export class BreathabilityBlockComponent {
+export class BreathabilityBlockComponent implements ComponentNamespace {
   @SerField({ default: () => "solid" })
   value: "air" | "solid";
 

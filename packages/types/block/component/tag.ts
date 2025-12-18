@@ -1,10 +1,15 @@
 import { SerClass } from "@mcbe/serialize";
+import type { ComponentNamespace } from "@mcbe/types/common";
 
 @SerClass()
-export class TagBlockComponent {
-  namespace: `tag:${string}`;
+export class TagBlockComponent implements ComponentNamespace {
+  #namespace: `tag:${string}`;
+
+  get namespace(): string {
+    return this.#namespace;
+  }
 
   constructor(namespace: string) {
-    this.namespace = `tag:${namespace}`;
+    this.#namespace = `tag:${namespace}`;
   }
 }

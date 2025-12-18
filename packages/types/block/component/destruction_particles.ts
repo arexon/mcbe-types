@@ -1,9 +1,9 @@
 import { SerClass, SerField } from "@mcbe/serialize";
 import type { TintMethod } from "@mcbe/types/block";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 @SerClass()
-export class DestructionParticlesBlockComponent {
+export class DestructionParticlesBlockComponent implements ComponentNamespace {
   @SerField({ default: () => 100 })
   particleCount: number;
 

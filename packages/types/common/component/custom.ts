@@ -1,4 +1,5 @@
 import { SerClass, SerField } from "@mcbe/serialize";
+import type { ComponentNamespace } from "@mcbe/types/common";
 
 /**
  * Common custom component for blocks and items.
@@ -20,7 +21,7 @@ export class CustomComponent<
   // deno-lint-ignore no-explicit-any
   Schema extends { namespace: string; params: unknown } = any,
   Namespace extends string = Schema["namespace"],
-> {
+> implements ComponentNamespace {
   @SerField()
   params: unknown;
 

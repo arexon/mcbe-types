@@ -3,9 +3,13 @@ import { SerClass } from "@mcbe/serialize";
 export * from "./custom.ts";
 export * from "./display_name.ts";
 
+export interface ComponentNamespace {
+  get namespace(): string;
+}
+
 /** Component collection of `T` keyed by the namespace of `T`. */
 @SerClass({ transparent: "value" })
-export class Components<T extends { namespace: string }> {
+export class Components<T extends ComponentNamespace> {
   #value: Record<string, T> = {};
 
   get value(): Record<string, T> {

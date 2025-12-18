@@ -1,8 +1,12 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { DerivedInputProps, InputProps } from "@mcbe/types/common";
+import type {
+  ComponentNamespace,
+  DerivedInputProps,
+  InputProps,
+} from "@mcbe/types/common";
 
 @SerClass({ transparent: "value" })
-export class CollisionBoxBlockComponent {
+export class CollisionBoxBlockComponent implements ComponentNamespace {
   @SerField({ default: () => true })
   value: boolean | BoundingBox | BoundingBox[];
 

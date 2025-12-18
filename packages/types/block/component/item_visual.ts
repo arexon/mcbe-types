@@ -3,10 +3,10 @@ import type {
   GeometryBlockComponent,
   MaterialInstancesBlockComponent,
 } from "@mcbe/types/block";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 @SerClass()
-export class ItemVisualBlockComponent {
+export class ItemVisualBlockComponent implements ComponentNamespace {
   @SerField()
   geometry: GeometryBlockComponent;
 

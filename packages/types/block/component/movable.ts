@@ -1,8 +1,8 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 @SerClass()
-export class MovableBlockComponent {
+export class MovableBlockComponent implements ComponentNamespace {
   @SerField({ default: () => "push_pull" })
   movementType: "immovable" | "popped" | "push" | "push_pull";
 

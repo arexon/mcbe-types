@@ -1,9 +1,13 @@
 import { SerClass, SerField } from "@mcbe/serialize";
-import type { DerivedInputProps, InputProps } from "@mcbe/types/common";
+import type {
+  ComponentNamespace,
+  DerivedInputProps,
+  InputProps,
+} from "@mcbe/types/common";
 import type { ItemDescriptor } from "@mcbe/types/item";
 
 @SerClass()
-export class DestructibleByMiningBlockComponent {
+export class DestructibleByMiningBlockComponent implements ComponentNamespace {
   @SerField({ default: () => true })
   value: boolean | DestructibleByMining;
 
