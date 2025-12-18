@@ -41,14 +41,7 @@ export default {
               if (
                 propNode.type !== "PropertyDefinition" ||
                 propNode.key.type === "PrivateIdentifier" ||
-                propNode.static ||
-                // We don't wanna interfere with `namespace-property-in-component-class`.
-                // This *could* cause problems in the future if we ever end up
-                // needing a property named "namespace" inside a component class.
-                (
-                  propNode.key.type === "Identifier" &&
-                  propNode.key.name === "namespace"
-                )
+                propNode.static
               ) {
                 continue;
               }
@@ -101,35 +94,26 @@ export default {
         };
       },
     },
-    "namespace-property-in-component-class": {
+    "component-namespace": {
       create(ctx) {
+        const COMP_NAMESPACE = "ComponentNamespace";
         return {
           ClassDeclaration(node) {
             if (
-              node.id === null ||
-              node.abstract ||
+              node.id !== null &&
               (
-                !node.id.name.endsWith("Component") &&
-                !node.id.name.endsWith("Trait")
-              )
-            ) return;
-
-            const hasNamespaceProp = node.body.body.some((propNode) =>
-              (
-                (
-                  propNode.type === "MethodDefinition" &&
-                  propNode.kind === "get"
-                ) ||
-                propNode.type === "PropertyDefinition"
+                node.id.name.endsWith("Component") ||
+                node.id.name.endsWith("Trait")
               ) &&
-              propNode.key.type === "Identifier" &&
-              propNode.key.name === "namespace"
-            );
-
-            if (!hasNamespaceProp) {
+              !node.implements.some((impl) =>
+                impl.expression.type === "Identifier" &&
+                impl.expression.name === COMP_NAMESPACE
+              )
+            ) {
               return ctx.report({
                 node: node.id,
-                message: "Component class does not have a `namespace` property",
+                message:
+                  `Component class does not implement \`${COMP_NAMESPACE}\``,
               });
             }
           },

@@ -85,7 +85,7 @@ export class Foo {
   );
 });
 
-Deno.test("style-guide/namespace-property-in-component-class", () => {
+Deno.test("style-guide/component-namespace", () => {
   // Bad
   assertDiagnostics(
     `
@@ -94,8 +94,8 @@ export class FooComponent {}
     `,
     [
       {
-        id: "style-guide/namespace-property-in-component-class",
-        message: "Component class does not have a `namespace` property",
+        id: "style-guide/component-namespace",
+        message: "Component class does not implement `ComponentNamespace`",
         hint: undefined,
         range: [26, 38],
         fix: [],
@@ -107,19 +107,8 @@ export class FooComponent {}
   assertDiagnostics(
     `
 @SerClass()
-export class FooComponent {
-  namespace = "minecraft:foo";
-}
-    `,
-    [],
-  );
-
-  // Good
-  assertDiagnostics(
-    `
-@SerClass()
-export class FooComponent {
-  get namespace() {
+export class FooComponent implements ComponentNamespace {
+  get namespace(): string {
     return "minecraft:foo";
   }
 }
