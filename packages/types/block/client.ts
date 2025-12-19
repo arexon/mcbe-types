@@ -7,7 +7,7 @@ export class ClientBlocks {
   @SerField()
   formatVersion: FormatVersion;
 
-  @SerField({ custom: (value) => ({ value, strategy: "merge" }) })
+  @SerField({ custom: [(value) => value, "merge"] })
   blocks: Record<string, ClientBlock> = {};
 
   constructor(formatVersion: FormatVersion) {
