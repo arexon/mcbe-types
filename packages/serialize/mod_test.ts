@@ -94,16 +94,25 @@ Deno.test("serialization with custom overrides", () => {
   @SerClass()
   class Foo {
     @SerField({
-      custom: (a) => ({ value: ["extra_thing", a], strategy: "normal" }),
+      custom: [(a) => ["extra_thing", a], "normal"],
     })
     a: string;
 
+    @SerField({
+      custom: [() => "apple", "normal"],
+    })
+    "a:b": string;
+
     constructor() {
       this.a = "apple";
+      this["a:b"] = "orange";
     }
   }
 
-  assertEquals(JSON.stringify(new Foo()), `{"a":["extra_thing","apple"]}`);
+  assertEquals(
+    JSON.stringify(new Foo()),
+    `{"a":["extra_thing","apple"],"a:b":"apple"}`,
+  );
 
   @SerClass()
   class Bar {
@@ -111,7 +120,7 @@ Deno.test("serialization with custom overrides", () => {
     kind = "apple";
 
     @SerField({
-      custom: (value) => ({ value, strategy: "merge" }),
+      custom: [(value) => value, "merge"],
     })
     data = { amount: 3, consumed: 1 };
   }
@@ -125,13 +134,8 @@ Deno.test("serialization with custom overrides", () => {
 Deno.test("serialization with transparency and custom overrides", () => {
   @SerClass({ transparent: "a" })
   class Foo {
-    @SerField({
-      custom: (a) => ({
-        value: `extra_thing:${a}`,
-        // In this case, this field does nothing since the value is used as the output.
-        strategy: "normal",
-      }),
-    })
+    // In this case, this field does nothing since the value is used as the output.
+    @SerField({ custom: [(a) => `extra_thing:${a}`, "normal"] })
     a: string | number;
 
     constructor() {
@@ -147,7 +151,7 @@ Deno.test("serialization with transparency, default, and custom overrides", () =
   class Foo {
     @SerField({
       default: () => "apple",
-      custom: (a) => ({ value: `extra_thing:${a}`, strategy: "normal" }),
+      custom: [(a) => `extra_thing:${a}`, "normal"],
     })
     a: string;
 
@@ -190,7 +194,7 @@ Deno.test("nested serialization", () => {
 
   @SerClass()
   class Bar {
-    @SerField()
+    @SerField({ rename: "other_a", custom: [() => "orange", "normal"] })
     a: string;
 
     constructor() {
@@ -198,7 +202,7 @@ Deno.test("nested serialization", () => {
     }
   }
 
-  assertEquals(JSON.stringify(new Foo()), `{"bar":{"a":"apple"}}`);
+  assertEquals(JSON.stringify(new Foo()), `{"bar":{"other_a":"orange"}}`);
 });
 
 Deno.test("nested serialization with transparency", () => {
@@ -217,12 +221,16 @@ Deno.test("nested serialization with transparency", () => {
     @SerField()
     a: string;
 
+    @SerField({ rename: "b2" })
+    b: string;
+
     constructor() {
       this.a = "apple";
+      this.b = "orange";
     }
   }
 
-  assertEquals(JSON.stringify(new Foo()), `{"a":"apple"}`);
+  assertEquals(JSON.stringify(new Foo()), `{"a":"apple","b2":"orange"}`);
 });
 
 Deno.test("nested serialization with custom override", () => {
@@ -231,7 +239,7 @@ Deno.test("nested serialization with custom override", () => {
     @SerField()
     foo = 1;
 
-    @SerField({ custom: (value) => ({ value, strategy: "merge" }) })
+    @SerField({ custom: [(value) => value, "merge"] })
     bar = [new Bar("apple"), new Bar("orange")];
   }
 
