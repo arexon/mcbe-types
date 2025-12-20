@@ -4,7 +4,7 @@ import type { InputProps } from "@mcbe/types/common";
 @SerClass()
 export class InventoryMenuCategory {
   @SerField()
-  category: InventoryItemCategory;
+  category: "nature" | "equipment" | "items" | "construction" | "none";
 
   @SerField()
   group?: string;
@@ -23,12 +23,4 @@ export class InventoryMenuCategory {
     this.group = props.group;
     this.isHiddenInCommand = props.isHiddenInCommand ?? false;
   }
-}
-
-export const enum InventoryItemCategory {
-  Nature = "Nature",
-  Equipment = "Equipment",
-  Items = "Items",
-  Construction = "Construction",
-  None = "None",
 }
