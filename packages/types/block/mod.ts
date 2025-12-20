@@ -21,6 +21,10 @@ export class BlockDefinition {
   @SerField()
   formatVersion: FormatVersion;
 
+  // NOTE: For now, we will not expose this in the constructor.
+  @SerField({ default: () => false })
+  useBetaFeatures: boolean = false;
+
   @SerField({ rename: "minecraft:block" })
   block: Block;
 
@@ -28,7 +32,9 @@ export class BlockDefinition {
     formatVersion: FormatVersion,
     props: DerivedInputProps<typeof Block>,
   );
-  constructor(props: InputProps<BlockDefinition, "formatVersion" | "block">);
+  constructor(
+    props: InputProps<BlockDefinition, "formatVersion" | "block">,
+  );
   constructor(
     formatVersionOrProps:
       | FormatVersion
