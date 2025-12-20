@@ -1,6 +1,5 @@
 import { toSnakeCase } from "@std/text";
 import { equal } from "@std/assert";
-import { deepMerge } from "@std/collections";
 
 export interface SerContext<Instance, Name extends keyof Instance> {
   readonly metadata: {
@@ -66,11 +65,9 @@ export function SerClass<
     let body = "";
     const env: Record<string, unknown> = {
       equal: equal,
-      deepMerge: deepMerge,
     };
 
     if (ctx.metadata.fields !== undefined && ctx.metadata.fields.size > 0) {
-      const customValuesToMerge: string[] = [];
       const getCustomKeyAndValue = (
         fieldName: string,
         value: string,
@@ -87,7 +84,7 @@ export function SerClass<
       for (const [fieldName, fieldOpts] of ctx.metadata.fields) {
         index += 1;
 
-        const isTransparentFieldCheck = `"${fieldName}" === "${
+        const isFieldTransparentCheck = `"${fieldName}" === "${
           transparent ?? ""
         }"`;
 
@@ -96,27 +93,7 @@ export function SerClass<
         else if (!fieldName.includes(":")) key = toSnakeCase(fieldName);
         else key = fieldName;
 
-        const initialValue = `this["${fieldName}"]`;
-        let value = "";
-        if (fieldOpts?.default !== undefined) {
-          const isDefaultCheck = `env.equal(${
-            JSON.stringify(fieldOpts.default())
-          }, ${initialValue})`;
-
-          if (transparent !== undefined) {
-            isTransparentCheck +=
-              `(${isTransparentFieldCheck} || ${isDefaultCheck} || ${initialValue} === undefined)`;
-          }
-
-          value = `${isDefaultCheck} ? undefined : ${initialValue}`;
-        } else {
-          value = initialValue;
-
-          if (transparent !== undefined) {
-            isTransparentCheck +=
-              `(${isTransparentFieldCheck} || ${initialValue} === undefined)`;
-          }
-        }
+        let value = `this["${fieldName}"]`;
 
         if (fieldOpts?.custom !== undefined) {
           const [customKey, customValue] = getCustomKeyAndValue(
@@ -125,39 +102,47 @@ export function SerClass<
           );
           env[customKey] = fieldOpts.custom[0];
 
-          if (fieldOpts.custom[1] === "normal") {
-            value = customValue;
+          value = customValue;
+        }
 
-            if (transparent !== undefined) {
-              isTransparentCheck =
-                `(${isTransparentFieldCheck} || ${customValue} === undefined)`;
-            }
-          } else if (fieldOpts.custom[1] === "merge") {
-            customValuesToMerge.push(customValue);
-            continue;
+        if (fieldOpts?.default !== undefined) {
+          const isDefaultCheck = `env.equal(${
+            JSON.stringify(fieldOpts.default())
+          }, ${value})`;
+
+          if (transparent !== undefined) {
+            isTransparentCheck +=
+              `(${isFieldTransparentCheck} || ${isDefaultCheck} || ${value} === undefined)`;
           }
+
+          value = `${isDefaultCheck} ? undefined : ${value}`;
+        } else if (transparent !== undefined) {
+          isTransparentCheck +=
+            `(${isFieldTransparentCheck} || ${value} === undefined)`;
         }
 
         if (transparent !== undefined && index < ctx.metadata.fields.size - 1) {
           isTransparentCheck += " && ";
         }
 
-        body += `"${key}": ${value},`;
+        let keyValuePair = "";
+        if (fieldOpts?.custom?.[1] === "merge") {
+          keyValuePair = `...(${value}),`;
+        } else {
+          keyValuePair = `"${key}": ${value},`;
+        }
+
+        body += keyValuePair;
       }
       body += "}";
-
-      if (customValuesToMerge.length > 0) {
-        body = customValuesToMerge.reduce(
-          (body, customValue) => `env.deepMerge(${body}, ${customValue})`,
-          body,
-        );
-      }
 
       const transparentField = ctx.metadata.fields.entries()
         .find((field) => field[0] === transparent);
       if (transparentField !== undefined && isTransparentCheck !== "") {
         const [transparentFieldName, transparentFieldOpts] = transparentField;
         let value = `this["${transparentFieldName}"]`;
+        // This is necessary because the method is not called on directly
+        // returned values, but rather on object properties.
         value = `(${value}?.toJSON?.() ?? ${value})`;
 
         if (transparentFieldOpts?.custom !== undefined) {

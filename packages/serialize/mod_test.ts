@@ -1,260 +1,233 @@
 import { SerClass, SerField } from "@mcbe/serialize";
 import { assertEquals } from "@std/assert";
 
-Deno.test("basic serialization", () => {
+function assertJSON(actual: unknown, expected: string): void {
+  assertEquals(JSON.stringify(actual), expected);
+}
+
+Deno.test("basic", () => {
   @SerClass()
   class Foo {
     @SerField()
-    a: number;
+    a = 8;
 
     @SerField()
-    b?: string;
-
-    constructor() {
-      this.a = 8;
-    }
+    b = "foo";
   }
 
-  assertEquals(JSON.stringify(new Foo()), `{"a":8}`);
+  assertJSON(new Foo(), `{"a":8,"b":"foo"}`);
 });
 
-Deno.test("serialization with defaults", () => {
+Deno.test("rename", () => {
+  @SerClass()
+  class Foo {
+    @SerField({ rename: "no" })
+    yes = 1;
+  }
+
+  assertJSON(new Foo(), `{"no":1}`);
+});
+
+Deno.test("defaults", async (t) => {
   @SerClass()
   class Foo {
     @SerField()
-    a: number;
+    noDefault = 8;
 
-    @SerField({ default: () => "hi" })
-    b: string | number;
+    @SerField({ default: () => "foo" })
+    primitive = "foo";
 
-    @SerField({ default: () => ["hi"] })
-    c: string[];
-
-    constructor() {
-      this.a = 8;
-      this.b = "hi";
-      this.c = ["hi"];
-    }
+    @SerField({ default: () => ["foo", "bar"] })
+    object = ["foo", "bar"];
   }
 
-  const foo = new Foo();
-  assertEquals(JSON.stringify(foo), `{"a":8}`);
+  const v = new Foo();
+  await t.step("all", () => {
+    assertJSON(v, `{"no_default":8}`);
+  });
 
-  foo.b = "hey";
-  assertEquals(JSON.stringify(foo), `{"a":8,"b":"hey"}`);
+  await t.step("primitive", () => {
+    v.primitive = "qux";
+    assertJSON(v, `{"no_default":8,"primitive":"qux"}`);
+  });
 
-  foo.b = "hi";
-  assertEquals(JSON.stringify(foo), `{"a":8}`);
-
-  foo.c = ["hey"];
-  assertEquals(JSON.stringify(foo), `{"a":8,"c":["hey"]}`);
+  await t.step("object", () => {
+    v.object.push("baz");
+    assertJSON(
+      v,
+      `{"no_default":8,"primitive":"qux","object":["foo","bar","baz"]}`,
+    );
+  });
 });
 
-Deno.test("serialization with transparency", () => {
-  @SerClass({ transparent: "a" })
-  class Foo {
-    @SerField()
-    a: string;
+Deno.test("custom override", async (t) => {
+  await t.step("normal", () => {
+    @SerClass()
+    class Foo {
+      @SerField({ custom: [(v) => ["custom", v], "normal"] })
+      normal: string | string[] = "foo";
 
-    @SerField()
-    b?: number;
-
-    @SerField({ default: () => true })
-    c: boolean;
-
-    constructor() {
-      this.a = "apple";
-      this.c = true;
+      @SerField({
+        custom: [(v) => ["custom", v], "normal"],
+        default: () => ["custom", "foo"],
+      })
+      normalDefaulted: string | string[] = "foo";
     }
-  }
 
-  const foo = new Foo();
-  assertEquals(JSON.stringify(foo), `"apple"`);
+    const v = new Foo();
+    assertJSON(v, `{"normal":["custom","foo"]}`);
 
-  foo.b = 3;
-  assertEquals(JSON.stringify(foo), `{"a":"apple","b":3}`);
+    v.normalDefaulted = "bar";
+    assertJSON(
+      v,
+      `{"normal":["custom","foo"],"normal_defaulted":["custom","bar"]}`,
+    );
+  });
 
-  foo.b = undefined;
-  foo.c = false;
-  assertEquals(JSON.stringify(foo), `{"a":"apple","c":false}`);
+  await t.step("merge", () => {
+    @SerClass()
+    class Foo {
+      @SerField()
+      a = 1;
+
+      @SerField()
+      b = 2;
+
+      @SerField({
+        custom: [(v) => v, "merge"],
+        default: () => ({ a: 10, c: 3 }),
+      })
+      merge = { a: 10, c: 3 };
+    }
+
+    const v = new Foo();
+    assertJSON(v, `{"a":1,"b":2}`);
+
+    v.merge.a = 12;
+    assertJSON(v, `{"a":12,"b":2,"c":3}`);
+  });
 });
 
-Deno.test("serialization with transparency on getter", () => {
-  @SerClass({ transparent: "a" })
-  class Foo {
-    get a(): string {
-      return "apple";
-    }
-  }
+Deno.test("transparent", async (t) => {
+  await t.step("with default", () => {
+    @SerClass({ transparent: "basic" })
+    class WithDefault {
+      @SerField()
+      basic = "foo";
 
-  assertEquals(JSON.stringify(new Foo()), `"apple"`);
+      @SerField({ default: () => true })
+      default = true;
+    }
+
+    const v = new WithDefault();
+    assertJSON(v, `"foo"`);
+
+    v.default = false;
+    assertJSON(v, `{"basic":"foo","default":false}`);
+  });
+
+  await t.step("on default", () => {
+    @SerClass({ transparent: "default" })
+    class OnDefault {
+      @SerField({ default: () => true })
+      default = true;
+    }
+
+    const v = new OnDefault();
+    assertJSON(v, `true`);
+
+    v.default = false;
+    assertJSON(v, `false`);
+  });
+
+  await t.step("on custom (normal) + on default", () => {
+    @SerClass({ transparent: "custom" })
+    class OnCustom {
+      @SerField()
+      basic? = "foo";
+
+      @SerField({
+        custom: [(v) => ["custom", v], "normal"],
+        default: () => ["custom", "foo"],
+      })
+      custom: string | string[] = "bar";
+    }
+
+    const v = new OnCustom();
+    assertJSON(v, `{"basic":"foo","custom":["custom","bar"]}`);
+
+    v.custom = "foo";
+    assertJSON(v, `{"basic":"foo"}`);
+
+    v.basic = undefined;
+    assertJSON(v, `["custom","foo"]`);
+  });
+
+  await t.step("on custom (merge)", () => {
+    @SerClass({ transparent: "custom" })
+    class OnCustom {
+      @SerField()
+      basic? = "foo";
+
+      @SerField({
+        custom: [(v) => ({ merged: v }), "merge"],
+        default: () => ({ merged: false }),
+      })
+      custom: boolean | object = false;
+    }
+
+    const v = new OnCustom();
+    assertJSON(v, `{"basic":"foo"}`);
+
+    v.custom = true;
+    assertJSON(v, `{"basic":"foo","merged":true}`);
+
+    v.basic = undefined;
+    assertJSON(v, `{"merged":true}`);
+  });
+
+  await t.step("on getter", () => {
+    @SerClass({ transparent: "name" })
+    class OnGetter {
+      get name(): string {
+        return "foo";
+      }
+    }
+
+    assertJSON(new OnGetter(), `"foo"`);
+  });
 });
 
-Deno.test("serialization with custom overrides", () => {
-  @SerClass()
-  class Foo {
-    @SerField({
-      custom: [(a) => ["extra_thing", a], "normal"],
-    })
-    a: string;
-
-    @SerField({
-      custom: [() => "apple", "normal"],
-    })
-    "a:b": string;
-
-    constructor() {
-      this.a = "apple";
-      this["a:b"] = "orange";
+Deno.test("nested", async (t) => {
+  await t.step("basic", () => {
+    @SerClass()
+    class Parent {
+      @SerField()
+      child = new Child();
     }
-  }
 
-  assertEquals(
-    JSON.stringify(new Foo()),
-    `{"a":["extra_thing","apple"],"a:b":"apple"}`,
-  );
-
-  @SerClass()
-  class Bar {
-    @SerField()
-    kind = "apple";
-
-    @SerField({
-      custom: [(value) => value, "merge"],
-    })
-    data = { amount: 3, consumed: 1 };
-  }
-
-  assertEquals(
-    JSON.stringify(new Bar()),
-    `{"kind":"apple","amount":3,"consumed":1}`,
-  );
-});
-
-Deno.test("serialization with transparency and custom overrides", () => {
-  @SerClass({ transparent: "a" })
-  class Foo {
-    // In this case, this field does nothing since the value is used as the output.
-    @SerField({ custom: [(a) => `extra_thing:${a}`, "normal"] })
-    a: string | number;
-
-    constructor() {
-      this.a = "apple";
+    @SerClass()
+    class Child {
+      @SerField({ rename: "b" })
+      a = "foo";
     }
-  }
 
-  assertEquals(JSON.stringify(new Foo()), `"extra_thing:apple"`);
-});
+    assertJSON(new Parent(), `{"child":{"b":"foo"}}`);
+  });
 
-Deno.test("serialization with transparency, default, and custom overrides", () => {
-  @SerClass({ transparent: "a" })
-  class Foo {
-    @SerField({
-      default: () => "apple",
-      custom: [(a) => `extra_thing:${a}`, "normal"],
-    })
-    a: string;
-
-    constructor() {
-      this.a = "apple";
+  await t.step("transparent", () => {
+    @SerClass({ transparent: "child" })
+    class Parent {
+      @SerField()
+      child = new Child();
     }
-  }
 
-  const foo = new Foo();
-  assertEquals(JSON.stringify(foo), `"extra_thing:apple"`);
-
-  foo.a = "orange";
-  assertEquals(JSON.stringify(foo), `"extra_thing:orange"`);
-});
-
-Deno.test("serialization with rename", () => {
-  @SerClass()
-  class Foo {
-    @SerField({ rename: "_a_" })
-    a: string;
-
-    constructor() {
-      this.a = "apple";
+    @SerClass()
+    class Child {
+      @SerField({ rename: "b" })
+      a = "foo";
     }
-  }
 
-  assertEquals(JSON.stringify(new Foo()), `{"_a_":"apple"}`);
-});
-
-Deno.test("nested serialization", () => {
-  @SerClass()
-  class Foo {
-    @SerField()
-    bar: Bar;
-
-    constructor() {
-      this.bar = new Bar();
-    }
-  }
-
-  @SerClass()
-  class Bar {
-    @SerField({ rename: "other_a", custom: [() => "orange", "normal"] })
-    a: string;
-
-    constructor() {
-      this.a = "apple";
-    }
-  }
-
-  assertEquals(JSON.stringify(new Foo()), `{"bar":{"other_a":"orange"}}`);
-});
-
-Deno.test("nested serialization with transparency", () => {
-  @SerClass({ transparent: "bar" })
-  class Foo {
-    @SerField()
-    bar: Bar;
-
-    constructor() {
-      this.bar = new Bar();
-    }
-  }
-
-  @SerClass()
-  class Bar {
-    @SerField()
-    a: string;
-
-    @SerField({ rename: "b2" })
-    b: string;
-
-    constructor() {
-      this.a = "apple";
-      this.b = "orange";
-    }
-  }
-
-  assertEquals(JSON.stringify(new Foo()), `{"a":"apple","b2":"orange"}`);
-});
-
-Deno.test("nested serialization with custom override", () => {
-  @SerClass()
-  class Foo {
-    @SerField()
-    foo = 1;
-
-    @SerField({ custom: [(value) => value, "merge"] })
-    bar = [new Bar("apple"), new Bar("orange")];
-  }
-
-  @SerClass()
-  class Bar {
-    @SerField({ rename: "_a_" })
-    a: string;
-
-    constructor(a: string) {
-      this.a = a;
-    }
-  }
-
-  assertEquals(
-    JSON.stringify(new Foo()),
-    `{"0":{"_a_":"apple"},"1":{"_a_":"orange"},"foo":1}`,
-  );
+    assertJSON(new Parent(), `{"b":"foo"}`);
+  });
 });

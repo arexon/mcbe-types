@@ -2,7 +2,6 @@
   "version": "5",
   "specifiers": {
     "jsr:@std/assert@^1.0.16": "1.0.16",
-    "jsr:@std/collections@^1.1.3": "1.1.3",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/regexp@^1.0.1": "1.0.1",
     "jsr:@std/text@^1.0.16": "1.0.16"
@@ -13,9 +12,6 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
-    },
-    "@std/collections@1.1.3": {
-      "integrity": "bf8b0818886df6a32b64c7d3b037a425111f28278d69fd0995aeb62777c986b0"
     },
     "@std/internal@1.0.12": {
       "integrity": "972a634fd5bc34b242024402972cd5143eac68d8dffaca5eaa4dba30ce17b027"
@@ -33,7 +29,6 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@^1.0.16",
-      "jsr:@std/collections@^1.1.3",
       "jsr:@std/text@^1.0.16"
     ]
   }
