@@ -3,6 +3,7 @@ import type {
   ConnectionRuleBlockComponent,
   CraftingTableBlockComponent,
   DestructibleByExplosionBlockComponent,
+  DestructibleByMiningBlockComponent,
   DestructionParticlesBlockComponent,
   EmbeddedVisualBlockComponent,
   EntityFallOnBlockComponent,
@@ -11,6 +12,7 @@ import type {
   FrictionBlockComponent,
   GeometryBlockComponent,
   ItemVisualBlockComponent,
+  LeashableBlockComponent,
   LightDampeningBlockComponent,
   LightEmissionBlockComponent,
   LiquidDetectionBlockComponent,
@@ -22,6 +24,7 @@ import type {
   PrecipitationInteractionsBlockComponent,
   RandomOffsetBlockComponent,
   RedstoneConductivityBlockComponent,
+  RedstoneConsumerBlockComponent,
   RedstoneProducerBlockComponent,
   ReplaceableBlockComponent,
   SelectionBoxBlockComponent,
@@ -37,13 +40,12 @@ import {
 } from "@mcbe/types/common";
 
 export type BlockComponent =
-  | LightDampeningBlockComponent
   | CollisionBoxBlockComponent
   | MapColorBlockComponent
   | ConnectionRuleBlockComponent
   | CraftingTableBlockComponent
   | DestructibleByExplosionBlockComponent
-  | DestructibleByExplosionBlockComponent
+  | DestructibleByMiningBlockComponent
   | DestructionParticlesBlockComponent
   | FlammableBlockComponent
   | GeometryBlockComponent
@@ -70,12 +72,13 @@ export type BlockComponent =
   | EntityFallOnBlockComponent
   | EmbeddedVisualBlockComponent
   | TagBlockComponent
+  | LeashableBlockComponent
+  | RedstoneConsumerBlockComponent
   | CustomComponent;
 
 // deno-lint-ignore style-guide/class-serialization
 export class BlockComponents extends Components<BlockComponent> {}
 
-export * from "./breathability.ts";
 export * from "./collision_box.ts";
 export * from "./connection_rule.ts";
 export * from "./crafting_table.ts";
@@ -89,6 +92,7 @@ export * from "./flower_pottable.ts";
 export * from "./friction.ts";
 export * from "./geometry.ts";
 export * from "./item_visual.ts";
+export * from "./leashable.ts";
 export * from "./light_dampening.ts";
 export * from "./light_emission.ts";
 export * from "./liquid_detection.ts";
@@ -100,6 +104,7 @@ export * from "./placement_filter.ts";
 export * from "./precipitation_interactions.ts";
 export * from "./random_offset.ts";
 export * from "./redstone_conductivity.ts";
+export * from "./redstone_consumer.ts";
 export * from "./redstone_producer.ts";
 export * from "./replaceable.ts";
 export * from "./selection_box.ts";

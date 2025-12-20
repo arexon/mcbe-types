@@ -26,19 +26,22 @@ export class MaterialInstance {
     | "double_sided"
     | "blend"
     | "alpha_test"
-    | "alpha_test_single_sided";
+    | "blend_to_opaque"
+    | "alpha_test_single_sided"
+    | "alpha_test_to_opaque"
+    | "alpha_test_single_sided_to_opaque";
 
   @SerField()
   tintMethod?: TintMethod;
 
-  @SerField({ default: () => false })
+  @SerField({ default: () => true })
   ambientOcclusion: number | boolean;
 
-  @SerField({ default: () => false })
-  alphaMaskedTint: boolean;
-
   @SerField()
-  faceDimming?: boolean;
+  alphaMaskedTint?: boolean;
+
+  @SerField({ default: () => true })
+  faceDimming: boolean;
 
   @SerField({ default: () => false })
   isotropic: boolean;
@@ -46,11 +49,10 @@ export class MaterialInstance {
   constructor(
     props: InputProps<
       MaterialInstance,
-      "texture",
+      "texture" | "alphaMaskedTint",
       | "renderMethod"
       | "tintMethod"
       | "ambientOcclusion"
-      | "alphaMaskedTint"
       | "faceDimming"
       | "isotropic"
     >,
@@ -58,9 +60,9 @@ export class MaterialInstance {
     this.texture = props.texture;
     this.renderMethod = props.renderMethod ?? "opaque";
     this.tintMethod = props.tintMethod;
-    this.ambientOcclusion = props.ambientOcclusion ?? false;
+    this.ambientOcclusion = props.ambientOcclusion ?? true;
     this.alphaMaskedTint = props.alphaMaskedTint ?? false;
-    this.faceDimming = props.faceDimming;
+    this.faceDimming = props.faceDimming ?? true;
     this.isotropic = props.isotropic ?? false;
   }
 }

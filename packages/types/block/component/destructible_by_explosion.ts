@@ -27,12 +27,12 @@ export class DestructibleByExplosionBlockComponent
 
 @SerClass()
 export class DestructibleByExplosion {
-  @SerField()
+  @SerField({ default: () => 0 })
   explosionResistance: number;
 
   constructor(
-    props: InputProps<DestructibleByExplosion, "explosionResistance">,
+    props: InputProps<DestructibleByExplosion, never, "explosionResistance">,
   ) {
-    this.explosionResistance = props.explosionResistance;
+    this.explosionResistance = props.explosionResistance ?? 0;
   }
 }

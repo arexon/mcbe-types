@@ -48,10 +48,10 @@ export class ItemDestroySpeed {
   item: ItemDescriptor;
 
   @SerField()
-  destroy_speed: number;
+  destroySpeed: number;
 
-  constructor(props: InputProps<ItemDestroySpeed, "item" | "destroy_speed">) {
+  constructor(props: InputProps<ItemDestroySpeed, "item" | "destroySpeed">) {
     this.item = props.item;
-    this.destroy_speed = props.destroy_speed;
+    this.destroySpeed = props.destroySpeed;
   }
 }
