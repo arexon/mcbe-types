@@ -23,15 +23,49 @@ export class ClientBlocks {
 @SerClass()
 export class ClientBlock {
   @SerField()
-  textures?: string;
-
-  @SerField()
   sound?: string;
 
+  @SerField()
+  ambientOcclusionExponent?: number;
+
+  @SerField()
+  brightnessGamma?: number;
+
+  @SerField()
+  isotropic?: ValueOrFaces<boolean>;
+
+  @SerField()
+  textures?: ValueOrFaces<string>;
+
+  @SerField()
+  carriedTextures?: ValueOrFaces<string>;
+
   constructor(
-    props: InputProps<ClientBlock, "textures" | "sound">,
+    props: InputProps<
+      ClientBlock,
+      | "sound"
+      | "ambientOcclusionExponent"
+      | "brightnessGamma"
+      | "isotropic"
+      | "textures"
+      | "carriedTextures"
+    >,
   ) {
-    this.textures = props.textures;
     this.sound = props.sound;
+    this.ambientOcclusionExponent = props.ambientOcclusionExponent;
+    this.brightnessGamma = props.brightnessGamma;
+    this.isotropic = props.isotropic;
+    this.textures = props.textures;
+    this.carriedTextures = props.carriedTextures;
   }
 }
+
+export type ValueOrFaces<T> = T | {
+  up?: T;
+  down?: T;
+  side?: T;
+  north?: T;
+  south?: T;
+  east?: T;
+  west?: T;
+};
