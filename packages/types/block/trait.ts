@@ -6,6 +6,7 @@ import {
 } from "@mcbe/types/common";
 
 export type BlockTrait =
+  | ConnectionBlockTrait
   | PlacementDirectionBlockTrait
   | PlacementPositionBlockTrait;
 
@@ -13,9 +14,23 @@ export type BlockTrait =
 export class BlockTraits extends Components<BlockTrait> {}
 
 @SerClass()
+export class ConnectionBlockTrait implements ComponentNamespace {
+  @SerField()
+  enabledStates: ("minecraft:cardinal_connections")[];
+
+  get namespace(): string {
+    return "minecraft:connection";
+  }
+
+  constructor(props: InputProps<ConnectionBlockTrait, "enabledStates">) {
+    this.enabledStates = props.enabledStates;
+  }
+}
+
+@SerClass()
 export class PlacementPositionBlockTrait implements ComponentNamespace {
   @SerField()
-  enabledStates: PlacementPositionState[];
+  enabledStates: ("minecraft:block_face" | "minecraft:vertical_half")[];
 
   get namespace(): string {
     return "minecraft:placement_position";
@@ -26,15 +41,11 @@ export class PlacementPositionBlockTrait implements ComponentNamespace {
   }
 }
 
-export const enum PlacementPositionState {
-  BlockFace = "minecraft:block_face",
-  VerticalHalf = "minecraft:vertical_half",
-}
-
 @SerClass()
 export class PlacementDirectionBlockTrait implements ComponentNamespace {
   @SerField()
-  enabledStates: PlacementDirectionState[];
+  enabledStates:
+    ("minecraft:cardinal_direction" | "minecraft:facing_direction")[];
 
   @SerField({ default: () => 0 })
   yRotationOffset: 0 | 90 | 180 | 270;
@@ -53,9 +64,4 @@ export class PlacementDirectionBlockTrait implements ComponentNamespace {
     this.enabledStates = props.enabledStates;
     this.yRotationOffset = props.yRotationOffset ?? 0;
   }
-}
-
-export const enum PlacementDirectionState {
-  CardinalDirection = "minecraft:cardinal_direction",
-  FacingDirection = "minecraft:facing_direction",
 }
