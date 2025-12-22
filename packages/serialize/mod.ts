@@ -1,153 +1,182 @@
 import { toSnakeCase } from "@std/text";
 import { equal } from "@std/assert";
 
-export interface SerContext<Instance, Name extends keyof Instance> {
+export interface MetadataContext<Instance, FieldName extends keyof Instance> {
   readonly metadata: {
-    fields?: Record<string, SerFieldOptions<Instance, Name> | undefined>;
+    fields?: Record<string, FieldOptions<Instance, FieldName> | undefined>;
   };
 }
 
-export interface SerFieldOptions<Instance, Name extends keyof Instance> {
-  default?: () => Instance[Name];
-  custom?: [(value: Instance[Name]) => unknown, "normal" | "merge"];
+export interface FieldOptions<Instance, FieldName extends keyof Instance> {
+  default?: () => Instance[FieldName];
+  custom?: [(value: Instance[FieldName]) => unknown, "normal" | "merge"];
   rename?: string;
-  flatten?: Instance[Name] extends Record<string, unknown> ? boolean : never;
 }
 
-export function SerField<This, Name extends keyof This>(
-  opts?: SerFieldOptions<This, Name>,
+export interface ClassOptions<FieldName> {
+  transparent?: FieldName;
+}
+
+// deno-lint-ignore no-explicit-any
+export type Constructor = abstract new (...args: any[]) => any;
+
+export function Serialize<
+  T extends Constructor | undefined,
+  InstanceForClass extends T extends Constructor ? InstanceType<T> : never,
+  InstanceForField extends T extends Constructor ? never : unknown,
+  FieldNameForField extends keyof InstanceForField,
+  FieldNameForClass extends {
+    [P in keyof InstanceForClass]: InstanceForClass[P] extends
+      (...args: unknown[]) => unknown ? never
+      : P;
+  }[keyof InstanceForClass],
+>(
+  opts?: T extends Constructor ? ClassOptions<FieldNameForClass>
+    : FieldOptions<InstanceForField, FieldNameForField>,
 ): (
-  _target: undefined,
-  ctx:
-    & ClassFieldDecoratorContext<This, This[Name]>
-    & SerContext<This, Name>
-    & { name: Name },
+  target: T,
+  ctx: T extends Constructor ?
+      & ClassDecoratorContext
+      & MetadataContext<InstanceForClass, FieldNameForClass>
+    :
+      & ClassFieldDecoratorContext<
+        InstanceForField,
+        InstanceForField[FieldNameForField]
+      >
+      & MetadataContext<InstanceForField, FieldNameForField>
+      & { name: FieldNameForField },
 ) => void {
-  return function (_target, ctx) {
-    if (ctx.metadata.fields === undefined) ctx.metadata.fields = {};
-    if (typeof ctx.name !== "symbol") {
-      ctx.metadata.fields[ctx.name] = opts;
+  return (target, ctx) => {
+    if (ctx.kind === "class" && target !== undefined) {
+      classImpl(opts as ClassOptions<FieldNameForClass> ?? {}, target, ctx);
+    } else if (ctx.kind === "field" && target === undefined) {
+      fieldImpl(
+        opts as FieldOptions<InstanceForField, FieldNameForField> ?? {},
+        ctx,
+      );
     }
   };
 }
 
-export interface SerClassOptions<Field> {
-  transparent?: Field;
+function fieldImpl<T, FieldName extends keyof T>(
+  opts: FieldOptions<T, FieldName>,
+  ctx:
+    & ClassFieldDecoratorContext<T, T[FieldName]>
+    & MetadataContext<T, FieldName>,
+): void {
+  if (ctx.metadata.fields === undefined) ctx.metadata.fields = {};
+  if (typeof ctx.name !== "symbol") {
+    ctx.metadata.fields[ctx.name] = opts;
+  }
 }
 
-export function SerClass<
-  // deno-lint-ignore no-explicit-any
-  T extends abstract new (...args: any[]) => InstanceType<T>,
-  Instance extends InstanceType<T>,
-  Field extends {
-    // deno-lint-ignore ban-types
-    [P in keyof Instance]: Instance[P] extends Function ? never : P;
-  }[keyof Instance],
->(classOpts?: SerClassOptions<Field>): (
+function classImpl<
+  T extends Constructor,
+  FieldName extends keyof InstanceType<T>,
+>(
+  classOpts: ClassOptions<FieldName>,
   target: T,
-  ctx: ClassDecoratorContext & SerContext<Instance, Field>,
-) => void {
+  ctx: ClassDecoratorContext & MetadataContext<InstanceType<T>, FieldName>,
+): void {
   const getMetadata = (fieldName: string, data: string): string => {
     return `this.constructor[Symbol.metadata]?.fields?.["${fieldName}"]?.${data}`;
   };
 
-  return function (target, ctx) {
-    const transparent = classOpts?.transparent;
-    if (transparent !== undefined && typeof transparent !== "string") {
-      throw new Error(
-        `Transparent field "${String(transparent)}" must be a string`,
-      );
-    }
+  const transparent = classOpts?.transparent;
+  if (transparent !== undefined && typeof transparent !== "string") {
+    throw new Error(
+      `Transparent field "${String(transparent)}" must be a string`,
+    );
+  }
 
-    let toJsonBody = "";
-    if (ctx.metadata.fields !== undefined) {
-      const fieldsLength = Object.keys(ctx.metadata.fields).length;
+  let toJsonBody = "";
+  if (ctx.metadata.fields !== undefined) {
+    const fieldsLength = Object.keys(ctx.metadata.fields).length;
 
-      let isTransparentCheck = "";
+    let isTransparentCheck = "";
 
-      toJsonBody += "{";
-      for (
-        const [index, [fieldName, fieldOpts]] of Object.entries(
-          ctx.metadata.fields,
-        ).entries()
-      ) {
-        const isFieldTransparentCheck = `"${fieldName}" === "${
-          transparent ?? ""
-        }"`;
+    toJsonBody += "{";
+    for (
+      const [index, [fieldName, fieldOpts]] of Object.entries(
+        ctx.metadata.fields,
+      ).entries()
+    ) {
+      const isFieldTransparentCheck = `"${fieldName}" === "${
+        transparent ?? ""
+      }"`;
 
-        let key: string;
-        if (fieldOpts?.rename !== undefined) key = fieldOpts.rename;
-        else if (!fieldName.includes(":")) key = toSnakeCase(fieldName);
-        else key = fieldName;
+      let key: string;
+      if (fieldOpts?.rename !== undefined) key = fieldOpts.rename;
+      else if (!fieldName.includes(":")) key = toSnakeCase(fieldName);
+      else key = fieldName;
 
-        let value = `this["${fieldName}"]`;
+      let value = `this["${fieldName}"]`;
 
-        if (fieldOpts?.custom !== undefined) {
-          value = getMetadata(fieldName, `custom[0](${value})`);
-        }
+      if (fieldOpts?.custom !== undefined) {
+        value = getMetadata(fieldName, `custom[0](${value})`);
+      }
 
-        if (fieldOpts?.default !== undefined) {
-          const isDefaultCheck = `equal(${
-            JSON.stringify(fieldOpts.default())
-          }, ${value})`;
+      if (fieldOpts?.default !== undefined) {
+        const isDefaultCheck = `equal(${
+          JSON.stringify(fieldOpts.default())
+        }, ${value})`;
 
-          if (transparent !== undefined) {
-            isTransparentCheck +=
-              `(${isFieldTransparentCheck} || ${isDefaultCheck} || ${value} === undefined)`;
-          }
-
-          value = `${isDefaultCheck} ? undefined : ${value}`;
-        } else if (transparent !== undefined) {
+        if (transparent !== undefined) {
           isTransparentCheck +=
-            `(${isFieldTransparentCheck} || ${value} === undefined)`;
+            `(${isFieldTransparentCheck} || ${isDefaultCheck} || ${value} === undefined)`;
         }
 
-        if (transparent !== undefined && index < fieldsLength - 1) {
-          isTransparentCheck += " && ";
-        }
-
-        let keyValuePair = "";
-        if (fieldOpts?.custom?.[1] === "merge") {
-          keyValuePair = `...(${value}),`;
-        } else {
-          keyValuePair = `"${key}": ${value},`;
-        }
-
-        toJsonBody += keyValuePair;
+        value = `${isDefaultCheck} ? undefined : ${value}`;
+      } else if (transparent !== undefined) {
+        isTransparentCheck +=
+          `(${isFieldTransparentCheck} || ${value} === undefined)`;
       }
-      toJsonBody += "}";
 
-      const transparentField = Object.entries(ctx.metadata.fields)
-        .find((field) => field[0] === transparent);
-      if (transparentField !== undefined && isTransparentCheck !== "") {
-        const [transparentFieldName, transparentFieldOpts] = transparentField;
-        let value = `this["${transparentFieldName}"]`;
-        // This is necessary because the method is not called on directly
-        // returned values, but rather on object properties.
-        value = `(${value}?.toJSON?.() ?? ${value})`;
-
-        if (transparentFieldOpts?.custom !== undefined) {
-          value = getMetadata(transparentFieldName, `custom[0](${value})`);
-        }
-
-        toJsonBody = `(${isTransparentCheck}) ? ${value} : ${toJsonBody}`;
+      if (transparent !== undefined && index < fieldsLength - 1) {
+        isTransparentCheck += " && ";
       }
-    } else {
-      if (classOpts?.transparent !== undefined) {
-        toJsonBody = `this["${String(classOpts.transparent)}"]`;
+
+      let keyValuePair = "";
+      if (fieldOpts?.custom?.[1] === "merge") {
+        keyValuePair = `...(${value}),`;
       } else {
-        toJsonBody = "{}";
+        keyValuePair = `"${key}": ${value},`;
       }
-    }
-    toJsonBody = "return " + toJsonBody;
 
-    const toJsonFn = new Function("equal", toJsonBody);
-    Object.defineProperty(target.prototype, "toJSON", {
-      value() {
-        return toJsonFn.call(this, equal);
-      },
-      configurable: true,
-      writable: true,
-    });
-  };
+      toJsonBody += keyValuePair;
+    }
+    toJsonBody += "}";
+
+    const transparentField = Object.entries(ctx.metadata.fields)
+      .find((field) => field[0] === transparent);
+    if (transparentField !== undefined && isTransparentCheck !== "") {
+      const [transparentFieldName, transparentFieldOpts] = transparentField;
+      let value = `this["${transparentFieldName}"]`;
+      // This is necessary because the method is not called on directly
+      // returned values, but rather on object properties.
+      value = `(${value}?.toJSON?.() ?? ${value})`;
+
+      if (transparentFieldOpts?.custom !== undefined) {
+        value = getMetadata(transparentFieldName, `custom[0](${value})`);
+      }
+
+      toJsonBody = `(${isTransparentCheck}) ? ${value} : ${toJsonBody}`;
+    }
+  } else {
+    if (classOpts?.transparent !== undefined) {
+      toJsonBody = `this["${String(classOpts.transparent)}"]`;
+    } else {
+      toJsonBody = "{}";
+    }
+  }
+  toJsonBody = "return " + toJsonBody;
+
+  const toJsonFn = new Function("equal", toJsonBody);
+  Object.defineProperty(target.prototype, "toJSON", {
+    value() {
+      return toJsonFn.call(this, equal);
+    },
+    configurable: true,
+    writable: true,
+  });
 }

@@ -1,4 +1,4 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import { assertEquals } from "@std/assert";
 
 function assertJSON(actual: unknown, expected: string): void {
@@ -6,12 +6,12 @@ function assertJSON(actual: unknown, expected: string): void {
 }
 
 Deno.test("basic", () => {
-  @SerClass()
+  @Serialize()
   class Foo {
-    @SerField()
+    @Serialize()
     a = 8;
 
-    @SerField()
+    @Serialize()
     b = "foo";
   }
 
@@ -19,9 +19,9 @@ Deno.test("basic", () => {
 });
 
 Deno.test("rename", () => {
-  @SerClass()
+  @Serialize()
   class Foo {
-    @SerField({ rename: "no" })
+    @Serialize({ rename: "no" })
     yes = 1;
   }
 
@@ -29,15 +29,15 @@ Deno.test("rename", () => {
 });
 
 Deno.test("defaults", async (t) => {
-  @SerClass()
+  @Serialize()
   class Foo {
-    @SerField()
+    @Serialize()
     noDefault = 8;
 
-    @SerField({ default: () => "foo" })
+    @Serialize({ default: () => "foo" })
     primitive = "foo";
 
-    @SerField({ default: () => ["foo", "bar"] })
+    @Serialize({ default: () => ["foo", "bar"] })
     object = ["foo", "bar"];
   }
 
@@ -62,12 +62,12 @@ Deno.test("defaults", async (t) => {
 
 Deno.test("custom override", async (t) => {
   await t.step("normal", () => {
-    @SerClass()
+    @Serialize()
     class Foo {
-      @SerField({ custom: [(v) => ["custom", v], "normal"] })
+      @Serialize({ custom: [(v) => ["custom", v], "normal"] })
       normal: string | string[] = "foo";
 
-      @SerField({
+      @Serialize({
         custom: [(v) => ["custom", v], "normal"],
         default: () => ["custom", "foo"],
       })
@@ -85,15 +85,15 @@ Deno.test("custom override", async (t) => {
   });
 
   await t.step("merge", () => {
-    @SerClass()
+    @Serialize()
     class Foo {
-      @SerField()
+      @Serialize()
       a = 1;
 
-      @SerField()
+      @Serialize()
       b = 2;
 
-      @SerField({
+      @Serialize({
         custom: [(v) => v, "merge"],
         default: () => ({ a: 10, c: 3 }),
       })
@@ -110,12 +110,12 @@ Deno.test("custom override", async (t) => {
 
 Deno.test("transparent", async (t) => {
   await t.step("with default", () => {
-    @SerClass({ transparent: "basic" })
+    @Serialize({ transparent: "basic" })
     class WithDefault {
-      @SerField()
+      @Serialize()
       basic = "foo";
 
-      @SerField({ default: () => true })
+      @Serialize({ default: () => true })
       default = true;
     }
 
@@ -127,9 +127,9 @@ Deno.test("transparent", async (t) => {
   });
 
   await t.step("on default", () => {
-    @SerClass({ transparent: "default" })
+    @Serialize({ transparent: "default" })
     class OnDefault {
-      @SerField({ default: () => true })
+      @Serialize({ default: () => true })
       default = true;
     }
 
@@ -141,12 +141,12 @@ Deno.test("transparent", async (t) => {
   });
 
   await t.step("on custom (normal) + on default", () => {
-    @SerClass({ transparent: "custom" })
+    @Serialize({ transparent: "custom" })
     class OnCustom {
-      @SerField()
+      @Serialize()
       basic? = "foo";
 
-      @SerField({
+      @Serialize({
         custom: [(v) => ["custom", v], "normal"],
         default: () => ["custom", "foo"],
       })
@@ -164,12 +164,12 @@ Deno.test("transparent", async (t) => {
   });
 
   await t.step("on custom (merge)", () => {
-    @SerClass({ transparent: "custom" })
+    @Serialize({ transparent: "custom" })
     class OnCustom {
-      @SerField()
+      @Serialize()
       basic? = "foo";
 
-      @SerField({
+      @Serialize({
         custom: [(v) => ({ merged: v }), "merge"],
         default: () => ({ merged: false }),
       })
@@ -187,7 +187,7 @@ Deno.test("transparent", async (t) => {
   });
 
   await t.step("on getter", () => {
-    @SerClass({ transparent: "name" })
+    @Serialize({ transparent: "name" })
     class OnGetter {
       get name(): string {
         return "foo";
@@ -200,15 +200,15 @@ Deno.test("transparent", async (t) => {
 
 Deno.test("nested", async (t) => {
   await t.step("basic", () => {
-    @SerClass()
+    @Serialize()
     class Parent {
-      @SerField()
+      @Serialize()
       child = new Child();
     }
 
-    @SerClass()
+    @Serialize()
     class Child {
-      @SerField({ rename: "b" })
+      @Serialize({ rename: "b" })
       a = "foo";
     }
 
@@ -216,15 +216,15 @@ Deno.test("nested", async (t) => {
   });
 
   await t.step("transparent", () => {
-    @SerClass({ transparent: "child" })
+    @Serialize({ transparent: "child" })
     class Parent {
-      @SerField()
+      @Serialize()
       child = new Child();
     }
 
-    @SerClass()
+    @Serialize()
     class Child {
-      @SerField({ rename: "b" })
+      @Serialize({ rename: "b" })
       a = "foo";
     }
 
