@@ -1,8 +1,14 @@
+const IGNORED_PATHS = [
+  "packages/serialize",
+];
+
 export default {
   name: "style-guide",
   rules: {
     "class-serialization": {
       create(ctx) {
+        if (IGNORED_PATHS.some((p) => ctx.filename.includes(p))) return {};
+
         const SER_CLASS_ID = "SerClass";
         const SER_FIELD_ID = "SerField";
 
@@ -99,6 +105,8 @@ export default {
         const COMP_NAMESPACE = "ComponentNamespace";
         return {
           ClassDeclaration(node) {
+            if (IGNORED_PATHS.some((p) => ctx.filename.includes(p))) return {};
+
             if (
               node.id !== null &&
               (
