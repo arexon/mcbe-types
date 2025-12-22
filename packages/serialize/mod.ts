@@ -3,13 +3,8 @@ import { equal } from "@std/assert";
 
 export interface SerContext<Instance, Name extends keyof Instance> {
   readonly metadata: {
-    fields?: Map<string, SerFieldOptions<Instance, Name> | undefined>;
+    fields?: Record<string, SerFieldOptions<Instance, Name> | undefined>;
   };
-}
-
-export interface CustomSerResult {
-  value: unknown;
-  strategy: "normal" | "merge";
 }
 
 export interface SerFieldOptions<Instance, Name extends keyof Instance> {
@@ -29,11 +24,9 @@ export function SerField<This, Name extends keyof This>(
     & { name: Name },
 ) => void {
   return function (_target, ctx) {
-    if (ctx.metadata.fields === undefined) {
-      ctx.metadata.fields = new Map();
-    }
+    if (ctx.metadata.fields === undefined) ctx.metadata.fields = {};
     if (typeof ctx.name !== "symbol") {
-      ctx.metadata.fields.set(ctx.name, opts);
+      ctx.metadata.fields[ctx.name] = opts;
     }
   };
 }
@@ -54,36 +47,30 @@ export function SerClass<
   target: T,
   ctx: ClassDecoratorContext & SerContext<Instance, Field>,
 ) => void {
-  const transparent = classOpts?.transparent;
-  if (transparent !== undefined && typeof transparent !== "string") {
-    throw new Error(
-      `Transparent field "${String(transparent)}" must be a string`,
-    );
-  }
+  const getMetadata = (fieldName: string, data: string): string => {
+    return `this.constructor[Symbol.metadata]?.fields?.["${fieldName}"]?.${data}`;
+  };
 
   return function (target, ctx) {
-    let body = "";
-    const env: Record<string, unknown> = {
-      equal: equal,
-    };
+    const transparent = classOpts?.transparent;
+    if (transparent !== undefined && typeof transparent !== "string") {
+      throw new Error(
+        `Transparent field "${String(transparent)}" must be a string`,
+      );
+    }
 
-    if (ctx.metadata.fields !== undefined && ctx.metadata.fields.size > 0) {
-      const getCustomKeyAndValue = (
-        fieldName: string,
-        value: string,
-      ): [string, string] => {
-        const customKey = `__${fieldName}_custom`;
-        const customValue = `env["${customKey}"](${value})`;
-        return [customKey, customValue];
-      };
+    let toJsonBody = "";
+    if (ctx.metadata.fields !== undefined) {
+      const fieldsLength = Object.keys(ctx.metadata.fields).length;
 
       let isTransparentCheck = "";
 
-      body += "{";
-      let index = -1;
-      for (const [fieldName, fieldOpts] of ctx.metadata.fields) {
-        index += 1;
-
+      toJsonBody += "{";
+      for (
+        const [index, [fieldName, fieldOpts]] of Object.entries(
+          ctx.metadata.fields,
+        ).entries()
+      ) {
         const isFieldTransparentCheck = `"${fieldName}" === "${
           transparent ?? ""
         }"`;
@@ -96,17 +83,11 @@ export function SerClass<
         let value = `this["${fieldName}"]`;
 
         if (fieldOpts?.custom !== undefined) {
-          const [customKey, customValue] = getCustomKeyAndValue(
-            fieldName,
-            value,
-          );
-          env[customKey] = fieldOpts.custom[0];
-
-          value = customValue;
+          value = getMetadata(fieldName, `custom[0](${value})`);
         }
 
         if (fieldOpts?.default !== undefined) {
-          const isDefaultCheck = `env.equal(${
+          const isDefaultCheck = `equal(${
             JSON.stringify(fieldOpts.default())
           }, ${value})`;
 
@@ -121,7 +102,7 @@ export function SerClass<
             `(${isFieldTransparentCheck} || ${value} === undefined)`;
         }
 
-        if (transparent !== undefined && index < ctx.metadata.fields.size - 1) {
+        if (transparent !== undefined && index < fieldsLength - 1) {
           isTransparentCheck += " && ";
         }
 
@@ -132,11 +113,11 @@ export function SerClass<
           keyValuePair = `"${key}": ${value},`;
         }
 
-        body += keyValuePair;
+        toJsonBody += keyValuePair;
       }
-      body += "}";
+      toJsonBody += "}";
 
-      const transparentField = ctx.metadata.fields.entries()
+      const transparentField = Object.entries(ctx.metadata.fields)
         .find((field) => field[0] === transparent);
       if (transparentField !== undefined && isTransparentCheck !== "") {
         const [transparentFieldName, transparentFieldOpts] = transparentField;
@@ -146,29 +127,24 @@ export function SerClass<
         value = `(${value}?.toJSON?.() ?? ${value})`;
 
         if (transparentFieldOpts?.custom !== undefined) {
-          const [_, customValue] = getCustomKeyAndValue(
-            transparentFieldName,
-            value,
-          );
-          value = customValue;
+          value = getMetadata(transparentFieldName, `custom[0](${value})`);
         }
 
-        body = `(${isTransparentCheck}) ? ${value} : ${body}`;
+        toJsonBody = `(${isTransparentCheck}) ? ${value} : ${toJsonBody}`;
       }
     } else {
       if (classOpts?.transparent !== undefined) {
-        body = `this["${String(classOpts.transparent)}"] ?? undefined`;
+        toJsonBody = `this["${String(classOpts.transparent)}"]`;
       } else {
-        body = "{}";
+        toJsonBody = "{}";
       }
     }
-    body = "return " + body;
+    toJsonBody = "return " + toJsonBody;
 
-    const fn = new Function("env", body);
-
+    const toJsonFn = new Function("equal", toJsonBody);
     Object.defineProperty(target.prototype, "toJSON", {
       value() {
-        return fn.call(this, env);
+        return toJsonFn.call(this, equal);
       },
       configurable: true,
       writable: true,
