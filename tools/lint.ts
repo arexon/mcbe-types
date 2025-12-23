@@ -9,8 +9,7 @@ export default {
       create(ctx) {
         if (IGNORED_PATHS.some((p) => ctx.filename.includes(p))) return {};
 
-        const SER_CLASS_ID = "SerClass";
-        const SER_FIELD_ID = "SerField";
+        const SER = "Serialize";
 
         return {
           ClassDeclaration(_node) {
@@ -25,19 +24,19 @@ export default {
               !node.decorators.some((decoNode) =>
                 decoNode.expression.type === "CallExpression" &&
                 decoNode.expression.callee.type === "Identifier" &&
-                decoNode.expression.callee.name === SER_CLASS_ID
+                decoNode.expression.callee.name === SER
               )
             ) {
               ctx.report({
                 node: node.id,
                 message:
-                  `The class is not annotated with the \`@${SER_CLASS_ID}\` decorator`,
+                  `The class is not annotated with the \`@${SER}\` decorator`,
                 hint:
-                  `Annotate the class with \`@${SER_CLASS_ID}()\` to enable smart serialization`,
+                  `Annotate the class with \`@${SER}()\` to enable smart serialization`,
                 fix(fixer) {
                   return fixer.insertTextBeforeRange(
                     node.parent.range,
-                    `@${SER_CLASS_ID}() `,
+                    `@${SER}() `,
                   );
                 },
               });
@@ -55,20 +54,20 @@ export default {
               const fieldDecoNode = propNode.decorators.find((decoNode) =>
                 decoNode.expression.type === "CallExpression" &&
                 decoNode.expression.callee.type === "Identifier" &&
-                decoNode.expression.callee.name === SER_FIELD_ID
+                decoNode.expression.callee.name === SER
               );
 
               if (fieldDecoNode === undefined) {
                 ctx.report({
                   node: propNode,
                   message:
-                    `The field is not annotated with the \`@${SER_FIELD_ID}\` decorator`,
+                    `The field is not annotated with the \`@${SER}\` decorator`,
                   hint:
-                    `Annotate the field with \`@${SER_FIELD_ID}()\` to enable smart serialization`,
+                    `Annotate the field with \`@${SER}()\` to enable smart serialization`,
                   fix(fixer) {
                     return fixer.insertTextBeforeRange(
                       propNode.range,
-                      `@${SER_FIELD_ID}() `,
+                      `@${SER}() `,
                     );
                   },
                 });
@@ -90,7 +89,7 @@ export default {
                   ctx.report({
                     node: propNode,
                     message:
-                      `Optional field is defining a default value for serialization with \`@${SER_FIELD_ID}\``,
+                      `Optional field is defining a default value for serialization with \`@${SER}\``,
                     hint: "Make the field required",
                   });
                 }

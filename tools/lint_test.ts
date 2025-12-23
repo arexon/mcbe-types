@@ -20,19 +20,19 @@ export class Foo {
     [
       {
         id: "style-guide/class-serialization",
-        message: "The class is not annotated with the `@SerClass` decorator",
+        message: "The class is not annotated with the `@Serialize` decorator",
         hint:
-          "Annotate the class with `@SerClass()` to enable smart serialization",
+          "Annotate the class with `@Serialize()` to enable smart serialization",
         range: [14, 17],
-        fix: [{ range: [1, 1], text: "@SerClass() " }],
+        fix: [{ range: [1, 1], text: "@Serialize() " }],
       },
       {
         id: "style-guide/class-serialization",
-        message: "The field is not annotated with the `@SerField` decorator",
+        message: "The field is not annotated with the `@Serialize` decorator",
         hint:
-          "Annotate the field with `@SerField()` to enable smart serialization",
+          "Annotate the field with `@Serialize()` to enable smart serialization",
         range: [22, 28],
-        fix: [{ range: [22, 22], text: "@SerField() " }],
+        fix: [{ range: [22, 22], text: "@Serialize() " }],
       },
     ],
   );
@@ -40,9 +40,9 @@ export class Foo {
   // Good
   assertDiagnostics(
     `
-@SerClass()
+@Serialize()
 export class Foo {
-  @SerField()
+  @Serialize()
   a = 1;
 }
     `,
@@ -52,9 +52,9 @@ export class Foo {
   // Bad
   assertDiagnostics(
     `
-@SerClass()
+@Serialize()
 export class Foo {
-  @SerField({ default: () => 1 })
+  @Serialize({ default: () => 1 })
   a?;
 }
     `,
@@ -62,9 +62,9 @@ export class Foo {
       {
         id: "style-guide/class-serialization",
         message:
-          "Optional field is defining a default value for serialization with `@SerField`",
+          "Optional field is defining a default value for serialization with `@Serialize`",
         hint: "Make the field required",
-        range: [34, 71],
+        range: [35, 73],
         fix: [],
       },
     ],
@@ -73,9 +73,9 @@ export class Foo {
   // Good
   assertDiagnostics(
     `
-@SerClass()
+@Serialize()
 export class Foo {
-  @SerField({ default: () => 1 })
+  @Serialize({ default: () => 1 })
   a;
 
   #b;
@@ -89,7 +89,7 @@ Deno.test("style-guide/component-namespace", () => {
   // Bad
   assertDiagnostics(
     `
-@SerClass()
+@Serialize()
 export class FooComponent {}
     `,
     [
@@ -97,7 +97,7 @@ export class FooComponent {}
         id: "style-guide/component-namespace",
         message: "Component class does not implement `ComponentNamespace`",
         hint: undefined,
-        range: [26, 38],
+        range: [27, 39],
         fix: [],
       },
     ],
@@ -106,7 +106,7 @@ export class FooComponent {}
   // Good
   assertDiagnostics(
     `
-@SerClass()
+@Serialize()
 export class FooComponent implements ComponentNamespace {
   get namespace(): string {
     return "minecraft:foo";
