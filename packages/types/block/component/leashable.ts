@@ -1,9 +1,9 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class LeashableBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   offset: [number, number, number];
 
   get namespace(): string {

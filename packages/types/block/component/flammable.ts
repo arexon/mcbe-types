@@ -1,13 +1,13 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type {
   ComponentNamespace,
   DerivedInputProps,
   InputProps,
 } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class FlammableBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   value: boolean | Flammable;
 
   get namespace(): string {
@@ -22,12 +22,12 @@ export class FlammableBlockComponent implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class Flammable {
-  @SerField({ default: () => 5 })
+  @Serialize({ default: () => 5 })
   catchChanceModifier: number;
 
-  @SerField({ default: () => 20 })
+  @Serialize({ default: () => 20 })
   destroyChanceModifier: number;
 
   constructor(

@@ -1,21 +1,21 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class TransformationBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => [0, 0, 0] })
+  @Serialize({ default: () => [0, 0, 0] })
   rotation: [number, number, number];
 
-  @SerField({ default: () => [0, 0, 0] })
+  @Serialize({ default: () => [0, 0, 0] })
   rotationPivot: [number, number, number];
 
-  @SerField({ default: () => [1, 1, 1] })
+  @Serialize({ default: () => [1, 1, 1] })
   scale: [number, number, number];
 
-  @SerField({ default: () => [0, 0, 0] })
+  @Serialize({ default: () => [0, 0, 0] })
   scalePivot: [number, number, number];
 
-  @SerField({ default: () => [0, 0, 0] })
+  @Serialize({ default: () => [0, 0, 0] })
   translation: [number, number, number];
 
   get namespace(): string {

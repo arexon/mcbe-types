@@ -1,13 +1,13 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type {
   ComponentNamespace,
   DerivedInputProps,
   InputProps,
 } from "@mcbe/types/common";
 
-@SerClass({ transparent: "value" })
+@Serialize({ transparent: "value" })
 export class CollisionBoxBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   value: boolean | BoundingBox | BoundingBox[];
 
   get namespace(): string {
@@ -33,12 +33,12 @@ export class CollisionBoxBlockComponent implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class BoundingBox {
-  @SerField({ default: () => [-8, 0, -8] })
+  @Serialize({ default: () => [-8, 0, -8] })
   origin: [number, number, number];
 
-  @SerField({ default: () => [16, 16, 16] })
+  @Serialize({ default: () => [16, 16, 16] })
   size: [number, number, number];
 
   constructor(props: InputProps<BoundingBox, "origin" | "size">) {

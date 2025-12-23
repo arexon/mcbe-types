@@ -1,12 +1,12 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class ConnectionRuleBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   acceptsConnectionsFrom: "all" | "only_fences" | "none";
 
-  @SerField()
+  @Serialize()
   enabledDirections: "north" | "east" | "south" | "west";
 
   get namespace(): string {

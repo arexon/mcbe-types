@@ -1,4 +1,4 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type {
   ComponentNamespace,
   DerivedInputProps,
@@ -6,9 +6,9 @@ import type {
 } from "@mcbe/types/common";
 import type { ItemDescriptor } from "@mcbe/types/item";
 
-@SerClass()
+@Serialize()
 export class DestructibleByMiningBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   value: boolean | DestructibleByMining;
 
   get namespace(): string {
@@ -23,12 +23,12 @@ export class DestructibleByMiningBlockComponent implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class DestructibleByMining {
-  @SerField({ default: () => 0 })
+  @Serialize({ default: () => 0 })
   secondsToDestroy: number;
 
-  @SerField()
+  @Serialize()
   itemSpecificSpeeds: ItemDestroySpeed[];
 
   constructor(
@@ -42,12 +42,12 @@ export class DestructibleByMining {
   }
 }
 
-@SerClass()
+@Serialize()
 export class ItemDestroySpeed {
-  @SerField()
+  @Serialize()
   item: ItemDescriptor;
 
-  @SerField()
+  @Serialize()
   destroySpeed: number;
 
   constructor(props: InputProps<ItemDestroySpeed, "item" | "destroySpeed">) {

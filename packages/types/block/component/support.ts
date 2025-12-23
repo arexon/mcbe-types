@@ -1,9 +1,9 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class SupportBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   shape: "fence" | "stair";
 
   get namespace(): string {

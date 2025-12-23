@@ -1,14 +1,14 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type {
   ComponentNamespace,
   DerivedInputProps,
   InputProps,
 } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class DestructibleByExplosionBlockComponent
   implements ComponentNamespace {
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   value: boolean | DestructibleByExplosion;
 
   get namespace(): string {
@@ -25,9 +25,9 @@ export class DestructibleByExplosionBlockComponent
   }
 }
 
-@SerClass()
+@Serialize()
 export class DestructibleByExplosion {
-  @SerField({ default: () => 0 })
+  @Serialize({ default: () => 0 })
   explosionResistance: number;
 
   constructor(

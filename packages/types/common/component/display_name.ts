@@ -1,10 +1,10 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { LocalizationText } from "@mcbe/types/text";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
-@SerClass({ transparent: "value" })
+@Serialize({ transparent: "value" })
 export class DisplayNameComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   value: LocalizationText;
 
   get namespace(): string {

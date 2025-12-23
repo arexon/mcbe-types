@@ -1,13 +1,13 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { InputProps } from "@mcbe/types/common";
 import type { FormatVersion } from "@mcbe/types/version";
 
-@SerClass()
+@Serialize()
 export class ClientBlocks {
-  @SerField()
+  @Serialize()
   formatVersion: FormatVersion;
 
-  @SerField({ custom: [(value) => value, "merge"] })
+  @Serialize({ custom: [(value) => value, "merge"] })
   blocks: Record<string, ClientBlock> = {};
 
   constructor(formatVersion: FormatVersion) {
@@ -20,24 +20,24 @@ export class ClientBlocks {
   }
 }
 
-@SerClass()
+@Serialize()
 export class ClientBlock {
-  @SerField()
+  @Serialize()
   sound?: string;
 
-  @SerField()
+  @Serialize()
   ambientOcclusionExponent?: number;
 
-  @SerField()
+  @Serialize()
   brightnessGamma?: number;
 
-  @SerField()
+  @Serialize()
   isotropic?: ValueOrFaces<boolean>;
 
-  @SerField()
+  @Serialize()
   textures?: ValueOrFaces<string>;
 
-  @SerField()
+  @Serialize()
   carriedTextures?: ValueOrFaces<string>;
 
   constructor(

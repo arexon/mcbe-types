@@ -1,8 +1,8 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 
-@SerClass({ transparent: "version" })
+@Serialize({ transparent: "version" })
 export class FormatVersion {
-  @SerField({
+  @Serialize({
     custom: [(v) => `${v[0]}.${v[1]}.${v[2]}`, "normal"],
   })
   version: [number, number, number];

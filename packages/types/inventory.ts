@@ -1,15 +1,15 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class InventoryMenuCategory {
-  @SerField()
+  @Serialize()
   category: "nature" | "equipment" | "items" | "construction" | "none";
 
-  @SerField()
+  @Serialize()
   group?: string;
 
-  @SerField({ default: () => false })
+  @Serialize({ default: () => false })
   isHiddenInCommand: boolean;
 
   constructor(

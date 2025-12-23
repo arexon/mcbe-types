@@ -1,9 +1,9 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
-@SerClass({ transparent: "value" })
+@Serialize({ transparent: "value" })
 export class LightDampeningBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => 15 })
+  @Serialize({ default: () => 15 })
   value: number;
 
   get namespace(): string {

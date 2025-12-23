@@ -1,9 +1,9 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class LiquidDetectionBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   detectionRules: LiquidDetectionRule[];
 
   get namespace(): string {
@@ -17,18 +17,18 @@ export class LiquidDetectionBlockComponent implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class LiquidDetectionRule {
-  @SerField()
+  @Serialize()
   liquidType: "water";
 
-  @SerField({ default: () => false })
+  @Serialize({ default: () => false })
   canContainLiquid: boolean;
 
-  @SerField({ default: () => "blocking" })
+  @Serialize({ default: () => "blocking" })
   onLiquidTouches: "blocking" | "broken" | "popped" | "no_reaction";
 
-  @SerField({ default: () => [] })
+  @Serialize({ default: () => [] })
   stopsLiquidFlowingFromDirection: (
     | "up"
     | "down"
@@ -38,7 +38,7 @@ export class LiquidDetectionRule {
     | "west"
   )[];
 
-  @SerField({ default: () => false })
+  @Serialize({ default: () => false })
   useLiquidClipping: boolean;
 
   constructor(

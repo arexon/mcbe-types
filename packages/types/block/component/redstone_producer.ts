@@ -1,18 +1,18 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class RedstoneProducerBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   power: number;
 
-  @SerField()
+  @Serialize()
   stronglyPoweredFace: "down" | "up" | "north" | "south" | "west" | "east";
 
-  @SerField()
+  @Serialize()
   connectedFaces?: ("down" | "up" | "north" | "south" | "west" | "east")[];
 
-  @SerField({ default: () => false })
+  @Serialize({ default: () => false })
   transformRelative: boolean;
 
   get namespace(): string {

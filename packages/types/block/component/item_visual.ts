@@ -1,16 +1,16 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type {
   GeometryBlockComponent,
   MaterialInstancesBlockComponent,
 } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class ItemVisualBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   geometry: GeometryBlockComponent;
 
-  @SerField()
+  @Serialize()
   materialInstances: MaterialInstancesBlockComponent;
 
   get namespace(): string {

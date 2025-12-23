@@ -1,12 +1,12 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class RedstoneConductivityBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   allowsWireToStepDown: boolean;
 
-  @SerField({ default: () => false })
+  @Serialize({ default: () => false })
   redstoneConductor: boolean;
 
   get namespace(): string {

@@ -1,12 +1,12 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class TickBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => [0, 0] })
+  @Serialize({ default: () => [0, 0] })
   intervalRange: [number, number];
 
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   looping: boolean;
 
   get namespace(): string {

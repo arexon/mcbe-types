@@ -1,4 +1,4 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import {
   BlockComponents,
   type BlockState,
@@ -16,16 +16,16 @@ export * from "./culling.ts";
 export * from "./descriptor.ts";
 export * from "./trait.ts";
 
-@SerClass()
+@Serialize()
 export class BlockDefinition {
-  @SerField()
+  @Serialize()
   formatVersion: FormatVersion;
 
   // NOTE: For now, we will not expose this in the constructor.
-  @SerField({ default: () => false })
+  @Serialize({ default: () => false })
   useBetaFeatures: boolean = false;
 
-  @SerField({ rename: "minecraft:block" })
+  @Serialize({ rename: "minecraft:block" })
   block: Block;
 
   constructor(
@@ -53,15 +53,15 @@ export class BlockDefinition {
   }
 }
 
-@SerClass()
+@Serialize()
 export class Block {
-  @SerField()
+  @Serialize()
   description: BlockDescription;
 
-  @SerField({ default: () => new BlockComponents() })
+  @Serialize({ default: () => new BlockComponents() })
   components: BlockComponents;
 
-  @SerField({ default: () => [] })
+  @Serialize({ default: () => [] })
   permutations: BlockPermutation[];
 
   constructor(
@@ -77,18 +77,18 @@ export class Block {
   }
 }
 
-@SerClass()
+@Serialize()
 export class BlockDescription {
-  @SerField()
+  @Serialize()
   identifier: Identifier;
 
-  @SerField()
+  @Serialize()
   menuCategory?: InventoryMenuCategory;
 
-  @SerField()
+  @Serialize()
   states?: Record<Identifier, BlockState>;
 
-  @SerField()
+  @Serialize()
   traits?: BlockTraits;
 
   constructor(
@@ -104,12 +104,12 @@ export class BlockDescription {
   }
 }
 
-@SerClass()
+@Serialize()
 export class BlockPermutation {
-  @SerField()
+  @Serialize()
   condition: Molang;
 
-  @SerField()
+  @Serialize()
   components: BlockComponents;
 
   constructor(props: InputProps<BlockPermutation, "condition" | "components">) {

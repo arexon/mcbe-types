@@ -1,4 +1,4 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import {
   type ComponentNamespace,
   Components,
@@ -13,9 +13,9 @@ export type BlockTrait =
 // deno-lint-ignore style-guide/class-serialization
 export class BlockTraits extends Components<BlockTrait> {}
 
-@SerClass()
+@Serialize()
 export class ConnectionBlockTrait implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   enabledStates: ("minecraft:cardinal_connections")[];
 
   get namespace(): string {
@@ -27,9 +27,9 @@ export class ConnectionBlockTrait implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class PlacementPositionBlockTrait implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   enabledStates: ("minecraft:block_face" | "minecraft:vertical_half")[];
 
   get namespace(): string {
@@ -41,13 +41,13 @@ export class PlacementPositionBlockTrait implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class PlacementDirectionBlockTrait implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   enabledStates:
     ("minecraft:cardinal_direction" | "minecraft:facing_direction")[];
 
-  @SerField({ default: () => 0 })
+  @Serialize({ default: () => 0 })
   yRotationOffset: 0 | 90 | 180 | 270;
 
   get namespace(): string {

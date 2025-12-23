@@ -1,15 +1,15 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class RandomOffsetBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   x?: RandomOffset;
 
-  @SerField()
+  @Serialize()
   y?: RandomOffset;
 
-  @SerField()
+  @Serialize()
   z?: RandomOffset;
 
   get namespace(): string {
@@ -23,14 +23,14 @@ export class RandomOffsetBlockComponent implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class RandomOffset {
-  @SerField({
+  @Serialize({
     custom: [([min, max]) => ({ min, max }), "normal"],
   })
   range: [number, number];
 
-  @SerField()
+  @Serialize()
   steps: number;
 
   constructor(props: InputProps<RandomOffset, "range" | "steps">) {

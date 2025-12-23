@@ -1,13 +1,13 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 import type { LocalizationText } from "@mcbe/types/text";
 
-@SerClass()
+@Serialize()
 export class CraftingTableBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   craftingTags: string[];
 
-  @SerField()
+  @Serialize()
   tableName?: LocalizationText;
 
   get namespace(): string {

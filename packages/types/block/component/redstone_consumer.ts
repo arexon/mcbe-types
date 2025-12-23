@@ -1,12 +1,12 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class RedstoneConsumerBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   minPower: number;
 
-  @SerField()
+  @Serialize()
   propagatesPower: boolean;
 
   get namespace(): string {

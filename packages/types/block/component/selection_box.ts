@@ -1,10 +1,10 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import { BoundingBox } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass({ transparent: "value" })
+@Serialize({ transparent: "value" })
 export class SelectionBoxBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   value: boolean | BoundingBox;
 
   get namespace(): string {

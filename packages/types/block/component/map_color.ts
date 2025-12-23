@@ -1,13 +1,13 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { TintMethod } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass({ transparent: "color" })
+@Serialize({ transparent: "color" })
 export class MapColorBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   color: string | [number, number, number];
 
-  @SerField()
+  @Serialize()
   tintMethod?: TintMethod;
 
   get namespace(): string {

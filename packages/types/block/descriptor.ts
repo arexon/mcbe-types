@@ -1,4 +1,4 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 
@@ -9,9 +9,9 @@ export type BlockDescriptor =
   | BlockDescriptorName
   | BlockDescriptorTags;
 
-@SerClass()
+@Serialize()
 export class BlockDescriptorTags {
-  @SerField()
+  @Serialize()
   tags: string;
 
   constructor(props: InputProps<BlockDescriptorTags, "tags">) {
@@ -19,12 +19,12 @@ export class BlockDescriptorTags {
   }
 }
 
-@SerClass()
+@Serialize()
 export class BlockDescriptorName {
-  @SerField()
+  @Serialize()
   name: Identifier;
 
-  @SerField({ default: () => ({}) })
+  @Serialize({ default: () => ({}) })
   states: Record<Identifier, BlockState>;
 
   constructor(props: InputProps<BlockDescriptorName, "name", "states">) {

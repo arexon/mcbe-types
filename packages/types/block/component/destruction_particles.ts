@@ -1,16 +1,16 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { TintMethod } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class DestructionParticlesBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => 100 })
+  @Serialize({ default: () => 100 })
   particleCount: number;
 
-  @SerField()
+  @Serialize()
   texture?: string;
 
-  @SerField()
+  @Serialize()
   tintMethod?: TintMethod;
 
   get namespace(): string {

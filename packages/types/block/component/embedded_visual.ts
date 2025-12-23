@@ -1,4 +1,4 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type {
   GeometryBlockComponent,
   MaterialInstancesBlockComponent,
@@ -7,12 +7,12 @@ import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 // NOTE: Cannot be used in permutations.
 
-@SerClass()
+@Serialize()
 export class EmbeddedVisualBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   geometry: GeometryBlockComponent;
 
-  @SerField()
+  @Serialize()
   materialInstances: MaterialInstancesBlockComponent;
 
   get namespace(): string {

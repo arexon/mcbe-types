@@ -1,4 +1,4 @@
-import { SerClass } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 
 export * from "./custom.ts";
 export * from "./display_name.ts";
@@ -8,7 +8,7 @@ export interface ComponentNamespace {
 }
 
 /** Component collection of `T` keyed by the namespace of `T`. */
-@SerClass({ transparent: "value" })
+@Serialize({ transparent: "value" })
 export class Components<T extends ComponentNamespace> {
   #value: Record<string, T> = {};
 

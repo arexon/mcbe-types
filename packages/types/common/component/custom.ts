@@ -1,4 +1,4 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
 /**
@@ -16,13 +16,13 @@ import type { ComponentNamespace } from "@mcbe/types/common";
  * });
  * ```
  */
-@SerClass({ transparent: "params" })
+@Serialize({ transparent: "params" })
 export class CustomComponent<
   // deno-lint-ignore no-explicit-any
   Schema extends { namespace: string; params: unknown } = any,
   Namespace extends string = Schema["namespace"],
 > implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   params: unknown;
 
   #namespace: string;

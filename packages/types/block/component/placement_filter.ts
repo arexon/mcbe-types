@@ -1,10 +1,10 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { BlockDescriptor } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class PlacementFilterBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => [] })
+  @Serialize({ default: () => [] })
   conditions: PlacementFilterCondition[];
 
   get namespace(): string {
@@ -18,9 +18,9 @@ export class PlacementFilterBlockComponent implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class PlacementFilterCondition {
-  @SerField({ default: () => [] })
+  @Serialize({ default: () => [] })
   allowedFaces: (
     | "all"
     | "side"
@@ -32,7 +32,7 @@ export class PlacementFilterCondition {
     | "east"
   )[];
 
-  @SerField({ default: () => [] })
+  @Serialize({ default: () => [] })
   blockFilter: BlockDescriptor[];
 
   constructor(

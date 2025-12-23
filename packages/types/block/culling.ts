@@ -1,17 +1,17 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 import type { FormatVersion } from "@mcbe/types/version";
 
-@SerClass()
+@Serialize()
 export class BlockCulling {
-  @SerField()
+  @Serialize()
   formatVersion: FormatVersion;
 
-  @SerField()
+  @Serialize()
   description: BlockCullingDescription;
 
-  @SerField()
+  @Serialize()
   rules: BlockCullingRule[];
 
   constructor(
@@ -24,9 +24,9 @@ export class BlockCulling {
   }
 }
 
-@SerClass()
+@Serialize()
 export class BlockCullingDescription {
-  @SerField()
+  @Serialize()
   identifier: Identifier;
 
   constructor(props: InputProps<BlockCullingDescription, "identifier">) {
@@ -34,19 +34,19 @@ export class BlockCullingDescription {
   }
 }
 
-@SerClass()
+@Serialize()
 export class BlockCullingRule {
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   cullAgainstFullAndOpaque: boolean;
 
-  @SerField({ default: () => "default" })
+  @Serialize({ default: () => "default" })
   condition:
     | "default"
     | "same_block"
     | "same_block_permutation"
     | "same_culling_layer";
 
-  @SerField()
+  @Serialize()
   direction:
     | "up"
     | "down"
@@ -55,7 +55,7 @@ export class BlockCullingRule {
     | "east"
     | "west";
 
-  @SerField()
+  @Serialize()
   geometryPart: "bone" | "cube" | "face";
 
   constructor(

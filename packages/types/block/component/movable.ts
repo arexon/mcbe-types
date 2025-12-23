@@ -1,12 +1,12 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class MovableBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => "push_pull" })
+  @Serialize({ default: () => "push_pull" })
   movementType: "immovable" | "popped" | "push" | "push_pull";
 
-  @SerField({ default: () => "none" })
+  @Serialize({ default: () => "none" })
   sticky: "none" | "sticky";
 
   get namespace(): string {

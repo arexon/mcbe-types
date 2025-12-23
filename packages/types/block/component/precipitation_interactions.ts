@@ -1,10 +1,10 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class PrecipitationInteractionsBlockComponent
   implements ComponentNamespace {
-  @SerField({ default: () => "obstruct_rain_accumulate_snow" })
+  @Serialize({ default: () => "obstruct_rain_accumulate_snow" })
   precipitationBehavior:
     | "obstruct_rain"
     | "obstruct_rain_accumulate_snow"

@@ -1,9 +1,9 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass()
+@Serialize()
 export class EntityFallOnBlockComponent implements ComponentNamespace {
-  @SerField({ default: () => 1 })
+  @Serialize({ default: () => 1 })
   minFallDistance: number;
 
   get namespace(): string {

@@ -1,9 +1,9 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
-@SerClass({ transparent: "path" })
+@Serialize({ transparent: "path" })
 export class LootBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   path: string;
 
   get namespace(): string {

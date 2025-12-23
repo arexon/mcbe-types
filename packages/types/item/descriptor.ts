@@ -1,12 +1,12 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 
 export type ItemDescriptor = Identifier | ItemDescriptorTags;
 
-@SerClass()
+@Serialize()
 export class ItemDescriptorTags {
-  @SerField()
+  @Serialize()
   tags: string;
 
   constructor(props: InputProps<ItemDescriptorTags, "tags">) {

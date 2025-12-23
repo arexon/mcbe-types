@@ -1,9 +1,9 @@
-import { SerClass, SerField } from "@mcbe/serialize";
+import { Serialize } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@SerClass({ transparent: "value" })
+@Serialize({ transparent: "value" })
 export class MaterialInstancesBlockComponent implements ComponentNamespace {
-  @SerField()
+  @Serialize()
   value: Record<string, MaterialInstance>;
 
   get namespace(): string {
@@ -15,12 +15,12 @@ export class MaterialInstancesBlockComponent implements ComponentNamespace {
   }
 }
 
-@SerClass()
+@Serialize()
 export class MaterialInstance {
-  @SerField()
+  @Serialize()
   texture: string;
 
-  @SerField({ default: () => "opaque" })
+  @Serialize({ default: () => "opaque" })
   renderMethod:
     | "opaque"
     | "double_sided"
@@ -31,19 +31,19 @@ export class MaterialInstance {
     | "alpha_test_to_opaque"
     | "alpha_test_single_sided_to_opaque";
 
-  @SerField()
+  @Serialize()
   tintMethod?: TintMethod;
 
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   ambientOcclusion: number | boolean;
 
-  @SerField()
+  @Serialize()
   alphaMaskedTint?: boolean;
 
-  @SerField({ default: () => true })
+  @Serialize({ default: () => true })
   faceDimming: boolean;
 
-  @SerField({ default: () => false })
+  @Serialize({ default: () => false })
   isotropic: boolean;
 
   constructor(
