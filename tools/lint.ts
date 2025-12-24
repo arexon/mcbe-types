@@ -1,5 +1,6 @@
 const IGNORED_PATHS = [
   "packages/serialize",
+  "packages/validate",
 ];
 
 export default {
