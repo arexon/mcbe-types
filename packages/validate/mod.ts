@@ -85,10 +85,12 @@ function fieldImpl(
   ctx: ClassFieldDecoratorContext & ValidateMetadata<unknown>,
   assertion: AssertionCallback<unknown> | null,
 ): void {
-  ctx.static;
   if (ctx.metadata.fields === undefined) ctx.metadata.fields = {};
   if (typeof ctx.name !== "symbol") {
-    ctx.metadata.fields[ctx.name] = { assertion };
+    if (ctx.metadata.fields[ctx.name] === undefined) {
+      ctx.metadata.fields[ctx.name] = {};
+    }
+    ctx.metadata.fields[ctx.name]!.assertion = assertion;
   }
 }
 

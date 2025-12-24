@@ -1,4 +1,5 @@
 import { Validate, validate } from "@mcbe/validate";
+import { Serialize } from "@mcbe/serialize";
 import { assertRange } from "@mcbe/validate/assertions";
 import { assertEquals } from "@std/assert";
 
@@ -55,4 +56,22 @@ Deno.test("nested", () => {
       reason: "32 is not between the range of 4..8",
     },
   ]);
+});
+
+Deno.test("metadata compatibility", () => {
+  @Validate() @Serialize()
+  class Foo {
+    @Validate(assertRange(0, 1)) @Serialize({ rename: "b" })
+    a = 5;
+  }
+
+  const v = new Foo();
+  assertEquals(validate(v), [
+    {
+      path: "Foo.a",
+      reason: "5 is not between the range of 0..1",
+    },
+  ]);
+
+  assertEquals(JSON.stringify(v), `{"b":5}`);
 });
