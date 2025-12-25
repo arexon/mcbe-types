@@ -1,7 +1,6 @@
-const IGNORED_PATHS = [
-  "packages/serialize",
-  "packages/validate",
-];
+import denoJson from "../deno.json" with { type: "json" };
+
+const IGNORED_PATHS = denoJson.workspace.filter((s) => s !== "types");
 
 export default {
   name: "style-guide",
