@@ -1,22 +1,70 @@
+/**
+ * Serialization library inspired by [Serde](https://serde.rs) from the Rust ecosystem.
+ *
+ * @module
+ */
+
 import { type AnyConstructor, equal } from "@std/assert";
 import { toSnakeCase } from "@std/text";
 
+/** Context metadata associated with a class decorator. Used by {@link Serialize} */
 export interface SerializeMetadata<FieldValue> {
+  /** The actual metadata in {@link ClassDecoratorContext} */
   readonly metadata: {
+    /** Maps fields to serialization options. */
     fields?: Record<string, FieldOptions<FieldValue> | undefined>;
   };
 }
 
+/** Options to configure how a field should be serialized. */
 export interface FieldOptions<FieldValue> {
+  /**
+   * A callback that returns the default value for this field.
+   *
+   * During serialization, the default is compared against the field's current
+   * value. If it matches, the field is omitted.
+   * Note that the comparison is deep for non-primitives.
+   */
   default?: () => FieldValue;
+  /**
+   * Defines a callback that returns a custom value to override the serialized
+   * field and a strategy for how the custom value should be serialized.
+   *
+   * Strategies:
+   * - `normal`: directly place the value as is
+   * - `merge`: merge the value (object, array) with the object properties
+   *
+   * When {@link FieldOptions.default} is set, it will compare against the
+   * custom value.
+   */
   custom?: [(value: FieldValue) => unknown, "normal" | "merge"];
+  /**
+   * A custom name for the serialized field.
+   *
+   * When {@link FieldOptions.custom} is set to `merge`, merged fields that
+   * match the renamed key will overwrite it.
+   */
   rename?: string;
 }
 
+/** Options to configure how a class should be serialized. */
 export interface ClassOptions<FieldName> {
+  /**
+   * A name of the field (instance field or getter) to use as the serialized
+   * value for this class.
+   *
+   * This will only apply if every other field is undefined at the time.
+   */
   transparent?: FieldName;
 }
 
+/**
+ * A decorator to apply on classes or instance fields.
+ *
+ * It implements a [`toJSON()`][toJSON] method on the class.
+ *
+ * [toJSON]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#tojson_behavior
+ */
 export function Serialize<
   Ctx extends
     & (ClassDecoratorContext | ClassFieldDecoratorContext)
