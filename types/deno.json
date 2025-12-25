@@ -1,0 +1,14 @@
+{
+  "name": "@mcbe/types",
+  "version": "0.0.1",
+  "exports": {
+    "./block": "./block/mod.ts",
+    "./common": "./common/mod.ts",
+    "./identifier": "./identifier.ts",
+    "./inventory": "./inventory.ts",
+    "./item": "./item/mod.ts",
+    "./molang": "./molang.ts",
+    "./text": "./text.ts",
+    "./version": "./version.ts"
+  }
+}
