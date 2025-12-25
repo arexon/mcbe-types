@@ -1,15 +1,15 @@
-import { toSnakeCase } from "@std/text";
 import { equal } from "@std/assert";
+import { toSnakeCase } from "@std/text";
 
-export interface MetadataContext<Instance, FieldName extends keyof Instance> {
+export interface SerializeMetadata<FieldValue> {
   readonly metadata: {
-    fields?: Record<string, FieldOptions<Instance, FieldName> | undefined>;
+    fields?: Record<string, FieldOptions<FieldValue> | undefined>;
   };
 }
 
-export interface FieldOptions<Instance, FieldName extends keyof Instance> {
-  default?: () => Instance[FieldName];
-  custom?: [(value: Instance[FieldName]) => unknown, "normal" | "merge"];
+export interface FieldOptions<FieldValue> {
+  default?: () => FieldValue;
+  custom?: [(value: FieldValue) => unknown, "normal" | "merge"];
   rename?: string;
 }
 
@@ -17,52 +17,40 @@ export interface ClassOptions<FieldName> {
   transparent?: FieldName;
 }
 
-// deno-lint-ignore no-explicit-any
-export type Constructor = abstract new (...args: any[]) => any;
-
 export function Serialize<
-  T extends Constructor | undefined,
-  InstanceForClass extends T extends Constructor ? InstanceType<T> : never,
-  InstanceForField extends T extends Constructor ? never : unknown,
-  FieldNameForField extends keyof InstanceForField,
-  FieldNameForClass extends {
-    [P in keyof InstanceForClass]: InstanceForClass[P] extends
-      (...args: unknown[]) => unknown ? never
-      : P;
-  }[keyof InstanceForClass],
+  Ctx extends
+    & (ClassDecoratorContext | ClassFieldDecoratorContext)
+    & SerializeMetadata<unknown>,
 >(
-  opts?: T extends Constructor ? ClassOptions<FieldNameForClass>
-    : FieldOptions<InstanceForField, FieldNameForField>,
+  opts?: Ctx extends { kind: "class" } ? ClassOptions<
+      Ctx extends ClassDecoratorContext<infer V> ? keyof {
+          [
+            K in keyof InstanceType<V> as InstanceType<V>[K] extends
+              (...args: unknown[]) => unknown ? never : K
+          ]: K;
+        }
+        : never
+    >
+    : FieldOptions<
+      Ctx extends ClassFieldDecoratorContext<unknown, infer V> ? V : never
+    >,
 ): (
-  target: T,
-  ctx: T extends Constructor ?
-      & ClassDecoratorContext
-      & MetadataContext<InstanceForClass, FieldNameForClass>
-    :
-      & ClassFieldDecoratorContext<
-        InstanceForField,
-        InstanceForField[FieldNameForField]
-      >
-      & MetadataContext<InstanceForField, FieldNameForField>
-      & { name: FieldNameForField },
+  target: Ctx extends { kind: "class" } ? new (...args: unknown[]) => object
+    : undefined,
+  ctx: Ctx,
 ) => void {
   return (target, ctx) => {
-    if (ctx.kind === "class" && target !== undefined) {
-      classImpl(opts as ClassOptions<FieldNameForClass> ?? {}, target, ctx);
-    } else if (ctx.kind === "field" && target === undefined) {
-      fieldImpl(
-        opts as FieldOptions<InstanceForField, FieldNameForField> ?? {},
-        ctx,
-      );
+    if (ctx.kind === "field") {
+      fieldImpl(ctx, (opts ?? {}) as FieldOptions<unknown>);
+    } else if (ctx.kind === "class") {
+      classImpl(ctx, target!.prototype, (opts ?? {}) as ClassOptions<unknown>);
     }
   };
 }
 
-function fieldImpl<T, FieldName extends keyof T>(
-  opts: FieldOptions<T, FieldName>,
-  ctx:
-    & ClassFieldDecoratorContext<T, T[FieldName]>
-    & MetadataContext<T, FieldName>,
+function fieldImpl(
+  ctx: ClassFieldDecoratorContext & SerializeMetadata<unknown>,
+  opts: FieldOptions<unknown>,
 ): void {
   if (ctx.metadata.fields === undefined) ctx.metadata.fields = {};
   if (typeof ctx.name !== "symbol") {
@@ -70,18 +58,11 @@ function fieldImpl<T, FieldName extends keyof T>(
   }
 }
 
-function classImpl<
-  T extends Constructor,
-  FieldName extends keyof InstanceType<T>,
->(
-  classOpts: ClassOptions<FieldName>,
-  target: T,
-  ctx: ClassDecoratorContext & MetadataContext<InstanceType<T>, FieldName>,
+function classImpl(
+  ctx: ClassDecoratorContext & SerializeMetadata<unknown>,
+  proto: unknown,
+  classOpts: ClassOptions<unknown>,
 ): void {
-  const getMetadata = (fieldName: string, data: string): string => {
-    return `this.constructor[Symbol.metadata]?.fields?.["${fieldName}"]?.${data}`;
-  };
-
   const transparent = classOpts?.transparent;
   if (transparent !== undefined && typeof transparent !== "string") {
     throw new Error(
@@ -89,13 +70,13 @@ function classImpl<
     );
   }
 
-  let toJsonBody = "";
+  let body = "";
   if (ctx.metadata.fields !== undefined) {
     const fieldsLength = Object.keys(ctx.metadata.fields).length;
 
     let isTransparentCheck = "";
 
-    toJsonBody += "{";
+    body += "{";
     for (
       const [index, [fieldName, fieldOpts]] of Object.entries(
         ctx.metadata.fields,
@@ -143,9 +124,9 @@ function classImpl<
         keyValuePair = `"${key}": ${value},`;
       }
 
-      toJsonBody += keyValuePair;
+      body += keyValuePair;
     }
-    toJsonBody += "}";
+    body += "}";
 
     const transparentField = Object.entries(ctx.metadata.fields)
       .find((field) => field[0] === transparent);
@@ -160,23 +141,27 @@ function classImpl<
         value = getMetadata(transparentFieldName, `custom[0](${value})`);
       }
 
-      toJsonBody = `(${isTransparentCheck}) ? ${value} : ${toJsonBody}`;
+      body = `(${isTransparentCheck}) ? ${value} : ${body}`;
     }
   } else {
     if (classOpts?.transparent !== undefined) {
-      toJsonBody = `this["${String(classOpts.transparent)}"]`;
+      body = `this["${String(classOpts.transparent)}"]`;
     } else {
-      toJsonBody = "{}";
+      body = "{}";
     }
   }
-  toJsonBody = "return " + toJsonBody;
+  body = "return " + body;
 
-  const toJsonFn = new Function("equal", toJsonBody);
-  Object.defineProperty(target.prototype, "toJSON", {
+  const fn = new Function("equal", body);
+  Object.defineProperty(proto, "toJSON", {
     value() {
-      return toJsonFn.call(this, equal);
+      return fn.call(this, equal);
     },
     configurable: true,
     writable: true,
   });
+}
+
+function getMetadata(fieldName: string, data: string): string {
+  return `this.constructor[Symbol.metadata]?.fields?.["${fieldName}"]?.${data}`;
 }
