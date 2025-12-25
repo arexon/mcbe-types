@@ -4,6 +4,8 @@
  * @module
  */
 
+import type { AnyConstructor } from "@std/assert";
+
 /** Context metadata associated with a class decorator. Used by {@link Validate} */
 export interface ValidateMetadata<Field> {
   /** The actual metadata in {@link ClassDecoratorContext} */
@@ -60,8 +62,7 @@ export function Validate<
       >,
     ]
 ): (
-  target: Ctx extends { kind: "class" } ? new (...args: unknown[]) => object
-    : undefined,
+  target: Ctx extends { kind: "class" } ? AnyConstructor : undefined,
   ctx: Ctx,
 ) => void {
   return (target, ctx) => {

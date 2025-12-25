@@ -1,4 +1,4 @@
-import { equal } from "@std/assert";
+import { type AnyConstructor, equal } from "@std/assert";
 import { toSnakeCase } from "@std/text";
 
 export interface SerializeMetadata<FieldValue> {
@@ -35,8 +35,7 @@ export function Serialize<
       Ctx extends ClassFieldDecoratorContext<unknown, infer V> ? V : never
     >,
 ): (
-  target: Ctx extends { kind: "class" } ? new (...args: unknown[]) => object
-    : undefined,
+  target: Ctx extends { kind: "class" } ? AnyConstructor : undefined,
   ctx: Ctx,
 ) => void {
   return (target, ctx) => {
