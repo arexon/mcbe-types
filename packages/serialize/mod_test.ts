@@ -20,14 +20,29 @@ Deno.test("basic", () => {
   assertJSON(new Foo(), `{"a":8,"b":"foo"}`);
 });
 
-Deno.test("rename", () => {
-  @Serialize()
-  class Foo {
-    @Serialize({ rename: "no" })
-    yes = 1;
-  }
+Deno.test("rename", async (t) => {
+  await t.step("basic", () => {
+    @Serialize()
+    class Foo {
+      @Serialize({ rename: "no" })
+      yes = 1;
+    }
 
-  assertJSON(new Foo(), `{"no":1}`);
+    assertJSON(new Foo(), `{"no":1}`);
+  });
+
+  await t.step("with custom override merge", () => {
+    @Serialize()
+    class Foo {
+      @Serialize({ rename: "no" })
+      yes = 1;
+
+      @Serialize({ custom: [(v) => ({ no: v + 20 }), "merge"] })
+      merge = 1;
+    }
+
+    assertJSON(new Foo(), `{"no":21}`);
+  });
 });
 
 Deno.test("defaults", async (t) => {
