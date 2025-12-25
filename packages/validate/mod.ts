@@ -39,9 +39,9 @@ export type AssertionError = {
 } & AssertionResult;
 
 /**
- * Decorator to apply on classes or instance fields.
+ * A decorator to apply on classes or instance fields.
  *
- * On classes, it attaches a `.validate()` method (required).
+ * On classes, it implements a `validate()` method (required).
  *
  * On instance fields, it optionally accepts an {@link AssertionCallback}.
  * Providing no argument signifies that the field will be transparent and
