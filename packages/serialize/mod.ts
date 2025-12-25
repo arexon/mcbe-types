@@ -52,9 +52,10 @@ function fieldImpl(
   ctx: ClassFieldDecoratorContext & SerializeMetadata<unknown>,
   opts: FieldOptions<unknown>,
 ): void {
-  if (ctx.metadata.fields === undefined) ctx.metadata.fields = {};
+  ctx.metadata.fields ??= {};
   if (typeof ctx.name !== "symbol") {
-    ctx.metadata.fields[ctx.name] = opts;
+    const fields = ctx.metadata.fields;
+    fields[ctx.name] = { ...fields[ctx.name], ...opts };
   }
 }
 

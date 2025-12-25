@@ -1,4 +1,6 @@
 import { Serialize } from "@mcbe/serialize";
+import { Validate, validate } from "@mcbe/validate";
+import { assertRange } from "@mcbe/validate/assertions";
 import { assertEquals } from "@std/assert";
 
 function assertJSON(actual: unknown, expected: string): void {
@@ -230,4 +232,22 @@ Deno.test("nested", async (t) => {
 
     assertJSON(new Parent(), `{"b":"foo"}`);
   });
+});
+
+Deno.test("metadata compatibility", () => {
+  @Serialize() @Validate()
+  class Foo {
+    @Serialize({ rename: "b" }) @Validate(assertRange(0, 1))
+    a = 5;
+  }
+
+  const v = new Foo();
+  assertEquals(validate(v), [
+    {
+      path: "Foo.a",
+      reason: "5 is not between the range of 0..1",
+    },
+  ]);
+
+  assertEquals(JSON.stringify(v), `{"b":5}`);
 });
