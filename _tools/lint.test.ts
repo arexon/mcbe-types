@@ -5,7 +5,11 @@ function assertDiagnostics(
   source: string,
   expectedDiagnostics: Deno.lint.Diagnostic[],
 ) {
-  const actualDiagnostics = Deno.lint.runPlugin(plugin, "mod.ts", source);
+  const actualDiagnostics = Deno.lint.runPlugin(
+    plugin,
+    "mcbe-types/types/mod.ts",
+    source,
+  );
   assertEquals(actualDiagnostics, expectedDiagnostics);
 }
 
@@ -20,19 +24,17 @@ export class Foo {
     [
       {
         id: "style-guide/class-serialization",
-        message: "The class is not annotated with the `@Serialize` decorator",
-        hint:
-          "Annotate the class with `@Serialize()` to enable smart serialization",
+        message: "The class is not annotated with the `@Ser` decorator",
+        hint: "Annotate the class with `@Ser()` to enable smart serialization",
         range: [14, 17],
-        fix: [{ range: [1, 1], text: "@Serialize() " }],
+        fix: [{ range: [1, 1], text: "@Ser() " }],
       },
       {
         id: "style-guide/class-serialization",
-        message: "The field is not annotated with the `@Serialize` decorator",
-        hint:
-          "Annotate the field with `@Serialize()` to enable smart serialization",
+        message: "The field is not annotated with the `@Ser` decorator",
+        hint: "Annotate the field with `@Ser()` to enable smart serialization",
         range: [22, 28],
-        fix: [{ range: [22, 22], text: "@Serialize() " }],
+        fix: [{ range: [22, 22], text: "@Ser() " }],
       },
     ],
   );
@@ -40,9 +42,9 @@ export class Foo {
   // Good
   assertDiagnostics(
     `
-@Serialize()
+@Ser()
 export class Foo {
-  @Serialize()
+  @Ser()
   a = 1;
 }
     `,
@@ -52,9 +54,9 @@ export class Foo {
   // Bad
   assertDiagnostics(
     `
-@Serialize()
+@Ser()
 export class Foo {
-  @Serialize({ default: () => 1 })
+  @Ser({ default: () => 1 })
   a?;
 }
     `,
@@ -62,9 +64,9 @@ export class Foo {
       {
         id: "style-guide/class-serialization",
         message:
-          "Optional field is defining a default value for serialization with `@Serialize`",
+          "Optional field is defining a default value for serialization with `@Ser()`",
         hint: "Make the field required",
-        range: [35, 73],
+        range: [29, 61],
         fix: [],
       },
     ],
@@ -73,9 +75,9 @@ export class Foo {
   // Good
   assertDiagnostics(
     `
-@Serialize()
+@Ser()
 export class Foo {
-  @Serialize({ default: () => 1 })
+  @Ser(t.number(), { default: () => 1 })
   a;
 
   #b;
@@ -89,7 +91,7 @@ Deno.test("style-guide/component-namespace", () => {
   // Bad
   assertDiagnostics(
     `
-@Serialize()
+@Ser()
 export class FooComponent {}
     `,
     [
@@ -97,7 +99,7 @@ export class FooComponent {}
         id: "style-guide/component-namespace",
         message: "Component class does not implement `ComponentNamespace`",
         hint: undefined,
-        range: [27, 39],
+        range: [21, 33],
         fix: [],
       },
     ],
@@ -106,7 +108,7 @@ export class FooComponent {}
   // Good
   assertDiagnostics(
     `
-@Serialize()
+@Ser()
 export class FooComponent implements ComponentNamespace {
   get namespace(): string {
     return "minecraft:foo";
