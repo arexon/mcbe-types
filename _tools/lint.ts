@@ -1,13 +1,11 @@
-import denoJson from "../deno.json" with { type: "json" };
-
-const IGNORED_PATHS = denoJson.workspace.filter((s) => s !== "types");
+const ALLOWED_PATHS = ["mcbe-types/types"];
 
 export default {
   name: "style-guide",
   rules: {
     "class-serialization": {
       create(ctx) {
-        if (IGNORED_PATHS.some((p) => ctx.filename.includes(p))) return {};
+        if (!ALLOWED_PATHS.some((p) => ctx.filename.includes(p))) return {};
 
         const SER = "Serialize";
 
@@ -104,7 +102,7 @@ export default {
         const COMP_NAMESPACE = "ComponentNamespace";
         return {
           ClassDeclaration(node) {
-            if (IGNORED_PATHS.some((p) => ctx.filename.includes(p))) return {};
+            if (!ALLOWED_PATHS.some((p) => ctx.filename.includes(p))) return {};
 
             if (
               node.id !== null &&
