@@ -5,11 +5,15 @@ function assertDiagnostics(
   source: string,
   expectedDiagnostics: Deno.lint.Diagnostic[],
 ) {
-  const actualDiagnostics = Deno.lint.runPlugin(plugin, "mod.ts", source);
+  const actualDiagnostics = Deno.lint.runPlugin(
+    plugin,
+    "mcbe-types/types/mod.ts",
+    source,
+  );
   assertEquals(actualDiagnostics, expectedDiagnostics);
 }
 
-Deno.test("style-guide/class-serialization", () => {
+Deno.test("style-guide/class-(de)serialization", () => {
   // Bad
   assertDiagnostics(
     `
@@ -19,20 +23,20 @@ export class Foo {
     `,
     [
       {
-        id: "style-guide/class-serialization",
-        message: "The class is not annotated with the `@Serialize` decorator",
+        id: "style-guide/class-(de)serialization",
+        message: "The class is not annotated with the `@Edres` decorator",
         hint:
-          "Annotate the class with `@Serialize()` to enable smart serialization",
+          "Annotate the class with `@Edres()` to enable smart serialization",
         range: [14, 17],
-        fix: [{ range: [1, 1], text: "@Serialize() " }],
+        fix: [{ range: [1, 1], text: "@Edres() " }],
       },
       {
-        id: "style-guide/class-serialization",
-        message: "The field is not annotated with the `@Serialize` decorator",
+        id: "style-guide/class-(de)serialization",
+        message: "The field is not annotated with the `@Edres` decorator",
         hint:
-          "Annotate the field with `@Serialize()` to enable smart serialization",
+          "Annotate the field with `@Edres()` to enable smart serialization",
         range: [22, 28],
-        fix: [{ range: [22, 22], text: "@Serialize() " }],
+        fix: [{ range: [22, 22], text: "@Edres() " }],
       },
     ],
   );
@@ -40,9 +44,9 @@ export class Foo {
   // Good
   assertDiagnostics(
     `
-@Serialize()
+@Edres()
 export class Foo {
-  @Serialize()
+  @Edres()
   a = 1;
 }
     `,
@@ -52,19 +56,19 @@ export class Foo {
   // Bad
   assertDiagnostics(
     `
-@Serialize()
+@Edres()
 export class Foo {
-  @Serialize({ default: () => 1 })
+  @Edres(t.number(), { default: () => 1 })
   a?;
 }
     `,
     [
       {
-        id: "style-guide/class-serialization",
+        id: "style-guide/class-(de)serialization",
         message:
-          "Optional field is defining a default value for serialization with `@Serialize`",
+          "Optional field is defining a default value for serialization with `@Edres()`",
         hint: "Make the field required",
-        range: [35, 73],
+        range: [31, 77],
         fix: [],
       },
     ],
@@ -73,9 +77,9 @@ export class Foo {
   // Good
   assertDiagnostics(
     `
-@Serialize()
+@Edres()
 export class Foo {
-  @Serialize({ default: () => 1 })
+  @Edres(t.number(), { default: () => 1 })
   a;
 
   #b;
@@ -89,7 +93,7 @@ Deno.test("style-guide/component-namespace", () => {
   // Bad
   assertDiagnostics(
     `
-@Serialize()
+@Edres()
 export class FooComponent {}
     `,
     [
@@ -97,7 +101,7 @@ export class FooComponent {}
         id: "style-guide/component-namespace",
         message: "Component class does not implement `ComponentNamespace`",
         hint: undefined,
-        range: [27, 39],
+        range: [23, 35],
         fix: [],
       },
     ],
@@ -106,7 +110,7 @@ export class FooComponent {}
   // Good
   assertDiagnostics(
     `
-@Serialize()
+@Edres()
 export class FooComponent implements ComponentNamespace {
   get namespace(): string {
     return "minecraft:foo";
