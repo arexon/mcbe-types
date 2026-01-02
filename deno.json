@@ -1,7 +1,6 @@
 {
   "workspace": [
-    "serialize",
-    "validate"
+    "edres"
   ],
   "tasks": {
     "test": "deno test --allow-all --parallel --doc",

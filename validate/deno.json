@@ -1,8 +1,0 @@
-{
-  "name": "@mcbe/validate",
-  "version": "0.0.1",
-  "exports": {
-    ".": "./mod.ts",
-    "./assertions": "./assertions.ts"
-  }
-}
