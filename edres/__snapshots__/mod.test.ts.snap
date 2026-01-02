@@ -1,0 +1,736 @@
+export const snapshot = {};
+
+snapshot[`fromJSON() > numbers 1`] = `
+{
+  isOk: true,
+  value: Number {
+    a: 2.5,
+    b: 2.5,
+    c: 2.5,
+    d: 2.5,
+  },
+}
+`;
+
+snapshot[`fromJSON() > numbers 2`] = `
+{
+  isOk: true,
+  value: Number {
+    a: 0.1,
+    b: 0,
+    c: 0,
+    d: 0.1,
+  },
+}
+`;
+
+snapshot[`fromJSON() > numbers 3`] = `
+{
+  isOk: true,
+  value: Number {
+    a: 4.9,
+    b: 4.9,
+    c: 5,
+    d: 5,
+  },
+}
+`;
+
+snapshot[`fromJSON() > numbers 4`] = `
+{
+  errors: [
+    {
+      message: "Not greater than 0",
+      path: "Number.a",
+    },
+    {
+      message: "Not greater than or equal to 0",
+      path: "Number.b",
+    },
+    {
+      message: "Not greater than or equal to 0",
+      path: "Number.c",
+    },
+    {
+      message: "Not greater than 0",
+      path: "Number.d",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > numbers 5`] = `
+{
+  errors: [
+    {
+      message: "Not less than 5",
+      path: "Number.a",
+    },
+    {
+      message: "Not less than 5",
+      path: "Number.b",
+    },
+    {
+      message: "Not less than or equal to 5",
+      path: "Number.c",
+    },
+    {
+      message: "Not less than or equal to 5",
+      path: "Number.d",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > numbers 6`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Number.a",
+    },
+    {
+      message: "Required field is missing",
+      path: "Number.b",
+    },
+    {
+      message: "Required field is missing",
+      path: "Number.c",
+    },
+    {
+      message: "Required field is missing",
+      path: "Number.d",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > booleans 1`] = `
+{
+  isOk: true,
+  value: Boolean {
+    a: true,
+    b: false,
+  },
+}
+`;
+
+snapshot[`fromJSON() > booleans 2`] = `
+{
+  isOk: true,
+  value: Boolean {
+    a: false,
+    b: true,
+  },
+}
+`;
+
+snapshot[`fromJSON() > booleans 3`] = `
+{
+  errors: [
+    {
+      message: "Expected a boolean",
+      path: "Boolean.a",
+    },
+    {
+      message: "Expected a boolean",
+      path: "Boolean.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > booleans 4`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Boolean.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > strings 1`] = `
+{
+  isOk: true,
+  value: Strings {
+    a: "foo",
+    b: "foo",
+  },
+}
+`;
+
+snapshot[`fromJSON() > strings 2`] = `
+{
+  errors: [
+    {
+      message: "Expected a string",
+      path: "Strings.a",
+    },
+    {
+      message: "Expected a string",
+      path: "Strings.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > strings 3`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Strings.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > literals 1`] = `
+{
+  isOk: true,
+  value: Literals {
+    a: "foo",
+    b: "foo",
+  },
+}
+`;
+
+snapshot[`fromJSON() > literals 2`] = `
+{
+  errors: [
+    {
+      message: 'Expected a literal of "foo"',
+      path: "Literals.a",
+    },
+    {
+      message: 'Expected a literal of "foo"',
+      path: "Literals.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > literals 3`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Literals.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > arrays 1`] = `
+{
+  isOk: true,
+  value: Arrays {
+    a: [
+      "foo",
+      "bar",
+    ],
+    b: [],
+  },
+}
+`;
+
+snapshot[`fromJSON() > arrays 2`] = `
+{
+  errors: [
+    {
+      message: "Expected a string",
+      path: "Arrays.a#1",
+    },
+    {
+      message: "Expected an array",
+      path: "Arrays.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > arrays 3`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Arrays.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > unions 1`] = `
+{
+  isOk: true,
+  value: Unions {
+    a: 0,
+    b: "foo",
+  },
+}
+`;
+
+snapshot[`fromJSON() > unions 2`] = `
+{
+  errors: [
+    {
+      message: "Expected a string, or number",
+      path: "Unions.a",
+    },
+    {
+      message: "Expected a string, or number",
+      path: "Unions.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > unions 3`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Unions.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > arrays + unions 1`] = `
+{
+  isOk: true,
+  value: ArraysUnions {
+    a: [
+      0,
+      "foo",
+    ],
+    b: [
+      0,
+      "foo",
+      1,
+      "bar",
+    ],
+  },
+}
+`;
+
+snapshot[`fromJSON() > arrays + unions 2`] = `
+{
+  errors: [
+    {
+      message: "Expected an array",
+      path: "ArraysUnions.a",
+    },
+    {
+      message: "Expected a string, or number",
+      path: "ArraysUnions.b#0",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > arrays + unions 3`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "ArraysUnions.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > tuples 1`] = `
+{
+  isOk: true,
+  value: Tuples {
+    a: [
+      "foo",
+      0,
+      "one",
+    ],
+    b: [
+      "bar",
+      1,
+      "one",
+    ],
+  },
+}
+`;
+
+snapshot[`fromJSON() > tuples 2`] = `
+{
+  errors: [
+    {
+      message: "Expected a string",
+      path: "Tuples.a#0",
+    },
+    {
+      message: 'Expected a literal of "one"',
+      path: "Tuples.a#2",
+    },
+    {
+      message: "Expected a string",
+      path: "Tuples.b#0",
+    },
+    {
+      message: "Expected a number",
+      path: "Tuples.b#1",
+    },
+    {
+      message: 'Expected a literal of "one"',
+      path: "Tuples.b#2",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > tuples 3`] = `
+{
+  errors: [
+    {
+      message: "Expected a string",
+      path: "Tuples.a#0",
+    },
+    {
+      message: "Expected a number",
+      path: "Tuples.a#1",
+    },
+    {
+      message: 'Expected a literal of "one"',
+      path: "Tuples.a#2",
+    },
+    {
+      message: "Expected a tuple array",
+      path: "Tuples.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > tuples 4`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Tuples.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > tuples + unions 1`] = `
+{
+  isOk: true,
+  value: TuplesUnions {
+    a: [
+      "A1",
+      "B2",
+    ],
+    b: [
+      "A2",
+      "B1",
+    ],
+  },
+}
+`;
+
+snapshot[`fromJSON() > tuples + unions 2`] = `
+{
+  errors: [
+    {
+      message: 'Expected a literal of "A1", or literal of "A2"',
+      path: "TuplesUnions.a#0",
+    },
+    {
+      message: 'Expected a literal of "B1", or literal of "B2"',
+      path: "TuplesUnions.a#1",
+    },
+    {
+      message: 'Expected a literal of "A1", or literal of "A2"',
+      path: "TuplesUnions.b#0",
+    },
+    {
+      message: 'Expected a literal of "B1", or literal of "B2"',
+      path: "TuplesUnions.b#1",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > tuples + unions 3`] = `
+{
+  errors: [
+    {
+      message: 'Expected a literal of "A1", or literal of "A2"',
+      path: "TuplesUnions.a#0",
+    },
+    {
+      message: 'Expected a literal of "B1", or literal of "B2"',
+      path: "TuplesUnions.a#1",
+    },
+    {
+      message: "Expected a tuple array",
+      path: "TuplesUnions.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > tuples + unions 4`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "TuplesUnions.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > objects 1`] = `
+{
+  isOk: true,
+  value: Objects {
+    a: {
+      a: "foo",
+      b: 0,
+    },
+    b: {
+      a: "bar",
+      b: 1,
+    },
+  },
+}
+`;
+
+snapshot[`fromJSON() > objects 2`] = `
+{
+  errors: [
+    {
+      message: "Expected a string",
+      path: "Objects.a.a",
+    },
+    {
+      message: "Expected a number",
+      path: "Objects.a.b",
+    },
+    {
+      message: "Expected an object",
+      path: "Objects.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > objects 3`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Objects.a",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > custom 1`] = `
+{
+  isOk: true,
+  value: Custom {
+    a: {},
+    b: B {
+      number: 0,
+    },
+    c: B {
+      number: 0,
+    },
+  },
+}
+`;
+
+snapshot[`fromJSON() > custom 2`] = `
+{
+  errors: [
+    {
+      message: "Expected an object",
+      path: "Custom.a.A",
+    },
+    {
+      message: "Expected a number",
+      path: "Custom.b.B.number",
+    },
+    {
+      message: "Expected a number",
+      path: "Custom.c.B.number",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > custom 3`] = `
+{
+  errors: [
+    {
+      message: "Expected an object",
+      path: "Custom.a.A",
+    },
+    {
+      message: "Required field is missing",
+      path: "Custom.b.B.number",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > custom 4`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Custom.a",
+    },
+    {
+      message: "Required field is missing",
+      path: "Custom.b",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > complex custom 1`] = `
+{
+  isOk: true,
+  value: Complex {
+    array: [
+      A {
+        name: "a",
+      },
+    ],
+    arrayUnion: [
+      A {
+        name: "a",
+      },
+      B {
+        number: 0,
+      },
+    ],
+    tuple: [
+      A {
+        name: "a",
+      },
+      B {
+        number: 0,
+      },
+    ],
+    tupleUnion: [
+      A {
+        name: "a",
+      },
+      [
+        B {
+          number: 0,
+        },
+        B {
+          number: 1,
+        },
+      ],
+    ],
+    union: A {
+      name: "a",
+    },
+  },
+}
+`;
+
+snapshot[`fromJSON() > complex custom 2`] = `
+{
+  errors: [
+    {
+      message: "Expected an object",
+      path: "Complex.array#0.A",
+    },
+    {
+      message: "Expected a A, or B",
+      path: "Complex.arrayUnion#0",
+    },
+    {
+      message: "Expected a A, or B",
+      path: "Complex.arrayUnion#1",
+    },
+    {
+      message: "Expected a A, or B",
+      path: "Complex.union",
+    },
+    {
+      message: "Required field is missing",
+      path: "Complex.tuple#0.A.name",
+    },
+    {
+      message: "Expected a A, or B",
+      path: "Complex.tupleUnion#0",
+    },
+    {
+      message: "Expected a A, or B",
+      path: "Complex.tupleUnion#1#0",
+    },
+  ],
+  isOk: false,
+}
+`;
+
+snapshot[`fromJSON() > complex custom 3`] = `
+{
+  errors: [
+    {
+      message: "Required field is missing",
+      path: "Complex.array",
+    },
+    {
+      message: "Required field is missing",
+      path: "Complex.arrayUnion",
+    },
+    {
+      message: "Required field is missing",
+      path: "Complex.union",
+    },
+    {
+      message: "Required field is missing",
+      path: "Complex.tuple",
+    },
+    {
+      message: "Required field is missing",
+      path: "Complex.tupleUnion",
+    },
+  ],
+  isOk: false,
+}
+`;
