@@ -1,20 +1,11 @@
 /**
- * Serialization library inspired by [Serde](https://serde.rs) from the Rust ecosystem.
+ * Simple serialization library powered by decorators. Inspired by [Serde](https://serde.rs).
  *
  * @module
  */
 
 import { type AnyConstructor, equal } from "@std/assert";
 import { toSnakeCase } from "@std/text";
-
-/** Context metadata associated with a class decorator. Used by {@link Serialize} */
-export interface SerializeMetadata<FieldValue> {
-  /** The actual metadata in {@link ClassDecoratorContext} */
-  readonly metadata: {
-    /** Maps fields to serialization options. */
-    fields?: Record<string, FieldOptions<FieldValue> | undefined>;
-  };
-}
 
 /** Options to configure how a field should be serialized. */
 export interface FieldOptions<FieldValue> {
@@ -61,14 +52,10 @@ export interface ClassOptions<FieldName> {
 /**
  * A decorator to apply on classes or instance fields.
  *
- * It implements a [`toJSON()`][toJSON] method on the class.
- *
- * [toJSON]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#tojson_behavior
+ * It implements `toJSON()` on the class prototype
  */
-export function Serialize<
-  Ctx extends
-    & (ClassDecoratorContext | ClassFieldDecoratorContext)
-    & SerializeMetadata<unknown>,
+export function Ser<
+  Ctx extends ClassDecoratorContext | ClassFieldDecoratorContext,
 >(
   opts?: Ctx extends { kind: "class" } ? ClassOptions<
       Ctx extends ClassDecoratorContext<infer V> ? keyof {
@@ -88,128 +75,196 @@ export function Serialize<
 ) => void {
   return (target, ctx) => {
     if (ctx.kind === "field") {
-      fieldImpl(ctx, (opts ?? {}) as FieldOptions<unknown>);
+      fieldImpl(ctx, opts as FieldOptions<unknown>);
     } else if (ctx.kind === "class") {
-      classImpl(ctx, target!.prototype, (opts ?? {}) as ClassOptions<unknown>);
+      classImpl(ctx, target!, opts as ClassOptions<string>);
     }
   };
 }
 
+interface ContextMetadata {
+  readonly metadata: {
+    [Metadata.symbol]?: Metadata;
+  };
+}
+
+const SPECIAL_CHARACTERS_REGEXP = /[$&+,:;=?@#|'<>.^*()%!-]/;
+
+interface FieldMetadata {
+  index: number;
+  name: string;
+  default?: () => unknown;
+  custom?: { fn: (value: unknown) => unknown; strategy: "normal" | "merge" };
+  rename?: string;
+}
+
+class Metadata {
+  static readonly symbol = Symbol();
+  static readonly symbolName = "metadataSymbol";
+
+  length = 0;
+  transparent: string | undefined;
+  fields: Record<string, FieldMetadata> = {};
+
+  setField(name: string, options: FieldOptions<unknown>): void {
+    this.fields[name] = {
+      index: this.length,
+      name,
+      custom: options.custom !== undefined
+        ? { fn: options.custom[0], strategy: options.custom[1] }
+        : undefined,
+      default: options.default,
+      rename: options.rename,
+    };
+    this.length++;
+  }
+
+  getField(name: string): FieldMetadata | undefined {
+    return this.fields[name];
+  }
+
+  getKey(name: string): string {
+    const field = this.fields[name];
+    if (field.rename !== undefined) {
+      return field.rename;
+    } else if (!SPECIAL_CHARACTERS_REGEXP.test(field.name)) {
+      return toSnakeCase(field.name);
+    } else {
+      return field.name;
+    }
+  }
+}
+
 function fieldImpl(
-  ctx: ClassFieldDecoratorContext & SerializeMetadata<unknown>,
-  opts: FieldOptions<unknown>,
+  ctx: ClassFieldDecoratorContext & ContextMetadata,
+  opts?: FieldOptions<unknown>,
 ): void {
-  ctx.metadata.fields ??= {};
+  ctx.metadata[Metadata.symbol] ??= new Metadata();
   if (typeof ctx.name !== "symbol") {
-    const fields = ctx.metadata.fields;
-    fields[ctx.name] = { ...fields[ctx.name], ...opts };
+    ctx.metadata[Metadata.symbol]!.setField(ctx.name, opts ?? {});
   }
 }
 
 function classImpl(
-  ctx: ClassDecoratorContext & SerializeMetadata<unknown>,
-  proto: unknown,
-  classOpts: ClassOptions<unknown>,
+  ctx: ClassDecoratorContext & ContextMetadata,
+  ctor: AnyConstructor,
+  classOpts: ClassOptions<string>,
 ): void {
-  const transparent = classOpts?.transparent;
-  if (transparent !== undefined && typeof transparent !== "string") {
-    throw new Error(
-      `Transparent field "${String(transparent)}" must be a string`,
-    );
-  }
+  ctx.metadata[Metadata.symbol] ??= new Metadata();
+  const metadata = ctx.metadata[Metadata.symbol]!;
+  metadata.transparent = classOpts?.transparent;
 
-  let body = "";
-  if (ctx.metadata.fields !== undefined) {
-    const fieldsLength = Object.keys(ctx.metadata.fields).length;
+  const toJsonFn = generateToJson(metadata);
 
-    let isTransparentCheck = "";
-
-    body += "{";
-    for (
-      const [index, [fieldName, fieldOpts]] of Object.entries(
-        ctx.metadata.fields,
-      ).entries()
-    ) {
-      const isFieldTransparentCheck = `"${fieldName}" === "${
-        transparent ?? ""
-      }"`;
-
-      let key: string;
-      if (fieldOpts?.rename !== undefined) key = fieldOpts.rename;
-      else if (!fieldName.includes(":")) key = toSnakeCase(fieldName);
-      else key = fieldName;
-
-      let value = `this["${fieldName}"]`;
-
-      if (fieldOpts?.custom !== undefined) {
-        value = getMetadata(fieldName, `custom[0](${value})`);
-      }
-
-      if (fieldOpts?.default !== undefined) {
-        const isDefaultCheck = `equal(${
-          JSON.stringify(fieldOpts.default())
-        }, ${value})`;
-
-        if (transparent !== undefined) {
-          isTransparentCheck +=
-            `(${isFieldTransparentCheck} || ${isDefaultCheck} || ${value} === undefined)`;
-        }
-
-        value = `${isDefaultCheck} ? undefined : ${value}`;
-      } else if (transparent !== undefined) {
-        isTransparentCheck +=
-          `(${isFieldTransparentCheck} || ${value} === undefined)`;
-      }
-
-      if (transparent !== undefined && index < fieldsLength - 1) {
-        isTransparentCheck += " && ";
-      }
-
-      let keyValuePair = "";
-      if (fieldOpts?.custom?.[1] === "merge") {
-        keyValuePair = `...(${value}),`;
-      } else {
-        keyValuePair = `"${key}": ${value},`;
-      }
-
-      body += keyValuePair;
-    }
-    body += "}";
-
-    const transparentField = Object.entries(ctx.metadata.fields)
-      .find((field) => field[0] === transparent);
-    if (transparentField !== undefined && isTransparentCheck !== "") {
-      const [transparentFieldName, transparentFieldOpts] = transparentField;
-      let value = `this["${transparentFieldName}"]`;
-      // This is necessary because the method is not called on directly
-      // returned values, but rather on object properties.
-      value = `(${value}?.toJSON?.() ?? ${value})`;
-
-      if (transparentFieldOpts?.custom !== undefined) {
-        value = getMetadata(transparentFieldName, `custom[0](${value})`);
-      }
-
-      body = `(${isTransparentCheck}) ? ${value} : ${body}`;
-    }
-  } else {
-    if (classOpts?.transparent !== undefined) {
-      body = `this["${String(classOpts.transparent)}"]`;
-    } else {
-      body = "{}";
-    }
-  }
-  body = "return " + body;
-
-  const fn = new Function("equal", body);
-  Object.defineProperty(proto, "toJSON", {
+  Object.defineProperty(ctor.prototype, "toJSON", {
     value() {
-      return fn.call(this, equal);
+      return toJsonFn.call(this, Metadata.symbol, equal);
     },
     configurable: true,
     writable: true,
   });
 }
 
-function getMetadata(fieldName: string, data: string): string {
-  return `this.constructor[Symbol.metadata]?.fields?.["${fieldName}"]?.${data}`;
+// deno-lint-ignore ban-types
+function generateToJson(metadata: Metadata): Function {
+  let body = "";
+  const canClassBeTransparent: string[] = [];
+  const props: string[] = [];
+  const customValues: [string, string][] = [];
+
+  if (metadata.length > 0) {
+    for (const field of Object.values(metadata.fields)) {
+      const key = metadata.getKey(field.name);
+      let value = `this["${field.name}"]`;
+
+      const canFieldAllowTransprency = [];
+      if (field.name !== metadata.transparent) {
+        canFieldAllowTransprency.push(`${value} === undefined`);
+      }
+
+      if (field.custom !== undefined) {
+        const customValue = `customValue${field.index}`;
+        const fieldsMetadata = "fieldsMetadata";
+
+        if (customValues.length === 0) {
+          customValues.push([
+            fieldsMetadata,
+            `this.constructor[Symbol.metadata][${Metadata.symbolName}]`,
+          ]);
+        }
+        customValues.push([
+          customValue,
+          `${fieldsMetadata}.getField("${field.name}").custom.fn(${value})`,
+        ]);
+
+        value = customValue;
+      }
+
+      if (field.default !== undefined) {
+        const isDefault = `equal(${JSON.stringify(field.default())}, ${value})`;
+
+        if (
+          metadata.transparent !== undefined &&
+          field.name !== metadata.transparent
+        ) {
+          canFieldAllowTransprency.push(isDefault);
+        }
+
+        value = `${isDefault} ? undefined : ${value}`;
+      }
+
+      if (field.custom?.strategy === "merge") {
+        props.push(`...(${value}),`);
+      } else {
+        props.push(`"${key}": ${value},`);
+      }
+
+      if (
+        metadata.transparent !== undefined &&
+        field.name !== metadata.transparent
+      ) {
+        canClassBeTransparent.push(
+          `(${canFieldAllowTransprency.join(" || ")})`,
+        );
+      }
+    }
+
+    for (const [name, value] of customValues) {
+      body += `const ${name} = ${value};`;
+    }
+
+    if (canClassBeTransparent.length > 0) {
+      body += `const result = {${props.join("")}};`;
+    } else if (metadata.transparent === undefined) {
+      body += `return {${props.join("")}};`;
+    }
+
+    if (metadata.transparent !== undefined) {
+      const transparentField = metadata.getField(metadata.transparent)!;
+      let value: string;
+      if (transparentField.custom !== undefined) {
+        value = `customValue${transparentField.index}`;
+      } else {
+        value = `this["${transparentField.name}"]`;
+      }
+
+      value = `${value}?.toJSON?.() ?? ${value}`;
+
+      if (canClassBeTransparent.length > 0) {
+        body += `if (${canClassBeTransparent.join(" && ")}) return ${value};`;
+      } else {
+        body += `return ${value};`;
+      }
+    }
+
+    if (canClassBeTransparent.length > 0) {
+      body += `return result;`;
+    }
+  } else if (metadata.transparent !== undefined) {
+    body += `return this["${metadata.transparent}"];`;
+  } else {
+    body += "return {};";
+  }
+
+  return new Function(Metadata.symbolName, "equal", body);
 }
