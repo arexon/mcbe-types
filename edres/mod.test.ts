@@ -2,9 +2,6 @@ import { deserialize, Edres, t } from "@mcbe/edres";
 import { type AnyConstructor, assertEquals } from "@std/assert";
 import { assertSnapshot } from "@std/testing/snapshot";
 
-const TO_JSON = "toJSON()";
-const FROM_JSON = "fromJSON()";
-
 function assertToJSON(actual: unknown, expected: string): void {
   assertEquals(JSON.stringify(actual), expected);
 }
@@ -17,7 +14,7 @@ async function snapshotFromJSON<T extends AnyConstructor>(
   await assertSnapshot(ctx, deserialize(JSON.stringify(input), ctor));
 }
 
-Deno.test(TO_JSON, async (ctx) => {
+Deno.test("toJSON()", async (ctx) => {
   await ctx.step("basic", () => {
     @Edres()
     class Foo {
@@ -285,7 +282,7 @@ Deno.test(TO_JSON, async (ctx) => {
   });
 });
 
-Deno.test(FROM_JSON, async (ctx) => {
+Deno.test("fromJSON()", async (ctx) => {
   // NOTE: We do not care about the initial field values, so we just assign them to whatever.
 
   await ctx.step("numbers", async (ctx) => {
