@@ -1,7 +1,4 @@
 {
-  "compilerOptions": {
-    "noUncheckedIndexedAccess": true
-  },
   "workspace": [
     "serialize",
     "validate"
