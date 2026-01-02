@@ -192,7 +192,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
     );
 
     this.#js.if('typeof input !== "object"', () => {
-      this.#generateTypeMismatchError([this.#ctor.name], "Expected an object");
+      this.#generateError([this.#ctor.name], "Expected an object");
       this.#js.return(`{ isOk: false, errors }`);
     });
 
@@ -294,7 +294,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
             this.#js.if(
               `${input} > ${fieldType.minimum}`,
               () =>
-                this.#generateTypeMismatchError(
+                this.#generateError(
                   path,
                   `Not greater than ${fieldType.minimum}`,
                 ),
@@ -304,7 +304,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
             this.#js.if(
               `${input} >= ${fieldType.exclusiveMinimum}`,
               () =>
-                this.#generateTypeMismatchError(
+                this.#generateError(
                   path,
                   `Not greater than or equal to ${fieldType.exclusiveMinimum}`,
                 ),
@@ -316,7 +316,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
             this.#js.if(
               `${input} < ${fieldType.maximum}`,
               () =>
-                this.#generateTypeMismatchError(
+                this.#generateError(
                   path,
                   `Not less than ${fieldType.maximum}`,
                 ),
@@ -326,7 +326,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
             this.#js.if(
               `${input} <= ${fieldType.exclusiveMaximum}`,
               () =>
-                this.#generateTypeMismatchError(
+                this.#generateError(
                   path,
                   `Not less than or equal to ${fieldType.exclusiveMaximum}`,
                 ),
@@ -382,7 +382,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
           },
         );
         this.#js.else(() => {
-          this.#generateTypeMismatchError(path, "Expected an object");
+          this.#generateError(path, "Expected an object");
         });
         break;
       }
@@ -449,7 +449,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
               if (i === fieldType.options.length - 2) message += ", or ";
               else if (i < fieldType.options.length - 1) message += ", ";
             }
-            this.#generateTypeMismatchError(path, message);
+            this.#generateError(path, message);
           });
         };
         if (this.#isRequired) this.#js.else(fn);
@@ -533,7 +533,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
       );
     }
     if (this.#parentTypeKind !== "union" && message !== undefined) {
-      this.#js.else(() => this.#generateTypeMismatchError(path, message));
+      this.#js.else(() => this.#generateError(path, message));
     }
   }
 
@@ -544,7 +544,7 @@ export class FromJsonGenerator<T extends AnyConstructor> {
     );
   }
 
-  #generateTypeMismatchError(path: string[], message: string): void {
+  #generateError(path: string[], message: string): void {
     this.#js.push(
       "errors",
       `{ path: ${formatPath(path)}, message: "${message}" }`,
