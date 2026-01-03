@@ -1,10 +1,10 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { BlockDescriptor } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class PlacementFilterBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => [] })
+  @Edres({ default: () => [] })
   conditions: PlacementFilterCondition[];
 
   get namespace(): string {
@@ -18,9 +18,9 @@ export class PlacementFilterBlockComponent implements ComponentNamespace {
   }
 }
 
-@Serialize()
+@Edres()
 export class PlacementFilterCondition {
-  @Serialize({ default: () => [] })
+  @Edres({ default: () => [] })
   allowedFaces: (
     | "all"
     | "side"
@@ -32,7 +32,7 @@ export class PlacementFilterCondition {
     | "east"
   )[];
 
-  @Serialize({ default: () => [] })
+  @Edres({ default: () => [] })
   blockFilter: BlockDescriptor[];
 
   constructor(

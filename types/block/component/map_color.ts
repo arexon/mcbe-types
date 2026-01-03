@@ -1,13 +1,13 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { TintMethod } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize({ transparent: "color" })
+@Edres({ transparent: "color" })
 export class MapColorBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   color: string | [number, number, number];
 
-  @Serialize()
+  @Edres()
   tintMethod?: TintMethod;
 
   get namespace(): string {

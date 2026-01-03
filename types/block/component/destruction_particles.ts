@@ -1,16 +1,16 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { TintMethod } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class DestructionParticlesBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => 100 })
+  @Edres({ default: () => 100 })
   particleCount: number;
 
-  @Serialize()
+  @Edres()
   texture?: string;
 
-  @Serialize()
+  @Edres()
   tintMethod?: TintMethod;
 
   get namespace(): string {

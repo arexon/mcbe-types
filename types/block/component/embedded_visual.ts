@@ -1,4 +1,4 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type {
   GeometryBlockComponent,
   MaterialInstancesBlockComponent,
@@ -7,12 +7,12 @@ import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 // NOTE: Cannot be used in permutations.
 
-@Serialize()
+@Edres()
 export class EmbeddedVisualBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   geometry: GeometryBlockComponent;
 
-  @Serialize()
+  @Edres()
   materialInstances: MaterialInstancesBlockComponent;
 
   get namespace(): string {

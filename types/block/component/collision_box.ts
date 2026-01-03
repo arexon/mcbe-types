@@ -1,13 +1,13 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type {
   ComponentNamespace,
   DerivedInputProps,
   InputProps,
 } from "@mcbe/types/common";
 
-@Serialize({ transparent: "value" })
+@Edres({ transparent: "value" })
 export class CollisionBoxBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   value: boolean | BoundingBox | BoundingBox[];
 
   get namespace(): string {
@@ -33,12 +33,12 @@ export class CollisionBoxBlockComponent implements ComponentNamespace {
   }
 }
 
-@Serialize()
+@Edres()
 export class BoundingBox {
-  @Serialize({ default: () => [-8, 0, -8] })
+  @Edres({ default: () => [-8, 0, -8] })
   origin: [number, number, number];
 
-  @Serialize({ default: () => [16, 16, 16] })
+  @Edres({ default: () => [16, 16, 16] })
   size: [number, number, number];
 
   constructor(props: InputProps<BoundingBox, "origin" | "size">) {

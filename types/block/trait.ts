@@ -1,4 +1,4 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import {
   type ComponentNamespace,
   Components,
@@ -13,9 +13,9 @@ export type BlockTrait =
 // deno-lint-ignore style-guide/class-serialization
 export class BlockTraits extends Components<BlockTrait> {}
 
-@Serialize()
+@Edres()
 export class ConnectionBlockTrait implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   enabledStates: ("minecraft:cardinal_connections")[];
 
   get namespace(): string {
@@ -27,9 +27,9 @@ export class ConnectionBlockTrait implements ComponentNamespace {
   }
 }
 
-@Serialize()
+@Edres()
 export class PlacementPositionBlockTrait implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   enabledStates: ("minecraft:block_face" | "minecraft:vertical_half")[];
 
   get namespace(): string {
@@ -41,13 +41,13 @@ export class PlacementPositionBlockTrait implements ComponentNamespace {
   }
 }
 
-@Serialize()
+@Edres()
 export class PlacementDirectionBlockTrait implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   enabledStates:
     ("minecraft:cardinal_direction" | "minecraft:facing_direction")[];
 
-  @Serialize({ default: () => 0 })
+  @Edres({ default: () => 0 })
   yRotationOffset: 0 | 90 | 180 | 270;
 
   get namespace(): string {

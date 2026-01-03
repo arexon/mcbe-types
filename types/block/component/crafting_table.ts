@@ -1,13 +1,13 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 import type { LocalizationText } from "@mcbe/types/text";
 
-@Serialize()
+@Edres()
 export class CraftingTableBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   craftingTags: string[];
 
-  @Serialize()
+  @Edres()
   tableName?: LocalizationText;
 
   get namespace(): string {

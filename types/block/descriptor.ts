@@ -1,4 +1,4 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 
@@ -9,9 +9,9 @@ export type BlockDescriptor =
   | BlockDescriptorName
   | BlockDescriptorTags;
 
-@Serialize()
+@Edres()
 export class BlockDescriptorTags {
-  @Serialize()
+  @Edres()
   tags: string;
 
   constructor(props: InputProps<BlockDescriptorTags, "tags">) {
@@ -19,12 +19,12 @@ export class BlockDescriptorTags {
   }
 }
 
-@Serialize()
+@Edres()
 export class BlockDescriptorName {
-  @Serialize()
+  @Edres()
   name: Identifier;
 
-  @Serialize({ default: () => ({}) })
+  @Edres({ default: () => ({}) })
   states: Record<Identifier, BlockState>;
 
   constructor(props: InputProps<BlockDescriptorName, "name", "states">) {

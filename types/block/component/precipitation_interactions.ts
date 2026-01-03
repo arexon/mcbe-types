@@ -1,10 +1,10 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class PrecipitationInteractionsBlockComponent
   implements ComponentNamespace {
-  @Serialize({ default: () => "obstruct_rain_accumulate_snow" })
+  @Edres({ default: () => "obstruct_rain_accumulate_snow" })
   precipitationBehavior:
     | "obstruct_rain"
     | "obstruct_rain_accumulate_snow"

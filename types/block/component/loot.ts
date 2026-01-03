@@ -1,9 +1,9 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
-@Serialize({ transparent: "path" })
+@Edres({ transparent: "path" })
 export class LootBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   path: string;
 
   get namespace(): string {

@@ -1,12 +1,12 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class MovableBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => "push_pull" })
+  @Edres({ default: () => "push_pull" })
   movementType: "immovable" | "popped" | "push" | "push_pull";
 
-  @Serialize({ default: () => "none" })
+  @Edres({ default: () => "none" })
   sticky: "none" | "sticky";
 
   get namespace(): string {

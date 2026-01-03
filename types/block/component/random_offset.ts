@@ -1,15 +1,15 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class RandomOffsetBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   x?: RandomOffset;
 
-  @Serialize()
+  @Edres()
   y?: RandomOffset;
 
-  @Serialize()
+  @Edres()
   z?: RandomOffset;
 
   get namespace(): string {
@@ -23,14 +23,14 @@ export class RandomOffsetBlockComponent implements ComponentNamespace {
   }
 }
 
-@Serialize()
+@Edres()
 export class RandomOffset {
-  @Serialize({
+  @Edres({
     custom: [([min, max]) => ({ min, max }), "normal"],
   })
   range: [number, number];
 
-  @Serialize()
+  @Edres()
   steps: number;
 
   constructor(props: InputProps<RandomOffset, "range" | "steps">) {

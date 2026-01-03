@@ -1,10 +1,10 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { LocalizationText } from "@mcbe/types/text";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
-@Serialize({ transparent: "value" })
+@Edres({ transparent: "value" })
 export class DisplayNameComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   value: LocalizationText;
 
   get namespace(): string {

@@ -1,9 +1,9 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class EntityFallOnBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => 1 })
+  @Edres({ default: () => 1 })
   minFallDistance: number;
 
   get namespace(): string {

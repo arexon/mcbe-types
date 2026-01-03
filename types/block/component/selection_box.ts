@@ -1,10 +1,10 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import { BoundingBox } from "@mcbe/types/block";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize({ transparent: "value" })
+@Edres({ transparent: "value" })
 export class SelectionBoxBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   value: boolean | BoundingBox;
 
   get namespace(): string {

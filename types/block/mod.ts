@@ -1,4 +1,4 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import {
   BlockComponents,
   type BlockState,
@@ -16,16 +16,16 @@ export * from "./culling.ts";
 export * from "./descriptor.ts";
 export * from "./trait.ts";
 
-@Serialize()
+@Edres()
 export class BlockDefinition {
-  @Serialize()
+  @Edres()
   formatVersion: FormatVersion;
 
   // NOTE: For now, we will not expose this in the constructor.
-  @Serialize({ default: () => false })
+  @Edres({ default: () => false })
   useBetaFeatures: boolean = false;
 
-  @Serialize({ rename: "minecraft:block" })
+  @Edres({ rename: "minecraft:block" })
   block: Block;
 
   constructor(
@@ -53,15 +53,15 @@ export class BlockDefinition {
   }
 }
 
-@Serialize()
+@Edres()
 export class Block {
-  @Serialize()
+  @Edres()
   description: BlockDescription;
 
-  @Serialize({ default: () => new BlockComponents() })
+  @Edres({ default: () => new BlockComponents() })
   components: BlockComponents;
 
-  @Serialize({ default: () => [] })
+  @Edres({ default: () => [] })
   permutations: BlockPermutation[];
 
   constructor(
@@ -77,18 +77,18 @@ export class Block {
   }
 }
 
-@Serialize()
+@Edres()
 export class BlockDescription {
-  @Serialize()
+  @Edres()
   identifier: Identifier;
 
-  @Serialize()
+  @Edres()
   menuCategory?: InventoryMenuCategory;
 
-  @Serialize()
+  @Edres()
   states?: Record<Identifier, BlockState>;
 
-  @Serialize()
+  @Edres()
   traits?: BlockTraits;
 
   constructor(
@@ -104,12 +104,12 @@ export class BlockDescription {
   }
 }
 
-@Serialize()
+@Edres()
 export class BlockPermutation {
-  @Serialize()
+  @Edres()
   condition: Molang;
 
-  @Serialize()
+  @Edres()
   components: BlockComponents;
 
   constructor(props: InputProps<BlockPermutation, "condition" | "components">) {

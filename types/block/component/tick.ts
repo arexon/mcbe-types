@@ -1,12 +1,12 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class TickBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => [0, 0] })
+  @Edres({ default: () => [0, 0] })
   intervalRange: [number, number];
 
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   looping: boolean;
 
   get namespace(): string {

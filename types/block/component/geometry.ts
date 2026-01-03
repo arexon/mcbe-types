@@ -1,25 +1,25 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 import type { Molang } from "@mcbe/types/molang";
 
 const DEFAULT_CULLING_LAYER = "minecraft:culling_layer.undefined";
 
-@Serialize({ transparent: "identifier" })
+@Edres({ transparent: "identifier" })
 export class GeometryBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   identifier: Identifier;
 
-  @Serialize()
+  @Edres()
   boneVisibility?: Record<string, Molang>;
 
-  @Serialize()
+  @Edres()
   culling?: Identifier;
 
-  @Serialize({ default: () => DEFAULT_CULLING_LAYER })
+  @Edres({ default: () => DEFAULT_CULLING_LAYER })
   cullingLayer: Identifier;
 
-  @Serialize({ default: () => false })
+  @Edres({ default: () => false })
   uvLock: boolean | string[];
 
   get namespace(): string {

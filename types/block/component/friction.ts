@@ -1,9 +1,9 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
-@Serialize({ transparent: "value" })
+@Edres({ transparent: "value" })
 export class FrictionBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => 0.4 })
+  @Edres({ default: () => 0.4 })
   value: number;
 
   get namespace(): string {

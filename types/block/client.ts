@@ -1,13 +1,13 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { InputProps } from "@mcbe/types/common";
 import type { FormatVersion } from "@mcbe/types/version";
 
-@Serialize()
+@Edres()
 export class ClientBlocks {
-  @Serialize()
+  @Edres()
   formatVersion: FormatVersion;
 
-  @Serialize({ custom: [(value) => value, "merge"] })
+  @Edres({ custom: [(value) => value, "merge"] })
   blocks: Record<string, ClientBlock> = {};
 
   constructor(formatVersion: FormatVersion) {
@@ -20,24 +20,24 @@ export class ClientBlocks {
   }
 }
 
-@Serialize()
+@Edres()
 export class ClientBlock {
-  @Serialize()
+  @Edres()
   sound?: string;
 
-  @Serialize()
+  @Edres()
   ambientOcclusionExponent?: number;
 
-  @Serialize()
+  @Edres()
   brightnessGamma?: number;
 
-  @Serialize()
+  @Edres()
   isotropic?: ValueOrFaces<boolean>;
 
-  @Serialize()
+  @Edres()
   textures?: ValueOrFaces<string>;
 
-  @Serialize()
+  @Edres()
   carriedTextures?: ValueOrFaces<string>;
 
   constructor(

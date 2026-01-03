@@ -1,9 +1,9 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
-@Serialize({ transparent: "value" })
+@Edres({ transparent: "value" })
 export class LightDampeningBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => 15 })
+  @Edres({ default: () => 15 })
   value: number;
 
   get namespace(): string {

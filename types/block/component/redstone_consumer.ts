@@ -1,12 +1,12 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class RedstoneConsumerBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   minPower: number;
 
-  @Serialize()
+  @Edres()
   propagatesPower: boolean;
 
   get namespace(): string {

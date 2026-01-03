@@ -1,8 +1,8 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 
-@Serialize({ transparent: "version" })
+@Edres({ transparent: "version" })
 export class FormatVersion {
-  @Serialize({
+  @Edres({
     custom: [(v) => `${v[0]}.${v[1]}.${v[2]}`, "normal"],
   })
   version: [number, number, number];

@@ -1,7 +1,7 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class ReplaceableBlockComponent implements ComponentNamespace {
   get namespace(): string {
     return "minecraft:replaceable";

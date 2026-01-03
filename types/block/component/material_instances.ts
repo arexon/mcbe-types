@@ -1,9 +1,9 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize({ transparent: "value" })
+@Edres({ transparent: "value" })
 export class MaterialInstancesBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   value: Record<string, MaterialInstance>;
 
   get namespace(): string {
@@ -15,12 +15,12 @@ export class MaterialInstancesBlockComponent implements ComponentNamespace {
   }
 }
 
-@Serialize()
+@Edres()
 export class MaterialInstance {
-  @Serialize()
+  @Edres()
   texture: string;
 
-  @Serialize({ default: () => "opaque" })
+  @Edres({ default: () => "opaque" })
   renderMethod:
     | "opaque"
     | "double_sided"
@@ -31,19 +31,19 @@ export class MaterialInstance {
     | "alpha_test_to_opaque"
     | "alpha_test_single_sided_to_opaque";
 
-  @Serialize()
+  @Edres()
   tintMethod?: TintMethod;
 
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   ambientOcclusion: number | boolean;
 
-  @Serialize()
+  @Edres()
   alphaMaskedTint?: boolean;
 
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   faceDimming: boolean;
 
-  @Serialize({ default: () => false })
+  @Edres({ default: () => false })
   isotropic: boolean;
 
   constructor(

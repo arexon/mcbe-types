@@ -1,12 +1,12 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 
 export type ItemDescriptor = Identifier | ItemDescriptorTags;
 
-@Serialize()
+@Edres()
 export class ItemDescriptorTags {
-  @Serialize()
+  @Edres()
   tags: string;
 
   constructor(props: InputProps<ItemDescriptorTags, "tags">) {

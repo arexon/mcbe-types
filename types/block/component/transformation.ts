@@ -1,21 +1,21 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class TransformationBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => [0, 0, 0] })
+  @Edres({ default: () => [0, 0, 0] })
   rotation: [number, number, number];
 
-  @Serialize({ default: () => [0, 0, 0] })
+  @Edres({ default: () => [0, 0, 0] })
   rotationPivot: [number, number, number];
 
-  @Serialize({ default: () => [1, 1, 1] })
+  @Edres({ default: () => [1, 1, 1] })
   scale: [number, number, number];
 
-  @Serialize({ default: () => [0, 0, 0] })
+  @Edres({ default: () => [0, 0, 0] })
   scalePivot: [number, number, number];
 
-  @Serialize({ default: () => [0, 0, 0] })
+  @Edres({ default: () => [0, 0, 0] })
   translation: [number, number, number];
 
   get namespace(): string {

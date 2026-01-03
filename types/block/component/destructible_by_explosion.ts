@@ -1,14 +1,14 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type {
   ComponentNamespace,
   DerivedInputProps,
   InputProps,
 } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class DestructibleByExplosionBlockComponent
   implements ComponentNamespace {
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   value: boolean | DestructibleByExplosion;
 
   get namespace(): string {
@@ -25,9 +25,9 @@ export class DestructibleByExplosionBlockComponent
   }
 }
 
-@Serialize()
+@Edres()
 export class DestructibleByExplosion {
-  @Serialize({ default: () => 0 })
+  @Edres({ default: () => 0 })
   explosionResistance: number;
 
   constructor(

@@ -1,12 +1,12 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class ConnectionRuleBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   acceptsConnectionsFrom: "all" | "only_fences" | "none";
 
-  @Serialize()
+  @Edres()
   enabledDirections: "north" | "east" | "south" | "west";
 
   get namespace(): string {

@@ -1,15 +1,15 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class InventoryMenuCategory {
-  @Serialize()
+  @Edres()
   category: "nature" | "equipment" | "items" | "construction" | "none";
 
-  @Serialize()
+  @Edres()
   group?: string;
 
-  @Serialize({ default: () => false })
+  @Edres({ default: () => false })
   isHiddenInCommand: boolean;
 
   constructor(

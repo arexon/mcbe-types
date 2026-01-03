@@ -1,13 +1,13 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type {
   ComponentNamespace,
   DerivedInputProps,
   InputProps,
 } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class FlammableBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   value: boolean | Flammable;
 
   get namespace(): string {
@@ -22,12 +22,12 @@ export class FlammableBlockComponent implements ComponentNamespace {
   }
 }
 
-@Serialize()
+@Edres()
 export class Flammable {
-  @Serialize({ default: () => 5 })
+  @Edres({ default: () => 5 })
   catchChanceModifier: number;
 
-  @Serialize({ default: () => 20 })
+  @Edres({ default: () => 20 })
   destroyChanceModifier: number;
 
   constructor(

@@ -1,9 +1,9 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class SupportBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   shape: "fence" | "stair";
 
   get namespace(): string {

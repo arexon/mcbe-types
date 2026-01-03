@@ -1,9 +1,9 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class LiquidDetectionBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   detectionRules: LiquidDetectionRule[];
 
   get namespace(): string {
@@ -17,18 +17,18 @@ export class LiquidDetectionBlockComponent implements ComponentNamespace {
   }
 }
 
-@Serialize()
+@Edres()
 export class LiquidDetectionRule {
-  @Serialize()
+  @Edres()
   liquidType: "water";
 
-  @Serialize({ default: () => false })
+  @Edres({ default: () => false })
   canContainLiquid: boolean;
 
-  @Serialize({ default: () => "blocking" })
+  @Edres({ default: () => "blocking" })
   onLiquidTouches: "blocking" | "broken" | "popped" | "no_reaction";
 
-  @Serialize({ default: () => [] })
+  @Edres({ default: () => [] })
   stopsLiquidFlowingFromDirection: (
     | "up"
     | "down"
@@ -38,7 +38,7 @@ export class LiquidDetectionRule {
     | "west"
   )[];
 
-  @Serialize({ default: () => false })
+  @Edres({ default: () => false })
   useLiquidClipping: boolean;
 
   constructor(

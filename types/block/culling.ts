@@ -1,17 +1,17 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 import type { FormatVersion } from "@mcbe/types/version";
 
-@Serialize()
+@Edres()
 export class BlockCulling {
-  @Serialize()
+  @Edres()
   formatVersion: FormatVersion;
 
-  @Serialize()
+  @Edres()
   description: BlockCullingDescription;
 
-  @Serialize()
+  @Edres()
   rules: BlockCullingRule[];
 
   constructor(
@@ -24,9 +24,9 @@ export class BlockCulling {
   }
 }
 
-@Serialize()
+@Edres()
 export class BlockCullingDescription {
-  @Serialize()
+  @Edres()
   identifier: Identifier;
 
   constructor(props: InputProps<BlockCullingDescription, "identifier">) {
@@ -34,19 +34,19 @@ export class BlockCullingDescription {
   }
 }
 
-@Serialize()
+@Edres()
 export class BlockCullingRule {
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   cullAgainstFullAndOpaque: boolean;
 
-  @Serialize({ default: () => "default" })
+  @Edres({ default: () => "default" })
   condition:
     | "default"
     | "same_block"
     | "same_block_permutation"
     | "same_culling_layer";
 
-  @Serialize()
+  @Edres()
   direction:
     | "up"
     | "down"
@@ -55,7 +55,7 @@ export class BlockCullingRule {
     | "east"
     | "west";
 
-  @Serialize()
+  @Edres()
   geometryPart: "bone" | "cube" | "face";
 
   constructor(

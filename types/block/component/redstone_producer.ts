@@ -1,18 +1,18 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class RedstoneProducerBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   power: number;
 
-  @Serialize()
+  @Edres()
   stronglyPoweredFace: "down" | "up" | "north" | "south" | "west" | "east";
 
-  @Serialize()
+  @Edres()
   connectedFaces?: ("down" | "up" | "north" | "south" | "west" | "east")[];
 
-  @Serialize({ default: () => false })
+  @Edres({ default: () => false })
   transformRelative: boolean;
 
   get namespace(): string {

@@ -1,9 +1,9 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class LeashableBlockComponent implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   offset: [number, number, number];
 
   get namespace(): string {

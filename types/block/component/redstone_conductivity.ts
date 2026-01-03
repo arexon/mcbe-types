@@ -1,12 +1,12 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
-@Serialize()
+@Edres()
 export class RedstoneConductivityBlockComponent implements ComponentNamespace {
-  @Serialize({ default: () => true })
+  @Edres({ default: () => true })
   allowsWireToStepDown: boolean;
 
-  @Serialize({ default: () => false })
+  @Edres({ default: () => false })
   redstoneConductor: boolean;
 
   get namespace(): string {

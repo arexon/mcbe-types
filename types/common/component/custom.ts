@@ -1,4 +1,4 @@
-import { Serialize } from "@mcbe/serialize";
+import { Edres } from "@mcbe/edres";
 import type { ComponentNamespace } from "@mcbe/types/common";
 
 /**
@@ -16,13 +16,13 @@ import type { ComponentNamespace } from "@mcbe/types/common";
  * });
  * ```
  */
-@Serialize({ transparent: "params" })
+@Edres({ transparent: "params" })
 export class CustomComponent<
   // deno-lint-ignore no-explicit-any
   Schema extends { namespace: string; params: unknown } = any,
   Namespace extends string = Schema["namespace"],
 > implements ComponentNamespace {
-  @Serialize()
+  @Edres()
   params: unknown;
 
   #namespace: string;
