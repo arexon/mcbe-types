@@ -24,15 +24,15 @@ export class Foo {
     [
       {
         id: "style-guide/class-serialization",
-        message: "The class is not annotated with the `@Ser` decorator",
-        hint: "Annotate the class with `@Ser()` to enable smart serialization",
+        message: "The class is not annotated with the @Ser() decorator",
+        hint: "Annotate the class with @Ser() to enable smart serialization",
         range: [14, 17],
         fix: [{ range: [1, 1], text: "@Ser() " }],
       },
       {
         id: "style-guide/class-serialization",
-        message: "The field is not annotated with the `@Ser` decorator",
-        hint: "Annotate the field with `@Ser()` to enable smart serialization",
+        message: "The field is not annotated with the @Ser() decorator",
+        hint: "Annotate the field with @Ser() to enable smart serialization",
         range: [22, 28],
         fix: [{ range: [22, 22], text: "@Ser() " }],
       },
@@ -64,7 +64,7 @@ export class Foo {
       {
         id: "style-guide/class-serialization",
         message:
-          "Optional field is defining a default value for serialization with `@Ser()`",
+          "Optional field is defining a default value for serialization with @Ser()",
         hint: "Make the field required",
         range: [29, 61],
         fix: [],
@@ -82,6 +82,34 @@ export class Foo {
 
   #b;
 }
+    `,
+    [],
+  );
+
+  // Bad
+  assertDiagnostics(
+    `
+@Ser()
+export class Child extends Parent {}
+    `,
+    [
+      {
+        id: "style-guide/class-serialization",
+        message:
+          "Classes that inherit other classes also inherit serialization behavior",
+        hint: "Remove @Ser()",
+        range: [21, 26],
+        fix: [
+          { range: [1, 7], text: "" },
+        ],
+      },
+    ],
+  );
+
+  // Good
+  assertDiagnostics(
+    `
+export class Child extends Parent {}
     `,
     [],
   );

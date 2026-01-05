@@ -1,3 +1,5 @@
+import { Ser } from "@mcbe/serialize";
+
 const ALLOWED_PATHS = ["mcbe-types/types"];
 
 export default {
@@ -7,7 +9,8 @@ export default {
       create(ctx) {
         if (!ALLOWED_PATHS.some((p) => ctx.filename.includes(p))) return {};
 
-        const DECO_ID = "Ser";
+        const DECO_ID = Ser.name;
+        const DECO = `@${DECO_ID}()`;
 
         return {
           ClassDeclaration(_node) {
@@ -18,24 +21,36 @@ export default {
 
             if (node.id === null || node.abstract) return;
 
-            if (
-              !node.decorators.some((decoNode) =>
-                decoNode.expression.type === "CallExpression" &&
-                decoNode.expression.callee.type === "Identifier" &&
-                decoNode.expression.callee.name === DECO_ID
-              )
-            ) {
+            const decoNode = node.decorators.find((decoNode) =>
+              decoNode.expression.type === "CallExpression" &&
+              decoNode.expression.callee.type === "Identifier" &&
+              decoNode.expression.callee.name === DECO_ID
+            );
+
+            if (decoNode === undefined && node.superClass === null) {
               ctx.report({
                 node: node.id,
                 message:
-                  `The class is not annotated with the \`@${DECO_ID}\` decorator`,
+                  `The class is not annotated with the ${DECO} decorator`,
                 hint:
-                  `Annotate the class with \`@${DECO_ID}()\` to enable smart serialization`,
+                  `Annotate the class with ${DECO} to enable smart serialization`,
                 fix(fixer) {
                   return fixer.insertTextBeforeRange(
                     node.parent.range,
-                    `@${DECO_ID}() `,
+                    `${DECO} `,
                   );
+                },
+              });
+            }
+
+            if (decoNode !== undefined && node.superClass !== null) {
+              ctx.report({
+                node: node.id,
+                message:
+                  "Classes that inherit other classes also inherit serialization behavior",
+                hint: `Remove ${DECO}`,
+                fix(fixer) {
+                  return fixer.removeRange(decoNode.range);
                 },
               });
             }
@@ -59,13 +74,13 @@ export default {
                 ctx.report({
                   node: propNode,
                   message:
-                    `The field is not annotated with the \`@${DECO_ID}\` decorator`,
+                    `The field is not annotated with the ${DECO} decorator`,
                   hint:
-                    `Annotate the field with \`@${DECO_ID}()\` to enable smart serialization`,
+                    `Annotate the field with ${DECO} to enable smart serialization`,
                   fix(fixer) {
                     return fixer.insertTextBeforeRange(
                       propNode.range,
-                      `@${DECO_ID}() `,
+                      `${DECO} `,
                     );
                   },
                 });
@@ -87,7 +102,7 @@ export default {
                   ctx.report({
                     node: propNode,
                     message:
-                      `Optional field is defining a default value for serialization with \`@${DECO_ID}()\``,
+                      `Optional field is defining a default value for serialization with ${DECO}`,
                     hint: "Make the field required",
                   });
                 }

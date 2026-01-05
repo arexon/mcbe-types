@@ -1,5 +1,5 @@
 import { Ser } from "@mcbe/serialize";
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 
 function assertToJSON(actual: unknown, expected: string): void {
   assertEquals(JSON.stringify(actual), expected);
@@ -43,6 +43,21 @@ Deno.test("toJSON()", async (ctx) => {
     }
 
     assertToJSON(new Foo(), `{"10":0,"*":0,"$":0,"a:bB":0}`);
+  });
+
+  await ctx.step("inherit", () => {
+    assertThrows(
+      () => {
+        @Ser()
+        class Parent {}
+
+        @Ser()
+        // deno-lint-ignore no-unused-vars
+        class Child extends Parent {}
+      },
+      Error,
+      "Class Child already has a toJSON() method defined",
+    );
   });
 
   await ctx.step("rename", async (ctx) => {

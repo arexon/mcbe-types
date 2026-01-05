@@ -158,6 +158,12 @@ function classImpl(
   ctor: AnyConstructor,
   classOpts: ClassOptions<string>,
 ): void {
+  if ("toJSON" in ctor.prototype) {
+    throw new Error(
+      `Class ${ctx.name} already has a toJSON() method defined`,
+    );
+  }
+
   ctx.metadata[Metadata.symbol] ??= new Metadata();
   const metadata = ctx.metadata[Metadata.symbol]!;
   metadata.transparent = classOpts?.transparent;
