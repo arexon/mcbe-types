@@ -8,29 +8,19 @@ export class BlockCulling {
   @Ser()
   formatVersion: FormatVersion;
 
-  @Ser()
-  description: BlockCullingDescription;
+  @Ser({ path: "minecraft:block_culling_rules/description" })
+  identifier: Identifier;
 
-  @Ser()
+  @Ser({ path: "minecraft:block_culling_rules" })
   rules: BlockCullingRule[];
 
   constructor(
     formatVersion: FormatVersion,
-    props: InputProps<BlockCulling, "description" | "rules">,
+    props: InputProps<BlockCulling, "identifier" | "rules">,
   ) {
     this.formatVersion = formatVersion;
-    this.description = props.description;
-    this.rules = props.rules;
-  }
-}
-
-@Ser()
-export class BlockCullingDescription {
-  @Ser()
-  identifier: Identifier;
-
-  constructor(props: InputProps<BlockCullingDescription, "identifier">) {
     this.identifier = props.identifier;
+    this.rules = props.rules;
   }
 }
 

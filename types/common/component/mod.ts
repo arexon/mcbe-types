@@ -61,7 +61,6 @@ export class Components<T extends ComponentNamespace> {
   }
 }
 
-// deno-lint-ignore style-guide/class-serialization
 export class DuplicateComponentError extends Error {
   constructor(componentId: string) {
     super();

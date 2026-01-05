@@ -10,7 +10,6 @@ export type BlockTrait =
   | PlacementDirectionBlockTrait
   | PlacementPositionBlockTrait;
 
-// deno-lint-ignore style-guide/class-serialization
 export class BlockTraits extends Components<BlockTrait> {}
 
 @Ser()

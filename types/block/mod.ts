@@ -1,14 +1,11 @@
 import { Ser } from "@mcbe/serialize";
-import {
-  BlockComponents,
-  type BlockState,
-  type BlockTraits,
-} from "@mcbe/types/block";
-import type { DerivedInputProps, InputProps } from "@mcbe/types/common";
+import { type BlockComponent, BlockTraits } from "@mcbe/types/block";
+import { Components, type InputProps } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 import type { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
-import { FormatVersion } from "@mcbe/types/version";
+import type { FormatVersion } from "@mcbe/types/version";
+import { unreachable } from "@std/assert";
 
 export * from "./client.ts";
 export * from "./component/mod.ts";
@@ -16,91 +13,86 @@ export * from "./culling.ts";
 export * from "./descriptor.ts";
 export * from "./trait.ts";
 
-@Ser()
-export class BlockDefinition {
-  @Ser()
-  formatVersion: FormatVersion;
+export class BlockComponents extends Components<BlockComponent> {}
 
-  // NOTE: For now, we will not expose this in the constructor.
-  @Ser({ default: () => false })
-  useBetaFeatures: boolean = false;
-
-  @Ser({ rename: "minecraft:block" })
-  block: Block;
-
-  constructor(
-    formatVersion: FormatVersion,
-    props: DerivedInputProps<typeof Block>,
-  );
-  constructor(
-    props: InputProps<BlockDefinition, "formatVersion" | "block">,
-  );
-  constructor(
-    formatVersionOrProps:
-      | FormatVersion
-      | InputProps<BlockDefinition, "formatVersion" | "block">,
-    props?: DerivedInputProps<typeof Block>,
-  ) {
-    if (!(formatVersionOrProps instanceof FormatVersion)) {
-      this.formatVersion = formatVersionOrProps.formatVersion;
-      this.block = formatVersionOrProps.block;
-    } else if (props !== undefined) {
-      this.formatVersion = formatVersionOrProps;
-      this.block = new Block(props);
-    } else {
-      throw new Error("unreachable");
-    }
-  }
-}
+export type BlockInputProps = InputProps<
+  Block,
+  "identifier" | "menuCategory",
+  "states" | "traits" | "components" | "permutations"
+>;
 
 @Ser()
 export class Block {
   @Ser()
-  description: BlockDescription;
+  formatVersion: FormatVersion;
 
-  @Ser({ default: () => new BlockComponents() })
-  components: BlockComponents;
+  @Ser({ default: () => false })
+  useBetaFeatures: boolean = false;
 
-  @Ser({ default: () => [] })
-  permutations: BlockPermutation[];
-
-  constructor(
-    props: InputProps<
-      Block,
-      "description",
-      "components" | "permutations"
-    >,
-  ) {
-    this.description = props.description;
-    this.components = props.components ?? new BlockComponents();
-    this.permutations = props.permutations ?? [];
-  }
-}
-
-@Ser()
-export class BlockDescription {
-  @Ser()
+  @Ser({ path: "minecraft:block/description" })
   identifier: Identifier;
 
-  @Ser()
-  menuCategory?: InventoryMenuCategory;
+  @Ser({ path: "minecraft:block/description" })
+  menuCategory: InventoryMenuCategory;
 
-  @Ser()
-  states?: Record<Identifier, BlockState>;
+  @Ser({
+    path: "minecraft:block/description",
+    default: () => ({}),
+  })
+  states: Record<
+    Identifier,
+    | (number | boolean | string)[]
+    | { value: { min: number; max: number } }
+  >;
 
-  @Ser()
-  traits?: BlockTraits;
+  @Ser({
+    path: "minecraft:block/description",
+    default: () => new BlockTraits(),
+  })
+  traits: BlockTraits;
 
+  @Ser({
+    path: "minecraft:block",
+    default: () => new BlockComponents(),
+  })
+  components: BlockComponents;
+
+  @Ser({
+    path: "minecraft:block",
+    default: () => [],
+  })
+  permutations: BlockPermutation[];
+
+  constructor(formatVersion: FormatVersion, props: BlockInputProps);
   constructor(
-    props: InputProps<
-      BlockDescription,
-      "identifier" | "menuCategory" | "states" | "traits"
-    >,
+    formatVersion: FormatVersion,
+    useBetaFeatures: boolean,
+    props: BlockInputProps,
+  );
+  constructor(
+    param0: FormatVersion,
+    param1: boolean | BlockInputProps,
+    param2?: BlockInputProps,
   ) {
-    this.identifier = props.identifier;
-    this.menuCategory = props.menuCategory;
-    this.states = props.states;
-    this.traits = props.traits;
+    this.formatVersion = param0;
+
+    this.useBetaFeatures = typeof param1 === "boolean" ? param1 : false;
+
+    const props = typeof param1 === "object" ? param1 : param2;
+    if (props !== undefined) {
+      this.identifier = props.identifier;
+      this.menuCategory = props.menuCategory;
+      this.states = props.states ?? {};
+      this.traits = props.traits ?? new BlockTraits();
+      if (Array.isArray(props.components)) {
+        this.components = new BlockComponents(...props.components);
+      } else {
+        this.components = props.components ?? new BlockComponents();
+      }
+      this.permutations = props.permutations ?? [];
+    } else {
+      unreachable();
+    }
   }
 }
 

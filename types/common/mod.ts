@@ -6,11 +6,11 @@ export * from "./component/mod.ts";
  */
 export type InputProps<
   T,
-  OriginalProps extends keyof T,
-  OptionalProps extends Exclude<keyof T, OriginalProps> = never,
+  Original extends keyof T,
+  Optional extends Exclude<keyof T, Original> = never,
 > =
-  & Pick<T, OriginalProps>
-  & Partial<Pick<T, OptionalProps>>;
+  & Pick<T, Original>
+  & Partial<Pick<T, Optional>>;
 
 /** Similar to {@link InputProps} but derives the properties from `T`'s constructor `props` parameter. */
 // deno-lint-ignore no-explicit-any

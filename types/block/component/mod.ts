@@ -33,11 +33,7 @@ import type {
   TickBlockComponent,
   TransformationBlockComponent,
 } from "@mcbe/types/block";
-import {
-  Components,
-  type CustomComponent,
-  type DisplayNameComponent,
-} from "@mcbe/types/common";
+import type { CustomComponent, DisplayNameComponent } from "@mcbe/types/common";
 
 export type BlockComponent =
   | CollisionBoxBlockComponent
@@ -75,9 +71,6 @@ export type BlockComponent =
   | LeashableBlockComponent
   | RedstoneConsumerBlockComponent
   | CustomComponent;
-
-// deno-lint-ignore style-guide/class-serialization
-export class BlockComponents extends Components<BlockComponent> {}
 
 export * from "./collision_box.ts";
 export * from "./connection_rule.ts";
