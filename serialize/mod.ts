@@ -36,6 +36,12 @@ export interface FieldOptions<FieldValue> {
    * match the renamed key will overwrite it.
    */
   rename?: string;
+  /**
+   * A path within the serialized object to place this field, delimited by `/`.
+   *
+   * Each part of the path is created as an object if it does not already exist.
+   */
+  path?: string;
 }
 
 /** Options to configure how a class should be serialized. */
@@ -96,6 +102,7 @@ interface FieldMetadata {
   default?: () => unknown;
   custom?: { fn: (value: unknown) => unknown; strategy: "normal" | "merge" };
   rename?: string;
+  path?: string;
 }
 
 class Metadata {
@@ -115,6 +122,7 @@ class Metadata {
         : undefined,
       default: options.default,
       rename: options.rename,
+      path: options.path,
     };
     this.length++;
   }
@@ -165,16 +173,20 @@ function classImpl(
   });
 }
 
+type ObjectProps = { [key: string]: string | ObjectProps };
+
 // deno-lint-ignore ban-types
 function generateToJson(metadata: Metadata): Function {
   let body = "";
   const canClassBeTransparent: string[] = [];
-  const props: string[] = [];
+  const objectProps: ObjectProps = {};
   const customValues: [string, string][] = [];
 
   if (metadata.length > 0) {
     for (const field of Object.values(metadata.fields)) {
-      const key = metadata.getKey(field.name);
+      const key = field.custom?.strategy === "merge"
+        ? "..."
+        : metadata.getKey(field.name);
       let value = `this["${field.name}"]`;
 
       const canFieldAllowTransprency = [];
@@ -213,10 +225,18 @@ function generateToJson(metadata: Metadata): Function {
         value = `${isDefault} ? undefined : ${value}`;
       }
 
-      if (field.custom?.strategy === "merge") {
-        props.push(`...(${value}),`);
+      if (field.path !== undefined) {
+        const pathParts = field.path.split("/");
+        let current = objectProps;
+        for (const pathPart of pathParts) {
+          if (current[pathPart] === undefined) {
+            current[pathPart] = {};
+          }
+          current = current[pathPart] as ObjectProps;
+        }
+        current[key] = value;
       } else {
-        props.push(`"${key}": ${value},`);
+        objectProps[key] = value;
       }
 
       if (
@@ -230,13 +250,35 @@ function generateToJson(metadata: Metadata): Function {
     }
 
     for (const [name, value] of customValues) {
-      body += `const ${name} = ${value};`;
+      body += `const ${name}=${value};`;
     }
 
+    const appendObjectProps = (objectProps: ObjectProps) => {
+      body += "{";
+      for (const [key, value] of Object.entries(objectProps)) {
+        if (key === "...") {
+          body += `...${value}`;
+        } else {
+          body += `"${key}":`;
+          if (typeof value === "string") {
+            body += value;
+          } else {
+            appendObjectProps(value);
+          }
+        }
+        body += ",";
+      }
+      body += "}";
+    };
+
     if (canClassBeTransparent.length > 0) {
-      body += `const result = {${props.join("")}};`;
+      body += "const result =";
+      appendObjectProps(objectProps);
+      body += ";";
     } else if (metadata.transparent === undefined) {
-      body += `return {${props.join("")}};`;
+      body += "return ";
+      appendObjectProps(objectProps);
+      body += ";";
     }
 
     if (metadata.transparent !== undefined) {

@@ -242,6 +242,64 @@ Deno.test("toJSON()", async (ctx) => {
     });
   });
 
+  await ctx.step("path", async (ctx) => {
+    await ctx.step("basic", () => {
+      @Ser()
+      class Foo {
+        @Ser({ path: "root:foo/bar" })
+        a = 1;
+
+        @Ser({ path: "root:foo/baz/quux" })
+        b = 2;
+      }
+
+      assertToJSON(
+        new Foo(),
+        `{"root:foo":{"bar":{"a":1},"baz":{"quux":{"b":2}}}}`,
+      );
+    });
+
+    await ctx.step("rename + custom", () => {
+      @Ser()
+      class Foo {
+        @Ser({
+          path: "root:foo",
+          rename: "__rename__",
+        })
+        rename = 1;
+
+        @Ser({
+          path: "root:foo/bar",
+          rename: "__rename__",
+          custom: [(v) => v, "merge"],
+        })
+        renameWithCustomMerge = { merge: 1 };
+
+        @Ser({
+          path: "root:foo/bar",
+          rename: "__rename__",
+          custom: [(v) => v, "normal"],
+        })
+        renameWithCustomNormal = { normal: 1 };
+      }
+
+      assertToJSON(
+        new Foo(),
+        `{"root:foo":{"__rename__":1,"bar":{"merge":1,"__rename__":{"normal":1}}}}`,
+      );
+    });
+
+    await ctx.step("transparent", () => {
+      @Ser({ transparent: "value" })
+      class Foo {
+        @Ser({ path: "root:foo/bar" })
+        value = 1;
+      }
+
+      assertToJSON(new Foo(), `1`);
+    });
+  });
+
   await ctx.step("nested", async (ctx) => {
     await ctx.step("basic", () => {
       @Ser()
