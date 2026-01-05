@@ -63,7 +63,7 @@ export interface ClassOptions<FieldName> {
 export function Ser<
   Ctx extends ClassDecoratorContext | ClassFieldDecoratorContext,
 >(
-  opts?: Ctx extends { kind: "class" } ? ClassOptions<
+  options?: Ctx extends { kind: "class" } ? ClassOptions<
       Ctx extends ClassDecoratorContext<infer V> ? keyof {
           [
             K in keyof InstanceType<V> as InstanceType<V>[K] extends
@@ -81,9 +81,9 @@ export function Ser<
 ) => void {
   return (target, ctx) => {
     if (ctx.kind === "field") {
-      fieldImpl(ctx, opts as FieldOptions<unknown>);
+      fieldImpl(ctx, options as FieldOptions<unknown>);
     } else if (ctx.kind === "class") {
-      classImpl(ctx, target!, opts as ClassOptions<string>);
+      classImpl(ctx, target!, options as ClassOptions<string>);
     }
   };
 }
@@ -94,7 +94,48 @@ interface ContextMetadata {
   };
 }
 
+function fieldImpl(
+  ctx: ClassFieldDecoratorContext & ContextMetadata,
+  options?: FieldOptions<unknown>,
+): void {
+  ctx.metadata[Metadata.symbol] ??= new Metadata();
+  if (typeof ctx.name !== "symbol") {
+    ctx.metadata[Metadata.symbol]!.setField(ctx.name, options ?? {});
+  }
+}
+
+function classImpl(
+  ctx: ClassDecoratorContext & ContextMetadata,
+  ctor: AnyConstructor,
+  options: ClassOptions<string>,
+): void {
+  if ("toJSON" in ctor.prototype) {
+    throw new Error(
+      `Class ${ctx.name} already has a toJSON() method defined`,
+    );
+  }
+
+  ctx.metadata[Metadata.symbol] ??= new Metadata();
+  const metadata = ctx.metadata[Metadata.symbol]!;
+  metadata.transparent = options?.transparent;
+
+  const body = generateToJson(metadata);
+  const fn = new Function(Metadata.symbolName, "equal", body);
+
+  Object.defineProperty(ctor.prototype, "toJSON", {
+    value() {
+      return fn.call(this, Metadata.symbol, equal);
+    },
+    configurable: true,
+    writable: true,
+  });
+}
+
 const SPECIAL_CHARACTERS_REGEXP = /[$&+,:;=?@#|'<>.^*()%!-]/;
+const CUSTOM_OVERRIDE_PREFIX = "customOverride";
+const RESULT_VAR = "result";
+const FIELDS_METADATA_VAR = "fieldsMetadata";
+const MERGE_KEY = "...";
 
 interface FieldMetadata {
   index: number;
@@ -102,7 +143,7 @@ interface FieldMetadata {
   default?: () => unknown;
   custom?: { fn: (value: unknown) => unknown; strategy: "normal" | "merge" };
   rename?: string;
-  path?: string;
+  path?: string[];
 }
 
 class Metadata {
@@ -122,7 +163,7 @@ class Metadata {
         : undefined,
       default: options.default,
       rename: options.rename,
-      path: options.path,
+      path: options.path?.split("/"),
     };
     this.length++;
   }
@@ -133,7 +174,9 @@ class Metadata {
 
   getKey(name: string): string {
     const field = this.fields[name];
-    if (field.rename !== undefined) {
+    if (field.custom?.strategy === "merge") {
+      return MERGE_KEY;
+    } else if (field.rename !== undefined) {
       return field.rename;
     } else if (!SPECIAL_CHARACTERS_REGEXP.test(field.name)) {
       return toSnakeCase(field.name);
@@ -143,127 +186,74 @@ class Metadata {
   }
 }
 
-function fieldImpl(
-  ctx: ClassFieldDecoratorContext & ContextMetadata,
-  opts?: FieldOptions<unknown>,
-): void {
-  ctx.metadata[Metadata.symbol] ??= new Metadata();
-  if (typeof ctx.name !== "symbol") {
-    ctx.metadata[Metadata.symbol]!.setField(ctx.name, opts ?? {});
-  }
-}
-
-function classImpl(
-  ctx: ClassDecoratorContext & ContextMetadata,
-  ctor: AnyConstructor,
-  classOpts: ClassOptions<string>,
-): void {
-  if ("toJSON" in ctor.prototype) {
-    throw new Error(
-      `Class ${ctx.name} already has a toJSON() method defined`,
-    );
-  }
-
-  ctx.metadata[Metadata.symbol] ??= new Metadata();
-  const metadata = ctx.metadata[Metadata.symbol]!;
-  metadata.transparent = classOpts?.transparent;
-
-  const toJsonFn = generateToJson(metadata);
-
-  Object.defineProperty(ctor.prototype, "toJSON", {
-    value() {
-      return toJsonFn.call(this, Metadata.symbol, equal);
-    },
-    configurable: true,
-    writable: true,
-  });
-}
-
 type ObjectProps = { [key: string]: string | ObjectProps };
 
-// deno-lint-ignore ban-types
-function generateToJson(metadata: Metadata): Function {
+function generateToJson(metadata: Metadata): string {
   let body = "";
-  const canClassBeTransparent: string[] = [];
-  const objectProps: ObjectProps = {};
+  const object: ObjectProps = {};
+  const transparencyChecks: string[] = [];
   const customValues: [string, string][] = [];
 
   if (metadata.length > 0) {
     for (const field of Object.values(metadata.fields)) {
-      const key = field.custom?.strategy === "merge"
-        ? "..."
-        : metadata.getKey(field.name);
+      const isNotTransparent = metadata.transparent !== undefined &&
+        field.name !== metadata.transparent;
+      const key = metadata.getKey(field.name);
       let value = `this["${field.name}"]`;
 
-      const canFieldAllowTransprency = [];
-      if (field.name !== metadata.transparent) {
-        canFieldAllowTransprency.push(`${value} === undefined`);
+      const transparencyCheck = [];
+      if (isNotTransparent) {
+        transparencyCheck.push(`${value} === undefined`);
       }
 
       if (field.custom !== undefined) {
-        const customValue = `customValue${field.index}`;
-        const fieldsMetadata = "fieldsMetadata";
+        const customOverride = CUSTOM_OVERRIDE_PREFIX + field.index;
 
         if (customValues.length === 0) {
           customValues.push([
-            fieldsMetadata,
+            FIELDS_METADATA_VAR,
             `this.constructor[Symbol.metadata][${Metadata.symbolName}]`,
           ]);
         }
         customValues.push([
-          customValue,
-          `${fieldsMetadata}.getField("${field.name}").custom.fn(${value})`,
+          customOverride,
+          `${FIELDS_METADATA_VAR}.getField("${field.name}").custom.fn(${value})`,
         ]);
 
-        value = customValue;
+        value = customOverride;
       }
 
       if (field.default !== undefined) {
         const isDefault = `equal(${JSON.stringify(field.default())}, ${value})`;
 
-        if (
-          metadata.transparent !== undefined &&
-          field.name !== metadata.transparent
-        ) {
-          canFieldAllowTransprency.push(isDefault);
+        if (isNotTransparent) {
+          transparencyCheck.push(isDefault);
         }
 
         value = `${isDefault} ? undefined : ${value}`;
       }
 
       if (field.path !== undefined) {
-        const pathParts = field.path.split("/");
-        let current = objectProps;
-        for (const pathPart of pathParts) {
-          if (current[pathPart] === undefined) {
-            current[pathPart] = {};
-          }
-          current = current[pathPart] as ObjectProps;
+        let current = object;
+        for (const part of field.path) {
+          current[part] ??= {};
+          current = current[part] as ObjectProps;
         }
         current[key] = value;
       } else {
-        objectProps[key] = value;
+        object[key] = value;
       }
 
-      if (
-        metadata.transparent !== undefined &&
-        field.name !== metadata.transparent
-      ) {
-        canClassBeTransparent.push(
-          `(${canFieldAllowTransprency.join(" || ")})`,
-        );
+      if (isNotTransparent) {
+        transparencyChecks.push(`(${transparencyCheck.join(" || ")})`);
       }
-    }
-
-    for (const [name, value] of customValues) {
-      body += `const ${name}=${value};`;
     }
 
     const appendObjectProps = (objectProps: ObjectProps) => {
       body += "{";
       for (const [key, value] of Object.entries(objectProps)) {
-        if (key === "...") {
-          body += `...${value}`;
+        if (key === MERGE_KEY) {
+          body += MERGE_KEY + value;
         } else {
           body += `"${key}":`;
           if (typeof value === "string") {
@@ -277,13 +267,17 @@ function generateToJson(metadata: Metadata): Function {
       body += "}";
     };
 
-    if (canClassBeTransparent.length > 0) {
-      body += "const result =";
-      appendObjectProps(objectProps);
+    for (const [name, value] of customValues) {
+      body += `const ${name}=${value};`;
+    }
+
+    if (transparencyChecks.length > 0) {
+      body += `const ${RESULT_VAR} =`;
+      appendObjectProps(object);
       body += ";";
     } else if (metadata.transparent === undefined) {
       body += "return ";
-      appendObjectProps(objectProps);
+      appendObjectProps(object);
       body += ";";
     }
 
@@ -291,22 +285,22 @@ function generateToJson(metadata: Metadata): Function {
       const transparentField = metadata.getField(metadata.transparent)!;
       let value: string;
       if (transparentField.custom !== undefined) {
-        value = `customValue${transparentField.index}`;
+        value = CUSTOM_OVERRIDE_PREFIX + transparentField.index;
       } else {
         value = `this["${transparentField.name}"]`;
       }
 
       value = `${value}?.toJSON?.() ?? ${value}`;
 
-      if (canClassBeTransparent.length > 0) {
-        body += `if (${canClassBeTransparent.join(" && ")}) return ${value};`;
+      if (transparencyChecks.length > 0) {
+        body += `if(${transparencyChecks.join(" && ")})return ${value};`;
       } else {
         body += `return ${value};`;
       }
     }
 
-    if (canClassBeTransparent.length > 0) {
-      body += `return result;`;
+    if (transparencyChecks.length > 0) {
+      body += `return ${RESULT_VAR};`;
     }
   } else if (metadata.transparent !== undefined) {
     body += `return this["${metadata.transparent}"];`;
@@ -314,5 +308,5 @@ function generateToJson(metadata: Metadata): Function {
     body += "return {};";
   }
 
-  return new Function(Metadata.symbolName, "equal", body);
+  return body;
 }
