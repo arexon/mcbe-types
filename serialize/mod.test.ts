@@ -41,19 +41,30 @@ Deno.test("toJSON()", async (ctx) => {
     assertEquals(JSON.stringify(new Foo()), `{"10":0,"*":0,"$":0,"a:bB":0}`);
   });
 
-  await ctx.step("inherit", () => {
-    assertThrows(
-      () => {
-        @Ser()
-        class Parent {}
+  await ctx.step("inherit", async (ctx) => {
+    @Ser()
+    class Parent {
+      @Ser({ rename: "b" })
+      a = "foo";
+    }
 
-        @Ser()
-        // deno-lint-ignore no-unused-vars
-        class Child extends Parent {}
-      },
-      Error,
-      "Class Child already has a toJSON() method defined",
-    );
+    await ctx.step("no method conflict", () => {
+      class Child extends Parent {}
+
+      assertEquals(JSON.stringify(new Child()), `{"b":"foo"}`);
+    });
+
+    await ctx.step("method conflict", () => {
+      assertThrows(
+        () => {
+          @Ser()
+          // deno-lint-ignore no-unused-vars
+          class Child extends Parent {}
+        },
+        Error,
+        "Class Child already has a toJSON() method defined",
+      );
+    });
   });
 
   await ctx.step("rename", async (ctx) => {
