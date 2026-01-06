@@ -1,16 +1,12 @@
 import { Ser } from "@mcbe/serialize";
 import { assertEquals, assertThrows } from "@std/assert";
 
-function assertToJSON(actual: unknown, expected: string): void {
-  assertEquals(JSON.stringify(actual), expected);
-}
-
 Deno.test("toJSON()", async (ctx) => {
   await ctx.step("empty", () => {
     @Ser()
     class Foo {}
 
-    assertToJSON(new Foo(), `{}`);
+    assertEquals(JSON.stringify(new Foo()), `{}`);
   });
 
   await ctx.step("basic", () => {
@@ -23,7 +19,7 @@ Deno.test("toJSON()", async (ctx) => {
       b = "foo";
     }
 
-    assertToJSON(new Foo(), `{"a":8,"b":"foo"}`);
+    assertEquals(JSON.stringify(new Foo()), `{"a":8,"b":"foo"}`);
   });
 
   await ctx.step("special field names", () => {
@@ -42,7 +38,7 @@ Deno.test("toJSON()", async (ctx) => {
       "a:bB" = 0;
     }
 
-    assertToJSON(new Foo(), `{"10":0,"*":0,"$":0,"a:bB":0}`);
+    assertEquals(JSON.stringify(new Foo()), `{"10":0,"*":0,"$":0,"a:bB":0}`);
   });
 
   await ctx.step("inherit", () => {
@@ -68,7 +64,7 @@ Deno.test("toJSON()", async (ctx) => {
         yes = 1;
       }
 
-      assertToJSON(new Foo(), `{"no":1}`);
+      assertEquals(JSON.stringify(new Foo()), `{"no":1}`);
     });
 
     await ctx.step("with custom override merge", () => {
@@ -81,7 +77,7 @@ Deno.test("toJSON()", async (ctx) => {
         merge = 1;
       }
 
-      assertToJSON(new Foo(), `{"no":21}`);
+      assertEquals(JSON.stringify(new Foo()), `{"no":21}`);
     });
   });
 
@@ -100,18 +96,18 @@ Deno.test("toJSON()", async (ctx) => {
 
     const v = new Foo();
     await ctx.step("all", () => {
-      assertToJSON(v, `{"no_default":8}`);
+      assertEquals(JSON.stringify(v), `{"no_default":8}`);
     });
 
     await ctx.step("primitive", () => {
       v.primitive = "qux";
-      assertToJSON(v, `{"no_default":8,"primitive":"qux"}`);
+      assertEquals(JSON.stringify(v), `{"no_default":8,"primitive":"qux"}`);
     });
 
     await ctx.step("object", () => {
       v.object.push("baz");
-      assertToJSON(
-        v,
+      assertEquals(
+        JSON.stringify(v),
         `{"no_default":8,"primitive":"qux","object":["foo","bar","baz"]}`,
       );
     });
@@ -134,11 +130,11 @@ Deno.test("toJSON()", async (ctx) => {
       }
 
       const v = new Foo();
-      assertToJSON(v, `{"normal":["custom","foo"]}`);
+      assertEquals(JSON.stringify(v), `{"normal":["custom","foo"]}`);
 
       v.normalDefaulted = "bar";
-      assertToJSON(
-        v,
+      assertEquals(
+        JSON.stringify(v),
         `{"normal":["custom","foo"],"normal_defaulted":["custom","bar"]}`,
       );
     });
@@ -160,10 +156,10 @@ Deno.test("toJSON()", async (ctx) => {
       }
 
       const v = new Foo();
-      assertToJSON(v, `{"a":1,"b":2}`);
+      assertEquals(JSON.stringify(v), `{"a":1,"b":2}`);
 
       v.merge.a = 12;
-      assertToJSON(v, `{"a":12,"b":2,"c":3}`);
+      assertEquals(JSON.stringify(v), `{"a":12,"b":2,"c":3}`);
     });
   });
 
@@ -179,10 +175,10 @@ Deno.test("toJSON()", async (ctx) => {
       }
 
       const v = new WithDefault();
-      assertToJSON(v, `"foo"`);
+      assertEquals(JSON.stringify(v), `"foo"`);
 
       v.default = false;
-      assertToJSON(v, `{"basic":"foo","default":false}`);
+      assertEquals(JSON.stringify(v), `{"basic":"foo","default":false}`);
     });
 
     await ctx.step("on default", () => {
@@ -193,10 +189,10 @@ Deno.test("toJSON()", async (ctx) => {
       }
 
       const v = new OnDefault();
-      assertToJSON(v, `true`);
+      assertEquals(JSON.stringify(v), `true`);
 
       v.default = false;
-      assertToJSON(v, `false`);
+      assertEquals(JSON.stringify(v), `false`);
     });
 
     await ctx.step("on custom (normal) + on default", () => {
@@ -213,13 +209,16 @@ Deno.test("toJSON()", async (ctx) => {
       }
 
       const v = new OnCustom();
-      assertToJSON(v, `{"basic":"foo","custom":["custom","bar"]}`);
+      assertEquals(
+        JSON.stringify(v),
+        `{"basic":"foo","custom":["custom","bar"]}`,
+      );
 
       v.custom = "foo";
-      assertToJSON(v, `{"basic":"foo"}`);
+      assertEquals(JSON.stringify(v), `{"basic":"foo"}`);
 
       v.basic = undefined;
-      assertToJSON(v, `["custom","foo"]`);
+      assertEquals(JSON.stringify(v), `["custom","foo"]`);
     });
 
     await ctx.step("on custom (merge)", () => {
@@ -236,13 +235,13 @@ Deno.test("toJSON()", async (ctx) => {
       }
 
       const v = new OnCustom();
-      assertToJSON(v, `{"basic":"foo"}`);
+      assertEquals(JSON.stringify(v), `{"basic":"foo"}`);
 
       v.custom = true;
-      assertToJSON(v, `{"basic":"foo","merged":true}`);
+      assertEquals(JSON.stringify(v), `{"basic":"foo","merged":true}`);
 
       v.basic = undefined;
-      assertToJSON(v, `{"merged":true}`);
+      assertEquals(JSON.stringify(v), `{"merged":true}`);
     });
 
     await ctx.step("on getter", () => {
@@ -253,7 +252,7 @@ Deno.test("toJSON()", async (ctx) => {
         }
       }
 
-      assertToJSON(new OnGetter(), `"foo"`);
+      assertEquals(JSON.stringify(new OnGetter()), `"foo"`);
     });
   });
 
@@ -268,8 +267,8 @@ Deno.test("toJSON()", async (ctx) => {
         b = 2;
       }
 
-      assertToJSON(
-        new Foo(),
+      assertEquals(
+        JSON.stringify(new Foo()),
         `{"root:foo":{"bar":{"a":1},"baz":{"quux":{"b":2}}}}`,
       );
     });
@@ -298,8 +297,8 @@ Deno.test("toJSON()", async (ctx) => {
         renameWithCustomNormal = { normal: 1 };
       }
 
-      assertToJSON(
-        new Foo(),
+      assertEquals(
+        JSON.stringify(new Foo()),
         `{"root:foo":{"__rename__":1,"bar":{"merge":1,"__rename__":{"normal":1}}}}`,
       );
     });
@@ -311,7 +310,7 @@ Deno.test("toJSON()", async (ctx) => {
         value = 1;
       }
 
-      assertToJSON(new Foo(), `1`);
+      assertEquals(JSON.stringify(new Foo()), `1`);
     });
   });
 
@@ -329,10 +328,10 @@ Deno.test("toJSON()", async (ctx) => {
         child = new Child();
       }
 
-      assertToJSON(new Parent(), `{"child":{"b":"foo"}}`);
+      assertEquals(JSON.stringify(new Parent()), `{"child":{"b":"foo"}}`);
     });
 
-    await ctx.step("transparent", () => {
+    await ctx.step(JSON.stringify("transparent"), () => {
       @Ser()
       class Child {
         @Ser({ rename: "b" })
@@ -345,7 +344,7 @@ Deno.test("toJSON()", async (ctx) => {
         child = new Child();
       }
 
-      assertToJSON(new Parent(), `{"b":"foo"}`);
+      assertEquals(JSON.stringify(new Parent()), `{"b":"foo"}`);
     });
   });
 });

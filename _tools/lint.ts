@@ -1,6 +1,8 @@
 import { Ser } from "@mcbe/serialize";
 
 const ALLOWED_PATHS = ["mcbe-types/types"];
+const DECO_ID = Ser.name;
+const DECO = `@${DECO_ID}()`;
 
 export default {
   name: "style-guide",
@@ -8,9 +10,6 @@ export default {
     "class-serialization": {
       create(ctx) {
         if (!ALLOWED_PATHS.some((p) => ctx.filename.includes(p))) return {};
-
-        const DECO_ID = Ser.name;
-        const DECO = `@${DECO_ID}()`;
 
         return {
           ClassDeclaration(_node) {
