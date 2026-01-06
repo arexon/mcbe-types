@@ -1,3 +1,5 @@
+import { Ser } from "@mcbe/serialize";
+
 export * from "./component/mod.ts";
 
 /**
@@ -16,3 +18,31 @@ export type InputProps<
 // deno-lint-ignore no-explicit-any
 export type DerivedInputProps<T extends new (...args: any) => any> =
   ConstructorParameters<T>[0];
+
+@Ser()
+export class Range {
+  @Ser()
+  min: number;
+
+  @Ser()
+  max: number;
+
+  constructor(min: number, max: number) {
+    this.min = min;
+    this.max = max;
+  }
+
+  static customTuple(range: Range): [number, number] {
+    return [range.min, range.max];
+  }
+
+  static customObject(range: Range): { min: number; max: number } {
+    return { min: range.min, max: range.max };
+  }
+
+  static customValueObject(
+    range: Range,
+  ): { value: { min: number; max: number } } {
+    return { value: { min: range.min, max: range.max } };
+  }
+}

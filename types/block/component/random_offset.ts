@@ -1,5 +1,9 @@
 import { Ser } from "@mcbe/serialize";
-import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
+import {
+  type ComponentNamespace,
+  type InputProps,
+  Range,
+} from "@mcbe/types/common";
 
 @Ser()
 export class RandomOffsetBlockComponent implements ComponentNamespace {
@@ -25,10 +29,8 @@ export class RandomOffsetBlockComponent implements ComponentNamespace {
 
 @Ser()
 export class RandomOffset {
-  @Ser({
-    custom: [([min, max]) => ({ min, max }), "normal"],
-  })
-  range: [number, number];
+  @Ser({ custom: [Range.customObject, "normal"] })
+  range: Range;
 
   @Ser()
   steps: number;

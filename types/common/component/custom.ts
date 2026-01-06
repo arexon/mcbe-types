@@ -18,8 +18,13 @@ import type { ComponentNamespace } from "@mcbe/types/common";
  */
 @Ser({ transparent: "params" })
 export class CustomComponent<
-  // deno-lint-ignore no-explicit-any
-  Schema extends { namespace: string; params: unknown } = any,
+  Schema extends {
+    namespace: string;
+    params: unknown;
+  } = {
+    namespace: string;
+    params: unknown;
+  },
   Namespace extends string = Schema["namespace"],
 > implements ComponentNamespace {
   @Ser()

@@ -1,10 +1,17 @@
 import { Ser } from "@mcbe/serialize";
-import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
+import {
+  type ComponentNamespace,
+  type InputProps,
+  Range,
+} from "@mcbe/types/common";
 
 @Ser()
 export class TickBlockComponent implements ComponentNamespace {
-  @Ser({ default: () => [0, 0] })
-  intervalRange: [number, number];
+  @Ser({
+    custom: [Range.customTuple, "normal"],
+    default: () => new Range(0, 0),
+  })
+  intervalRange: Range;
 
   @Ser({ default: () => true })
   looping: boolean;

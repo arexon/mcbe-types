@@ -1,11 +1,12 @@
 import { Ser } from "@mcbe/serialize";
 import { type BlockComponent, BlockTraits } from "@mcbe/types/block";
-import { Components, type InputProps } from "@mcbe/types/common";
+import { Components, type InputProps, Range } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
 import type { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
 import type { FormatVersion } from "@mcbe/types/version";
 import { unreachable } from "@std/assert";
+import { mapEntries } from "@std/collections";
 
 export * from "./client.ts";
 export * from "./component/mod.ts";
@@ -13,13 +14,13 @@ export * from "./culling.ts";
 export * from "./descriptor.ts";
 export * from "./trait.ts";
 
-export class BlockComponents extends Components<BlockComponent> {}
-
 export type BlockInputProps = InputProps<
   Block,
   "identifier" | "menuCategory",
   "states" | "traits" | "components" | "permutations"
 >;
+
+export class BlockComponents extends Components<BlockComponent> {}
 
 @Ser()
 export class Block {
@@ -38,12 +39,17 @@ export class Block {
   @Ser({
     path: "minecraft:block/description",
     default: () => ({}),
+    custom: [(states) =>
+      mapEntries(states, ([key, state]) => {
+        if (state instanceof Range) {
+          // The output conforms to the format.
+          // deno-lint-ignore no-explicit-any
+          return [key, Range.customValueObject(state) as any];
+        }
+        return [key, state];
+      }), "normal"],
   })
-  states: Record<
-    Identifier,
-    | (number | boolean | string)[]
-    | { value: { min: number; max: number } }
-  >;
+  states: Record<Identifier, (number | boolean | string)[] | Range>;
 
   @Ser({
     path: "minecraft:block/description",
