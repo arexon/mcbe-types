@@ -117,7 +117,10 @@ export class Child extends Parent {}
       // Good
       assertDiagnostics(
         `
-export class Child extends Parent {}
+export class Child extends Parent {
+  a;
+  b;
+}
     `,
         [],
       );

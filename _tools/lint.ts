@@ -52,6 +52,8 @@ export default {
                   return fixer.removeRange(decoNode.range);
                 },
               });
+            } else if (decoNode === undefined && node.superClass !== null) {
+              return;
             }
 
             for (const propNode of node.body.body) {
