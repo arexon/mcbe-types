@@ -8,7 +8,7 @@ import { type AnyConstructor, equal } from "@std/assert";
 import { toSnakeCase } from "@std/text";
 
 /** Options to configure how a field should be serialized. */
-export interface FieldOptions<FieldValue> {
+export interface FieldOptions<FieldValue = unknown> {
   /**
    * A callback that returns the default value for this field.
    *
@@ -45,7 +45,7 @@ export interface FieldOptions<FieldValue> {
 }
 
 /** Options to configure how a class should be serialized. */
-export interface ClassOptions<FieldName> {
+export interface ClassOptions<FieldName = string> {
   /**
    * A name of the field (instance field or getter) to use as the serialized
    * value for this class.
@@ -81,9 +81,9 @@ export function Ser<
 ) => void {
   return (target, ctx) => {
     if (ctx.kind === "field") {
-      fieldImpl(ctx, options as FieldOptions<unknown>);
+      return fieldImpl(ctx, options as FieldOptions);
     } else if (ctx.kind === "class") {
-      classImpl(ctx, target!, options as ClassOptions<string>);
+      classImpl(ctx, target!, options as ClassOptions);
     }
   };
 }
@@ -96,7 +96,7 @@ interface ContextMetadata {
 
 function fieldImpl(
   ctx: ClassFieldDecoratorContext & ContextMetadata,
-  options?: FieldOptions<unknown>,
+  options?: FieldOptions,
 ): void {
   ctx.metadata[Metadata.symbol] ??= new Metadata();
   if (typeof ctx.name !== "symbol") {
@@ -107,7 +107,7 @@ function fieldImpl(
 function classImpl(
   ctx: ClassDecoratorContext & ContextMetadata,
   ctor: AnyConstructor,
-  options: ClassOptions<string>,
+  options: ClassOptions,
 ): void {
   if ("toJSON" in ctor.prototype) {
     throw new Error(
@@ -151,10 +151,10 @@ class Metadata {
   static readonly symbolName = "metadataSymbol";
 
   length = 0;
-  transparent: string | undefined;
   fields: Record<string, FieldMetadata> = {};
+  transparent?: string;
 
-  setField(name: string, options: FieldOptions<unknown>): void {
+  setField(name: string, options: FieldOptions): void {
     this.fields[name] = {
       index: this.length,
       name,
@@ -166,10 +166,6 @@ class Metadata {
       path: options.path?.split("/"),
     };
     this.length++;
-  }
-
-  getField(name: string): FieldMetadata | undefined {
-    return this.fields[name];
   }
 
   getKey(name: string): string {
@@ -190,9 +186,9 @@ type ObjectProps = { [key: string]: string | ObjectProps };
 
 function generateToJson(metadata: Metadata): string {
   let body = "";
-  const object: ObjectProps = {};
+  const objectProps: ObjectProps = {};
   const transparencyChecks: string[] = [];
-  const customValues: [string, string][] = [];
+  const consts: [string, string][] = [];
 
   if (metadata.length > 0) {
     for (const field of Object.values(metadata.fields)) {
@@ -209,15 +205,15 @@ function generateToJson(metadata: Metadata): string {
       if (field.custom !== undefined) {
         const customOverride = CUSTOM_OVERRIDE_PREFIX + field.index;
 
-        if (customValues.length === 0) {
-          customValues.push([
+        if (consts.length === 0) {
+          consts.push([
             FIELDS_METADATA_VAR,
             `this.constructor[Symbol.metadata][${Metadata.symbolName}]`,
           ]);
         }
-        customValues.push([
+        consts.push([
           customOverride,
-          `${FIELDS_METADATA_VAR}.getField("${field.name}").custom.fn(${value})`,
+          `${FIELDS_METADATA_VAR}.fields["${field.name}"].custom.fn(${value})`,
         ]);
 
         value = customOverride;
@@ -234,14 +230,14 @@ function generateToJson(metadata: Metadata): string {
       }
 
       if (field.path !== undefined) {
-        let current = object;
+        let current = objectProps;
         for (const part of field.path) {
           current[part] ??= {};
           current = current[part] as ObjectProps;
         }
         current[key] = value;
       } else {
-        object[key] = value;
+        objectProps[key] = value;
       }
 
       if (isNotTransparent) {
@@ -267,22 +263,22 @@ function generateToJson(metadata: Metadata): string {
       body += "}";
     };
 
-    for (const [name, value] of customValues) {
+    for (const [name, value] of consts) {
       body += `const ${name}=${value};`;
     }
 
     if (transparencyChecks.length > 0) {
       body += `const ${RESULT_VAR} =`;
-      appendObjectProps(object);
+      appendObjectProps(objectProps);
       body += ";";
     } else if (metadata.transparent === undefined) {
       body += "return ";
-      appendObjectProps(object);
+      appendObjectProps(objectProps);
       body += ";";
     }
 
     if (metadata.transparent !== undefined) {
-      const transparentField = metadata.getField(metadata.transparent)!;
+      const transparentField = metadata.fields[metadata.transparent]!;
       let value: string;
       if (transparentField.custom !== undefined) {
         value = CUSTOM_OVERRIDE_PREFIX + transparentField.index;
