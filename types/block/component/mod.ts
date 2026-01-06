@@ -1,76 +1,42 @@
-import type {
-  CollisionBoxBlockComponent,
-  ConnectionRuleBlockComponent,
-  CraftingTableBlockComponent,
-  DestructibleByExplosionBlockComponent,
-  DestructibleByMiningBlockComponent,
-  DestructionParticlesBlockComponent,
-  EmbeddedVisualBlockComponent,
-  EntityFallOnBlockComponent,
-  FlammableBlockComponent,
-  FlowerPottableBlockComponent,
-  FrictionBlockComponent,
-  GeometryBlockComponent,
-  ItemVisualBlockComponent,
-  LeashableBlockComponent,
-  LightDampeningBlockComponent,
-  LightEmissionBlockComponent,
-  LiquidDetectionBlockComponent,
-  LootBlockComponent,
-  MapColorBlockComponent,
-  MaterialInstancesBlockComponent,
-  MovableBlockComponent,
-  PlacementFilterBlockComponent,
-  PrecipitationInteractionsBlockComponent,
-  RandomOffsetBlockComponent,
-  RedstoneConductivityBlockComponent,
-  RedstoneConsumerBlockComponent,
-  RedstoneProducerBlockComponent,
-  ReplaceableBlockComponent,
-  SelectionBoxBlockComponent,
-  SupportBlockComponent,
-  TagBlockComponent,
-  TickBlockComponent,
-  TransformationBlockComponent,
-} from "@mcbe/types/block";
+import type * as block from "@mcbe/types/block";
 import type { CustomComponent, DisplayNameComponent } from "@mcbe/types/common";
 
 export type BlockComponent =
-  | CollisionBoxBlockComponent
-  | MapColorBlockComponent
-  | ConnectionRuleBlockComponent
-  | CraftingTableBlockComponent
-  | DestructibleByExplosionBlockComponent
-  | DestructibleByMiningBlockComponent
-  | DestructionParticlesBlockComponent
-  | FlammableBlockComponent
-  | GeometryBlockComponent
-  | ItemVisualBlockComponent
-  | MaterialInstancesBlockComponent
-  | SelectionBoxBlockComponent
-  | DisplayNameComponent
-  | LightDampeningBlockComponent
-  | LightEmissionBlockComponent
-  | LiquidDetectionBlockComponent
-  | LootBlockComponent
-  | FrictionBlockComponent
-  | MovableBlockComponent
-  | PlacementFilterBlockComponent
-  | PrecipitationInteractionsBlockComponent
-  | RedstoneConductivityBlockComponent
-  | ReplaceableBlockComponent
-  | SupportBlockComponent
-  | TransformationBlockComponent
-  | TickBlockComponent
-  | RedstoneProducerBlockComponent
-  | RandomOffsetBlockComponent
-  | FlowerPottableBlockComponent
-  | EntityFallOnBlockComponent
-  | EmbeddedVisualBlockComponent
-  | TagBlockComponent
-  | LeashableBlockComponent
-  | RedstoneConsumerBlockComponent
-  | CustomComponent;
+  | block.CollisionBoxBlockComponent
+  | block.ConnectionRuleBlockComponent
+  | block.CraftingTableBlockComponent
+  | block.DestructibleByExplosionBlockComponent
+  | block.DestructibleByMiningBlockComponent
+  | block.DestructionParticlesBlockComponent
+  | block.EmbeddedVisualBlockComponent
+  | block.EntityFallOnBlockComponent
+  | block.FlammableBlockComponent
+  | block.FlowerPottableBlockComponent
+  | block.FrictionBlockComponent
+  | block.GeometryBlockComponent
+  | block.ItemVisualBlockComponent
+  | block.LeashableBlockComponent
+  | block.LightDampeningBlockComponent
+  | block.LightEmissionBlockComponent
+  | block.LiquidDetectionBlockComponent
+  | block.LootBlockComponent
+  | block.MapColorBlockComponent
+  | block.MaterialInstancesBlockComponent
+  | block.MovableBlockComponent
+  | block.PlacementFilterBlockComponent
+  | block.PrecipitationInteractionsBlockComponent
+  | block.RandomOffsetBlockComponent
+  | block.RedstoneConductivityBlockComponent
+  | block.RedstoneConsumerBlockComponent
+  | block.RedstoneProducerBlockComponent
+  | block.ReplaceableBlockComponent
+  | block.SelectionBoxBlockComponent
+  | block.SupportBlockComponent
+  | block.TagBlockComponent
+  | block.TickBlockComponent
+  | block.TransformationBlockComponent
+  | CustomComponent
+  | DisplayNameComponent;
 
 export * from "./collision_box.ts";
 export * from "./connection_rule.ts";
