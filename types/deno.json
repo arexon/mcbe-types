@@ -11,6 +11,7 @@
     "./text": "./text.ts",
     "./version": "./version.ts",
     "./manifest": "./manifest.ts",
-    "./uuid": "./uuid.ts"
+    "./uuid": "./uuid.ts",
+    "./packs": "./packs.ts"
   }
 }
