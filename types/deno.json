@@ -9,6 +9,8 @@
     "./item": "./item/mod.ts",
     "./molang": "./molang.ts",
     "./text": "./text.ts",
-    "./version": "./version.ts"
+    "./version": "./version.ts",
+    "./manifest": "./manifest.ts",
+    "./uuid": "./uuid.ts"
   }
 }

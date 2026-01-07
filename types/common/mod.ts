@@ -1,10 +1,16 @@
 import { Ser } from "@mcbe/serialize";
+import type { AnyConstructor } from "@std/assert";
 
 export * from "./component/mod.ts";
 
+export const TOOL_NAME = "MCBE-Types";
+
+export type Vec2 = [number, number];
+export type Vec3 = [number, number, number];
+
 /**
- * Takes the properties of `T` and returns a matching object based on
- * `OriginalProps` and `OptionalProps`.
+ * Takes the properties of `T` and returns a matching object based on `Original`
+ * and `Optional`.
  */
 export type InputProps<
   T,
@@ -15,9 +21,9 @@ export type InputProps<
   & Partial<Pick<T, Optional>>;
 
 /** Similar to {@link InputProps} but derives the properties from `T`'s constructor `props` parameter. */
-// deno-lint-ignore no-explicit-any
-export type DerivedInputProps<T extends new (...args: any) => any> =
-  ConstructorParameters<T>[0];
+export type DerivedInputProps<
+  T extends AnyConstructor,
+> = ConstructorParameters<T>[0];
 
 @Ser()
 export class Range {
