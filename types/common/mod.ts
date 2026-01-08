@@ -38,7 +38,7 @@ export class Range {
     this.max = max;
   }
 
-  static fromLength(length: number): Range {
+  static from(length: number): Range {
     return new Range(0, length - 1);
   }
 

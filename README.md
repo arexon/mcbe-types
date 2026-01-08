@@ -53,7 +53,7 @@ const block = new Block(new FormatVersion(1, 21, 130), {
   identifier: "custom:wood",
   menuCategory: new InventoryMenuCategory({ category: "nature" }),
   states: {
-    [variantState]: Range.fromLength(variants.length),
+    [variantState]: Range.from(variants.length),
   },
   components: new BlockComponents(
     new GeometryBlockComponent("minecraft:geometry.full_block"),
