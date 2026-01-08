@@ -94,6 +94,12 @@ Deno.test("toJSON()", async (ctx) => {
 
   await ctx.step("defaults", async (ctx) => {
     @Ser()
+    class Bar {
+      @Ser()
+      a = 0;
+    }
+
+    @Ser()
     class Foo {
       @Ser()
       noDefault = 8;
@@ -103,6 +109,9 @@ Deno.test("toJSON()", async (ctx) => {
 
       @Ser({ default: () => ["foo", "bar"] })
       object = ["foo", "bar"];
+
+      @Ser({ default: () => new Bar() })
+      instance = new Bar();
     }
 
     const v = new Foo();
@@ -120,6 +129,14 @@ Deno.test("toJSON()", async (ctx) => {
       assertEquals(
         JSON.stringify(v),
         `{"no_default":8,"primitive":"qux","object":["foo","bar","baz"]}`,
+      );
+    });
+
+    await ctx.step("instance", () => {
+      v.instance.a = 10;
+      assertEquals(
+        JSON.stringify(v),
+        `{"no_default":8,"primitive":"qux","object":["foo","bar","baz"],"instance":{"a":10}}`,
       );
     });
   });

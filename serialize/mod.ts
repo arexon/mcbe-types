@@ -202,30 +202,30 @@ function generateToJson(metadata: Metadata): string {
         transparencyCheck.push(`${value} === undefined`);
       }
 
-      if (field.custom !== undefined) {
-        const customOverride = CUSTOM_OVERRIDE_PREFIX + field.index;
-
+      if (field.default !== undefined || field.custom !== undefined) {
         if (consts.length === 0) {
           consts.push([
             FIELDS_METADATA_VAR,
             `this.constructor[Symbol.metadata][${Metadata.symbolName}]`,
           ]);
         }
+      }
+
+      if (field.custom !== undefined) {
+        const customOverride = CUSTOM_OVERRIDE_PREFIX + field.index;
         consts.push([
           customOverride,
           `${FIELDS_METADATA_VAR}.fields["${field.name}"].custom.fn(${value})`,
         ]);
-
         value = customOverride;
       }
 
       if (field.default !== undefined) {
-        const isDefault = `equal(${JSON.stringify(field.default())}, ${value})`;
-
+        const isDefault =
+          `equal(${FIELDS_METADATA_VAR}.fields["${field.name}"].default(), ${value})`;
         if (isNotTransparent) {
           transparencyCheck.push(isDefault);
         }
-
         value = `${isDefault} ? undefined : ${value}`;
       }
 
