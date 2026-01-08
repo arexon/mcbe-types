@@ -10,7 +10,7 @@ export class FuelItemComponent implements ComponentNamespace {
     return "minecraft:fuel";
   }
 
-  constructor(props: InputProps<FuelItemComponent, "duration">) {
-    this.duration = props.duration;
+  constructor(input: InputProps<FuelItemComponent, "duration">) {
+    this.duration = input.duration;
   }
 }

@@ -20,12 +20,12 @@ export class EmbeddedVisualBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       EmbeddedVisualBlockComponent,
       "geometry" | "materialInstances"
     >,
   ) {
-    this.geometry = props.geometry;
-    this.materialInstances = props.materialInstances;
+    this.geometry = input.geometry;
+    this.materialInstances = input.materialInstances;
   }
 }

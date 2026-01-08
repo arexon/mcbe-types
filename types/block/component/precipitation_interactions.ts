@@ -15,11 +15,11 @@ export class PrecipitationInteractionsBlockComponent
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       PrecipitationInteractionsBlockComponent,
       "precipitationBehavior"
     >,
   ) {
-    this.precipitationBehavior = props.precipitationBehavior;
+    this.precipitationBehavior = input.precipitationBehavior;
   }
 }

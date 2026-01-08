@@ -9,7 +9,7 @@ export class ItemDescriptorTags {
   @Ser()
   tags: string;
 
-  constructor(props: InputProps<ItemDescriptorTags, "tags">) {
-    this.tags = props.tags;
+  constructor(input: InputProps<ItemDescriptorTags, "tags">) {
+    this.tags = input.tags;
   }
 }

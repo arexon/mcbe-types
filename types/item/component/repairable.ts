@@ -13,9 +13,9 @@ export class RepairableItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<RepairableItemComponent, never, "repairItems">,
+    input: InputProps<RepairableItemComponent, never, "repairItems">,
   ) {
-    this.repairItems = props.repairItems ?? [];
+    this.repairItems = input.repairItems ?? [];
   }
 }
 
@@ -28,9 +28,9 @@ export class RepairableItemEntry {
   repairAmount: number | Molang;
 
   constructor(
-    props: InputProps<RepairableItemEntry, "items" | "repairAmount">,
+    input: InputProps<RepairableItemEntry, "items" | "repairAmount">,
   ) {
-    this.items = props.items;
-    this.repairAmount = props.repairAmount;
+    this.items = input.items;
+    this.repairAmount = input.repairAmount;
   }
 }

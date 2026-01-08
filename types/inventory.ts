@@ -13,14 +13,14 @@ export class InventoryMenuCategory {
   isHiddenInCommand: boolean;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       InventoryMenuCategory,
       "category",
       "group" | "isHiddenInCommand"
     >,
   ) {
-    this.category = props.category;
-    this.group = props.group;
-    this.isHiddenInCommand = props.isHiddenInCommand ?? false;
+    this.category = input.category;
+    this.group = input.group;
+    this.isHiddenInCommand = input.isHiddenInCommand ?? false;
   }
 }

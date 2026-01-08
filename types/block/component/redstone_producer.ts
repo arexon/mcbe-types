@@ -20,15 +20,15 @@ export class RedstoneProducerBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       RedstoneProducerBlockComponent,
       "power" | "stronglyPoweredFace" | "connectedFaces",
       "transformRelative"
     >,
   ) {
-    this.power = props.power;
-    this.stronglyPoweredFace = props.stronglyPoweredFace;
-    this.connectedFaces = props.connectedFaces;
-    this.transformRelative = props.transformRelative ?? false;
+    this.power = input.power;
+    this.stronglyPoweredFace = input.stronglyPoweredFace;
+    this.connectedFaces = input.connectedFaces;
+    this.transformRelative = input.transformRelative ?? false;
   }
 }

@@ -27,16 +27,24 @@ export class GeometryBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
-      GeometryBlockComponent,
-      "identifier" | "boneVisibility" | "culling",
-      "uvLock" | "cullingLayer"
-    >,
+    input:
+      | InputProps<
+        GeometryBlockComponent,
+        "identifier" | "boneVisibility" | "culling",
+        "uvLock" | "cullingLayer"
+      >
+      | Identifier,
   ) {
-    this.identifier = props.identifier;
-    this.boneVisibility = props.boneVisibility;
-    this.culling = props.culling;
-    this.cullingLayer = props.cullingLayer ?? DEFAULT_CULLING_LAYER;
-    this.uvLock = props.uvLock ?? false;
+    if (typeof input === "string") {
+      this.identifier = input;
+      this.cullingLayer = DEFAULT_CULLING_LAYER;
+      this.uvLock = false;
+    } else {
+      this.identifier = input.identifier;
+      this.boneVisibility = input.boneVisibility;
+      this.culling = input.culling;
+      this.cullingLayer = input.cullingLayer ?? DEFAULT_CULLING_LAYER;
+      this.uvLock = input.uvLock ?? false;
+    }
   }
 }

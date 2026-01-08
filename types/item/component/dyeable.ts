@@ -10,7 +10,7 @@ export class DyeableItemComponent implements ComponentNamespace {
     return "minecraft:dyeable";
   }
 
-  constructor(props: InputProps<DyeableItemComponent, "defaultColor">) {
-    this.defaultColor = props.defaultColor;
+  constructor(input: InputProps<DyeableItemComponent, "defaultColor">) {
+    this.defaultColor = input.defaultColor;
   }
 }

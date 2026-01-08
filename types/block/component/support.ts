@@ -10,7 +10,7 @@ export class SupportBlockComponent implements ComponentNamespace {
     return "minecraft:support";
   }
 
-  constructor(props: InputProps<SupportBlockComponent, "shape">) {
-    this.shape = props.shape;
+  constructor(input: InputProps<SupportBlockComponent, "shape">) {
+    this.shape = input.shape;
   }
 }

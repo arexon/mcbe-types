@@ -11,12 +11,12 @@ export class BundleInteractionItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       BundleInteractionItemComponent,
       never,
       "numViewableSlots"
     >,
   ) {
-    this.numViewableSlots = props.numViewableSlots ?? 12;
+    this.numViewableSlots = input.numViewableSlots ?? 12;
   }
 }

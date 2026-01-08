@@ -9,7 +9,7 @@ export class TagBlockComponent implements ComponentNamespace {
     return this.#namespace;
   }
 
-  constructor(namespace: string) {
-    this.#namespace = `tag:${namespace}`;
+  constructor(input: string) {
+    this.#namespace = `tag:${input}`;
   }
 }

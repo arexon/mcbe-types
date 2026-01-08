@@ -11,8 +11,8 @@ export class CanDestroyInCreativeItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<CanDestroyInCreativeItemComponent, never, "value">,
+    input: InputProps<CanDestroyInCreativeItemComponent, never, "value">,
   ) {
-    this.value = props.value ?? true;
+    this.value = input.value ?? true;
   }
 }

@@ -5,7 +5,6 @@ import type {
   InputProps,
 } from "@mcbe/types/common";
 import type { Identifier } from "@mcbe/types/identifier";
-import { unreachable } from "@std/assert";
 
 @Ser({ transparent: "value" })
 export class IconItemComponent implements ComponentNamespace {
@@ -21,18 +20,13 @@ export class IconItemComponent implements ComponentNamespace {
     return "minecraft:icon";
   }
 
-  constructor(value: Identifier);
-  constructor(props: IconTextures);
-  constructor(props: DerivedInputProps<typeof IconTextures>);
-  constructor(input: Identifier | IconTextures) {
+  constructor(input: Identifier | DerivedInputProps<typeof IconTextures>) {
     if (typeof input === "string") {
       this.value = input;
-    } else if (typeof input === "object" && !(input instanceof IconTextures)) {
-      this.value = new IconTextures(input);
-    } else if (input instanceof IconTextures) {
-      this.value = input;
     } else {
-      unreachable();
+      this.value = input instanceof IconTextures
+        ? input
+        : new IconTextures(input);
     }
   }
 }
@@ -55,15 +49,15 @@ export class IconTextures {
   bundleOpenFront?: Identifier;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       IconTextures,
       "default" | "dyed" | "iconTrim" | "bundleOpenBack" | "bundleOpenFront"
     >,
   ) {
-    this.default = props.default;
-    this.dyed = props.dyed;
-    this.iconTrim = props.iconTrim;
-    this.bundleOpenBack = props.bundleOpenBack;
-    this.bundleOpenFront = props.bundleOpenFront;
+    this.default = input.default;
+    this.dyed = input.dyed;
+    this.iconTrim = input.iconTrim;
+    this.bundleOpenBack = input.bundleOpenBack;
+    this.bundleOpenFront = input.bundleOpenFront;
   }
 }

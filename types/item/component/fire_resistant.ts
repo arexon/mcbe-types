@@ -10,7 +10,7 @@ export class FireResistantItemComponent implements ComponentNamespace {
     return "minecraft:fire_resistant";
   }
 
-  constructor(props: InputProps<FireResistantItemComponent, "value">) {
-    this.value = props.value;
+  constructor(input: InputProps<FireResistantItemComponent, "value">) {
+    this.value = input.value;
   }
 }

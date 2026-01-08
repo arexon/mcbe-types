@@ -18,14 +18,14 @@ export class DestructionParticlesBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       DestructionParticlesBlockComponent,
       "texture" | "tintMethod",
       "particleCount"
     >,
   ) {
-    this.particleCount = props.particleCount ?? 100;
-    this.texture = props.texture;
-    this.tintMethod = props.tintMethod;
+    this.particleCount = input.particleCount ?? 100;
+    this.texture = input.texture;
+    this.tintMethod = input.tintMethod;
   }
 }

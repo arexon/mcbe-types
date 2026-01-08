@@ -6,7 +6,7 @@ import type {
 } from "@mcbe/types/common";
 import type { ItemDescriptor } from "@mcbe/types/item";
 
-@Ser()
+@Ser({ transparent: "value" })
 export class DestructibleByMiningBlockComponent implements ComponentNamespace {
   @Ser({ default: () => true })
   value: boolean | DestructibleByMining;
@@ -15,11 +15,14 @@ export class DestructibleByMiningBlockComponent implements ComponentNamespace {
     return "minecraft:destructible_by_mining";
   }
 
-  constructor(value: boolean);
-  constructor(props: DerivedInputProps<typeof DestructibleByMining>);
-  constructor(value: boolean | DerivedInputProps<typeof DestructibleByMining>) {
-    if (typeof value === "boolean") this.value = value;
-    else this.value = new DestructibleByMining(value);
+  constructor(input: boolean | DerivedInputProps<typeof DestructibleByMining>) {
+    if (typeof input === "boolean") {
+      this.value = input;
+    } else {
+      this.value = input instanceof DestructibleByMining
+        ? input
+        : new DestructibleByMining(input);
+    }
   }
 }
 
@@ -28,17 +31,18 @@ export class DestructibleByMining {
   @Ser({ default: () => 0 })
   secondsToDestroy: number;
 
-  @Ser()
+  @Ser({ default: () => [] })
   itemSpecificSpeeds: ItemDestroySpeed[];
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       DestructibleByMining,
-      "secondsToDestroy" | "itemSpecificSpeeds"
+      "secondsToDestroy",
+      "itemSpecificSpeeds"
     >,
   ) {
-    this.secondsToDestroy = props.secondsToDestroy;
-    this.itemSpecificSpeeds = props.itemSpecificSpeeds;
+    this.secondsToDestroy = input.secondsToDestroy;
+    this.itemSpecificSpeeds = input.itemSpecificSpeeds ?? [];
   }
 }
 
@@ -50,8 +54,8 @@ export class ItemDestroySpeed {
   @Ser()
   destroySpeed: number;
 
-  constructor(props: InputProps<ItemDestroySpeed, "item" | "destroySpeed">) {
-    this.item = props.item;
-    this.destroySpeed = props.destroySpeed;
+  constructor(input: InputProps<ItemDestroySpeed, "item" | "destroySpeed">) {
+    this.item = input.item;
+    this.destroySpeed = input.destroySpeed;
   }
 }

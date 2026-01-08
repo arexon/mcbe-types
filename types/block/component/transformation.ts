@@ -1,38 +1,38 @@
 import { Ser } from "@mcbe/serialize";
-import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps, Vec3 } from "@mcbe/types/common";
 
 @Ser()
 export class TransformationBlockComponent implements ComponentNamespace {
   @Ser({ default: () => [0, 0, 0] })
-  rotation: [number, number, number];
+  rotation: Vec3;
 
   @Ser({ default: () => [0, 0, 0] })
-  rotationPivot: [number, number, number];
+  rotationPivot: Vec3;
 
   @Ser({ default: () => [1, 1, 1] })
-  scale: [number, number, number];
+  scale: Vec3;
 
   @Ser({ default: () => [0, 0, 0] })
-  scalePivot: [number, number, number];
+  scalePivot: Vec3;
 
   @Ser({ default: () => [0, 0, 0] })
-  translation: [number, number, number];
+  translation: Vec3;
 
   get namespace(): string {
     return "minecraft:transformation";
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       TransformationBlockComponent,
       never,
       "rotation" | "rotationPivot" | "scale" | "scalePivot" | "translation"
     >,
   ) {
-    this.rotation = props.rotation ?? [0, 0, 0];
-    this.rotationPivot = props.rotationPivot ?? [0, 0, 0];
-    this.scale = props.scale ?? [1, 1, 1];
-    this.scalePivot = props.scalePivot ?? [0, 0, 0];
-    this.translation = props.translation ?? [0, 0, 0];
+    this.rotation = input.rotation ?? [0, 0, 0];
+    this.rotationPivot = input.rotationPivot ?? [0, 0, 0];
+    this.scale = input.scale ?? [1, 1, 1];
+    this.scalePivot = input.scalePivot ?? [0, 0, 0];
+    this.translation = input.translation ?? [0, 0, 0];
   }
 }

@@ -10,7 +10,7 @@ export class GlintItemComponent implements ComponentNamespace {
     return "minecraft:glint";
   }
 
-  constructor(value: boolean) {
-    this.value = value;
+  constructor(input: boolean) {
+    this.value = input;
   }
 }

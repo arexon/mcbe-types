@@ -11,12 +11,12 @@ export class StorageWeightModifierItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       StorageWeightModifierItemComponent,
       never,
       "weightInStorageItem"
     >,
   ) {
-    this.weightInStorageItem = props.weightInStorageItem ?? 4;
+    this.weightInStorageItem = input.weightInStorageItem ?? 4;
   }
 }

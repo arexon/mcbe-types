@@ -1,6 +1,6 @@
 import { Ser } from "@mcbe/serialize";
 import { BoundingBox } from "@mcbe/types/block";
-import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, DerivedInputProps } from "@mcbe/types/common";
 
 @Ser({ transparent: "value" })
 export class SelectionBoxBlockComponent implements ComponentNamespace {
@@ -11,13 +11,13 @@ export class SelectionBoxBlockComponent implements ComponentNamespace {
     return "minecraft:selection_box";
   }
 
-  constructor(enable: boolean);
-  constructor(props: InputProps<BoundingBox, "origin" | "size">);
-  constructor(value: boolean | InputProps<BoundingBox, "origin" | "size">) {
-    if (typeof value === "boolean") {
-      this.value = value;
+  constructor(input: boolean | DerivedInputProps<typeof BoundingBox>) {
+    if (typeof input === "boolean") {
+      this.value = input;
     } else {
-      this.value = new BoundingBox(value);
+      this.value = input instanceof BoundingBox
+        ? input
+        : new BoundingBox(input);
     }
   }
 }

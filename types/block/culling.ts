@@ -16,11 +16,11 @@ export class BlockCulling {
 
   constructor(
     formatVersion: FormatVersion,
-    props: InputProps<BlockCulling, "identifier" | "rules">,
+    input: InputProps<BlockCulling, "identifier" | "rules">,
   ) {
     this.formatVersion = formatVersion;
-    this.identifier = props.identifier;
-    this.rules = props.rules;
+    this.identifier = input.identifier;
+    this.rules = input.rules;
   }
 }
 
@@ -49,15 +49,15 @@ export class BlockCullingRule {
   geometryPart: "bone" | "cube" | "face";
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       BlockCullingRule,
       "direction" | "geometryPart",
       "cullAgainstFullAndOpaque" | "condition"
     >,
   ) {
-    this.cullAgainstFullAndOpaque = props.cullAgainstFullAndOpaque ?? true;
-    this.condition = props.condition ?? "default";
-    this.direction = props.direction;
-    this.geometryPart = props.geometryPart;
+    this.cullAgainstFullAndOpaque = input.cullAgainstFullAndOpaque ?? true;
+    this.condition = input.condition ?? "default";
+    this.direction = input.direction;
+    this.geometryPart = input.geometryPart;
   }
 }

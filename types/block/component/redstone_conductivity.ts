@@ -14,13 +14,13 @@ export class RedstoneConductivityBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       RedstoneConductivityBlockComponent,
       never,
       "allowsWireToStepDown" | "redstoneConductor"
     >,
   ) {
-    this.allowsWireToStepDown = props.allowsWireToStepDown ?? true;
-    this.redstoneConductor = props.redstoneConductor ?? false;
+    this.allowsWireToStepDown = input.allowsWireToStepDown ?? true;
+    this.redstoneConductor = input.redstoneConductor ?? false;
   }
 }

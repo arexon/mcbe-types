@@ -12,7 +12,7 @@ export class RarityItemComponent implements ComponentNamespace {
     return "minecraft:rarity";
   }
 
-  constructor(value: ItemRarity) {
-    this.value = value;
+  constructor(input: ItemRarity) {
+    this.value = input;
   }
 }

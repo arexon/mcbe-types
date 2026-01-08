@@ -26,7 +26,7 @@ export class ThrowableItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ThrowableItemComponent,
       never,
       | "doSwingAnimation"
@@ -37,11 +37,11 @@ export class ThrowableItemComponent implements ComponentNamespace {
       | "scalePowerByDrawDuration"
     >,
   ) {
-    this.doSwingAnimation = props.doSwingAnimation ?? false;
-    this.launchPowerScale = props.launchPowerScale ?? 1;
-    this.maxDrawDuration = props.maxDrawDuration ?? 0;
-    this.maxLaunchPower = props.maxLaunchPower ?? 1;
-    this.minDrawDuration = props.minDrawDuration ?? 0;
-    this.scalePowerByDrawDuration = props.scalePowerByDrawDuration ?? false;
+    this.doSwingAnimation = input.doSwingAnimation ?? false;
+    this.launchPowerScale = input.launchPowerScale ?? 1;
+    this.maxDrawDuration = input.maxDrawDuration ?? 0;
+    this.maxLaunchPower = input.maxLaunchPower ?? 1;
+    this.minDrawDuration = input.minDrawDuration ?? 0;
+    this.scalePowerByDrawDuration = input.scalePowerByDrawDuration ?? false;
   }
 }

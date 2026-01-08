@@ -14,9 +14,9 @@ export class MovableBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<MovableBlockComponent, "movementType", "sticky">,
+    input: InputProps<MovableBlockComponent, "movementType", "sticky">,
   ) {
-    this.movementType = props.movementType;
-    this.sticky = props.sticky ?? "none";
+    this.movementType = input.movementType;
+    this.sticky = input.sticky ?? "none";
   }
 }

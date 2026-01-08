@@ -14,11 +14,12 @@ export class FlammableBlockComponent implements ComponentNamespace {
     return "minecraft:flammable";
   }
 
-  constructor(value: boolean);
-  constructor(props: DerivedInputProps<typeof Flammable>);
-  constructor(value: boolean | DerivedInputProps<typeof Flammable>) {
-    if (typeof value === "boolean") this.value = value;
-    else this.value = new Flammable(value);
+  constructor(input: boolean | DerivedInputProps<typeof Flammable>) {
+    if (typeof input === "boolean") {
+      this.value = input;
+    } else {
+      this.value = input instanceof Flammable ? input : new Flammable(input);
+    }
   }
 }
 
@@ -31,12 +32,12 @@ export class Flammable {
   destroyChanceModifier: number;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       Flammable,
       "catchChanceModifier" | "destroyChanceModifier"
     >,
   ) {
-    this.catchChanceModifier = props.catchChanceModifier;
-    this.destroyChanceModifier = props.destroyChanceModifier;
+    this.catchChanceModifier = input.catchChanceModifier;
+    this.destroyChanceModifier = input.destroyChanceModifier;
   }
 }

@@ -10,7 +10,7 @@ export class TagsItemComponent implements ComponentNamespace {
     return "minecraft:tags";
   }
 
-  constructor(...tags: string[]) {
-    this.tags = tags;
+  constructor(...input: string[]) {
+    this.tags = input;
   }
 }

@@ -18,12 +18,12 @@ export class DurabilityItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       DurabilityItemComponent,
       "maxDurability" | "damageChance"
     >,
   ) {
-    this.maxDurability = props.maxDurability;
-    this.damageChance = props.damageChance;
+    this.maxDurability = input.maxDurability;
+    this.damageChance = input.damageChance;
   }
 }

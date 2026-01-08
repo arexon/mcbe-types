@@ -41,7 +41,7 @@ export class ClientBlock {
   carriedTextures?: ValueOrFaces<string>;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ClientBlock,
       | "sound"
       | "ambientOcclusionExponent"
@@ -51,12 +51,12 @@ export class ClientBlock {
       | "carriedTextures"
     >,
   ) {
-    this.sound = props.sound;
-    this.ambientOcclusionExponent = props.ambientOcclusionExponent;
-    this.brightnessGamma = props.brightnessGamma;
-    this.isotropic = props.isotropic;
-    this.textures = props.textures;
-    this.carriedTextures = props.carriedTextures;
+    this.sound = input.sound;
+    this.ambientOcclusionExponent = input.ambientOcclusionExponent;
+    this.brightnessGamma = input.brightnessGamma;
+    this.isotropic = input.isotropic;
+    this.textures = input.textures;
+    this.carriedTextures = input.carriedTextures;
   }
 }
 

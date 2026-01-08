@@ -10,7 +10,7 @@ export class HandEquippedItemComponent implements ComponentNamespace {
     return "minecraft:hand_equipped";
   }
 
-  constructor(value: boolean) {
-    this.value = value;
+  constructor(input: boolean) {
+    this.value = input;
   }
 }

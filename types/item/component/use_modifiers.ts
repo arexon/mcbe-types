@@ -20,15 +20,15 @@ export class UseModifiersItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       UseModifiersItemComponent,
       "movementModifier" | "startSound" | "useDuration",
       "emitVibrations"
     >,
   ) {
-    this.emitVibrations = props.emitVibrations ?? true;
-    this.movementModifier = props.movementModifier;
-    this.startSound = props.startSound;
-    this.useDuration = props.useDuration;
+    this.emitVibrations = input.emitVibrations ?? true;
+    this.movementModifier = input.movementModifier;
+    this.startSound = input.startSound;
+    this.useDuration = input.useDuration;
   }
 }

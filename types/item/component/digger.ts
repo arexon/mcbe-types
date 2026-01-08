@@ -15,10 +15,10 @@ export class DiggerItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<DiggerItemComponent, "useEfficiency" | "destroySpeed">,
+    input: InputProps<DiggerItemComponent, "useEfficiency" | "destroySpeed">,
   ) {
-    this.useEfficiency = props.useEfficiency;
-    this.destroySpeed = props.destroySpeed;
+    this.useEfficiency = input.useEfficiency;
+    this.destroySpeed = input.destroySpeed;
   }
 }
 
@@ -30,8 +30,8 @@ export class BlockDestroySpeed {
   @Ser()
   speed: number;
 
-  constructor(props: InputProps<BlockDestroySpeed, "block" | "speed">) {
-    this.block = props.block;
-    this.speed = props.speed;
+  constructor(input: InputProps<BlockDestroySpeed, "block" | "speed">) {
+    this.block = input.block;
+    this.speed = input.speed;
   }
 }

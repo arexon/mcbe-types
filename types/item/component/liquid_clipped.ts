@@ -10,7 +10,7 @@ export class LiquidClippedItemComponent implements ComponentNamespace {
     return "minecraft:liquid_clipped";
   }
 
-  constructor(value: boolean) {
-    this.value = value;
+  constructor(input: boolean) {
+    this.value = input;
   }
 }

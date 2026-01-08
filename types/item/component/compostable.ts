@@ -10,7 +10,7 @@ export class CompostableItemComponent implements ComponentNamespace {
     return "minecraft:compostable";
   }
 
-  constructor(props: InputProps<CompostableItemComponent, "compostingChance">) {
-    this.compostingChance = props.compostingChance;
+  constructor(input: InputProps<CompostableItemComponent, "compostingChance">) {
+    this.compostingChance = input.compostingChance;
   }
 }

@@ -17,10 +17,10 @@ export class CooldownItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<CooldownItemComponent, "category" | "duration", "type">,
+    input: InputProps<CooldownItemComponent, "category" | "duration", "type">,
   ) {
-    this.category = props.category;
-    this.duration = props.duration;
-    this.type = props.type ?? "use";
+    this.category = input.category;
+    this.duration = input.duration;
+    this.type = input.type ?? "use";
   }
 }

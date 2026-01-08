@@ -1,5 +1,14 @@
 import { Ser } from "@mcbe/serialize";
-import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
+import type {
+  ComponentNamespace,
+  DerivedInputProps,
+  InputProps,
+} from "@mcbe/types/common";
+
+const mapRulesFn = (
+  v: DerivedInputProps<typeof LiquidDetectionRule>,
+): LiquidDetectionRule =>
+  v instanceof LiquidDetectionRule ? v : new LiquidDetectionRule(v);
 
 @Ser()
 export class LiquidDetectionBlockComponent implements ComponentNamespace {
@@ -11,9 +20,15 @@ export class LiquidDetectionBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<LiquidDetectionBlockComponent, "detectionRules">,
+    input:
+      | DerivedInputProps<typeof LiquidDetectionRule>[]
+      | InputProps<LiquidDetectionBlockComponent, "detectionRules">,
   ) {
-    this.detectionRules = props.detectionRules;
+    if (Array.isArray(input)) {
+      this.detectionRules = input.map(mapRulesFn);
+    } else {
+      this.detectionRules = input.detectionRules.map(mapRulesFn);
+    }
   }
 }
 
@@ -42,7 +57,7 @@ export class LiquidDetectionRule {
   useLiquidClipping: boolean;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       LiquidDetectionRule,
       "liquidType" | "canContainLiquid",
       | "onLiquidTouches"
@@ -50,11 +65,11 @@ export class LiquidDetectionRule {
       | "useLiquidClipping"
     >,
   ) {
-    this.liquidType = props.liquidType;
-    this.canContainLiquid = props.canContainLiquid;
-    this.onLiquidTouches = props.onLiquidTouches ?? "blocking";
+    this.liquidType = input.liquidType;
+    this.canContainLiquid = input.canContainLiquid;
+    this.onLiquidTouches = input.onLiquidTouches ?? "blocking";
     this.stopsLiquidFlowingFromDirection =
-      props.stopsLiquidFlowingFromDirection ?? [];
-    this.useLiquidClipping = props.useLiquidClipping ?? false;
+      input.stopsLiquidFlowingFromDirection ?? [];
+    this.useLiquidClipping = input.useLiquidClipping ?? false;
   }
 }

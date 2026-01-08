@@ -11,9 +11,9 @@ export class DurabilitySensorItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<DurabilitySensorItemComponent, "durabilityThresholds">,
+    input: InputProps<DurabilitySensorItemComponent, "durabilityThresholds">,
   ) {
-    this.durabilityThresholds = props.durabilityThresholds;
+    this.durabilityThresholds = input.durabilityThresholds;
   }
 }
 
@@ -29,13 +29,13 @@ export class DurabilityThreshold {
   soundEvent: string;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       DurabilityThreshold,
       "durability" | "particleType" | "soundEvent"
     >,
   ) {
-    this.durability = props.durability;
-    this.particleType = props.particleType;
-    this.soundEvent = props.soundEvent;
+    this.durability = input.durability;
+    this.particleType = input.particleType;
+    this.soundEvent = input.soundEvent;
   }
 }

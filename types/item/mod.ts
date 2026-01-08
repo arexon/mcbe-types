@@ -29,11 +29,11 @@ export class Item {
 
   constructor(
     formatVersion: FormatVersion,
-    props: InputProps<Item, "identifier" | "menuCategory", "components">,
+    input: InputProps<Item, "identifier" | "menuCategory", "components">,
   ) {
     this.formatVersion = formatVersion;
-    this.identifier = props.identifier;
-    this.menuCategory = props.menuCategory;
-    this.components = props.components ?? new ItemComponents();
+    this.identifier = input.identifier;
+    this.menuCategory = input.menuCategory;
+    this.components = input.components ?? new ItemComponents();
   }
 }

@@ -1,5 +1,9 @@
 import { Ser } from "@mcbe/serialize";
-import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
+import type {
+  ComponentNamespace,
+  DerivedInputProps,
+  InputProps,
+} from "@mcbe/types/common";
 
 @Ser({ transparent: "value" })
 export class MaterialInstancesBlockComponent implements ComponentNamespace {
@@ -10,8 +14,19 @@ export class MaterialInstancesBlockComponent implements ComponentNamespace {
     return "minecraft:material_instances";
   }
 
-  constructor(value: Record<string, MaterialInstance>) {
-    this.value = value;
+  constructor(
+    value: Record<
+      string,
+      MaterialInstance | DerivedInputProps<typeof MaterialInstance>
+    >,
+  ) {
+    this.value = {};
+    for (const key in value) {
+      const instance = value[key];
+      this.value[key] = instance instanceof MaterialInstance
+        ? instance
+        : new MaterialInstance(instance);
+    }
   }
 }
 
@@ -47,7 +62,7 @@ export class MaterialInstance {
   isotropic: boolean;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       MaterialInstance,
       "texture",
       | "alphaMaskedTint"
@@ -58,13 +73,13 @@ export class MaterialInstance {
       | "isotropic"
     >,
   ) {
-    this.texture = props.texture;
-    this.renderMethod = props.renderMethod ?? "opaque";
-    this.tintMethod = props.tintMethod;
-    this.ambientOcclusion = props.ambientOcclusion ?? true;
-    this.alphaMaskedTint = props.alphaMaskedTint ?? false;
-    this.faceDimming = props.faceDimming ?? true;
-    this.isotropic = props.isotropic ?? false;
+    this.texture = input.texture;
+    this.renderMethod = input.renderMethod ?? "opaque";
+    this.tintMethod = input.tintMethod;
+    this.ambientOcclusion = input.ambientOcclusion ?? true;
+    this.alphaMaskedTint = input.alphaMaskedTint ?? false;
+    this.faceDimming = input.faceDimming ?? true;
+    this.isotropic = input.isotropic ?? false;
   }
 }
 

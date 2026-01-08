@@ -44,20 +44,20 @@ export class Manifest<FV extends ManifestFormatVersion = 2> {
 
   constructor(
     formatVersion: FV,
-    props: InputProps<
+    input: InputProps<
       Manifest<FV>,
       "header" | "modules" | "metadata",
       "dependencies" | "capabilities" | "settings"
     >,
   ) {
     this.formatVersion = formatVersion;
-    this.header = props.header;
-    this.modules = props.modules;
-    this.dependencies = props.dependencies ?? [];
-    this.metadata = props.metadata;
-    this.capabilities = props.capabilities ?? [];
+    this.header = input.header;
+    this.modules = input.modules;
+    this.dependencies = input.dependencies ?? [];
+    this.metadata = input.metadata;
+    this.capabilities = input.capabilities ?? [];
     // deno-lint-ignore no-explicit-any
-    this.settings = props.settings ?? [] as any;
+    this.settings = input.settings ?? [] as any;
   }
 }
 
@@ -83,18 +83,18 @@ export class ManifestHeader<FV extends ManifestFormatVersion> {
   packScope: "global" | "world" | "any";
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ManifestHeader<FV>,
       "name" | "description" | "uuid" | "version" | "minEngineVersion",
       "packScope"
     >,
   ) {
-    this.name = props.name;
-    this.description = props.description;
-    this.uuid = props.uuid;
-    this.version = props.version;
-    this.minEngineVersion = props.minEngineVersion;
-    this.packScope = props.packScope ?? "any";
+    this.name = input.name;
+    this.description = input.description;
+    this.uuid = input.uuid;
+    this.version = input.version;
+    this.minEngineVersion = input.minEngineVersion;
+    this.packScope = input.packScope ?? "any";
   }
 }
 
@@ -119,14 +119,14 @@ export class ManifestResourceModule<FV extends ManifestFormatVersion> {
   version: ManifestVersion<FV>;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ManifestResourceModule<FV>,
       "description" | "uuid" | "version"
     >,
   ) {
-    this.description = props.description;
-    this.uuid = props.uuid;
-    this.version = props.version;
+    this.description = input.description;
+    this.uuid = input.uuid;
+    this.version = input.version;
   }
 }
 
@@ -145,14 +145,14 @@ export class ManifestDataModule<FV extends ManifestFormatVersion> {
   version: ManifestVersion<FV>;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ManifestDataModule<FV>,
       "description" | "uuid" | "version"
     >,
   ) {
-    this.description = props.description;
-    this.uuid = props.uuid;
-    this.version = props.version;
+    this.description = input.description;
+    this.uuid = input.uuid;
+    this.version = input.version;
   }
 }
 
@@ -177,15 +177,15 @@ export class ManifestScriptModule<FV extends ManifestFormatVersion> {
   readonly language: "javascript" = "javascript";
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ManifestScriptModule<FV>,
       "description" | "uuid" | "version" | "entry"
     >,
   ) {
-    this.description = props.description;
-    this.uuid = props.uuid;
-    this.version = props.version;
-    this.entry = props.entry;
+    this.description = input.description;
+    this.uuid = input.uuid;
+    this.version = input.version;
+    this.entry = input.entry;
   }
 }
 
@@ -210,10 +210,10 @@ export class ManifestScriptDependency<FV extends ManifestFormatVersion> {
   version: ManifestVersion<FV>;
 
   constructor(
-    props: InputProps<ManifestScriptDependency<FV>, "moduleName" | "version">,
+    input: InputProps<ManifestScriptDependency<FV>, "moduleName" | "version">,
   ) {
-    this.moduleName = props.moduleName;
-    this.version = props.version;
+    this.moduleName = input.moduleName;
+    this.version = input.version;
   }
 }
 
@@ -240,15 +240,15 @@ export class ManifestMetadata {
   readonly productType: "addon" = "addon";
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ManifestMetadata,
       "authors" | "license" | "url" | "generatedWith"
     >,
   ) {
-    this.authors = props.authors;
-    this.license = props.license;
-    this.url = props.url;
-    this.generatedWith = props.generatedWith;
+    this.authors = input.authors;
+    this.license = input.license;
+    this.url = input.url;
+    this.generatedWith = input.generatedWith;
   }
 }
 
@@ -295,11 +295,11 @@ export class PackToggleSetting {
   default: boolean;
 
   constructor(
-    props: InputProps<PackToggleSetting, "text" | "name" | "default">,
+    input: InputProps<PackToggleSetting, "text" | "name" | "default">,
   ) {
-    this.text = props.text;
-    this.name = props.name;
-    this.default = props.default;
+    this.text = input.text;
+    this.name = input.name;
+    this.default = input.default;
   }
 }
 
@@ -327,17 +327,17 @@ export class PackSliderSetting {
   default: number;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       PackSliderSetting,
       "text" | "name" | "min" | "max" | "step" | "default"
     >,
   ) {
-    this.text = props.text;
-    this.name = props.name;
-    this.min = props.min;
-    this.max = props.max;
-    this.step = props.step;
-    this.default = props.default;
+    this.text = input.text;
+    this.name = input.name;
+    this.min = input.min;
+    this.max = input.max;
+    this.step = input.step;
+    this.default = input.default;
   }
 }
 
@@ -361,14 +361,14 @@ export class PackDropdownSetting<
   default: Option[][number]["value"];
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       PackDropdownSetting<Option>,
       "text" | "name" | "options" | "default"
     >,
   ) {
-    this.text = props.text;
-    this.name = props.name;
-    this.options = props.options;
-    this.default = props.default;
+    this.text = input.text;
+    this.name = input.name;
+    this.options = input.options;
+    this.default = input.default;
   }
 }

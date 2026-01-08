@@ -14,12 +14,12 @@ export class RedstoneConsumerBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       RedstoneConsumerBlockComponent,
       "minPower" | "propagatesPower"
     >,
   ) {
-    this.minPower = props.minPower;
-    this.propagatesPower = props.propagatesPower;
+    this.minPower = input.minPower;
+    this.propagatesPower = input.propagatesPower;
   }
 }

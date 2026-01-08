@@ -15,13 +15,13 @@ export class ProjectileItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ProjectileItemComponent,
       "projectileEntity",
       "minimumCriticalPower"
     >,
   ) {
-    this.projectileEntity = props.projectileEntity;
-    this.minimumCriticalPower = props.minimumCriticalPower ?? 0;
+    this.projectileEntity = input.projectileEntity;
+    this.minimumCriticalPower = input.minimumCriticalPower ?? 0;
   }
 }

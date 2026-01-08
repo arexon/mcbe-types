@@ -47,7 +47,7 @@ export class KineticWeaponItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       KineticWeaponItemComponent,
       "damageConditions" | "dismountConditions" | "knockbackConditions",
       | "delay"
@@ -58,15 +58,15 @@ export class KineticWeaponItemComponent implements ComponentNamespace {
       | "damageModifier"
     >,
   ) {
-    this.delay = props.delay ?? 0;
-    this.hitboxMargin = props.hitboxMargin ?? 0;
-    this.reach = props.reach ?? DEFAULT_REACH;
-    this.creativeReach = props.creativeReach ?? DEFAULT_REACH;
-    this.damageMultiplier = props.damageMultiplier ?? 1;
-    this.damageModifier = props.damageModifier ?? 0;
-    this.damageConditions = props.damageConditions;
-    this.dismountConditions = props.dismountConditions;
-    this.knockbackConditions = props.knockbackConditions;
+    this.delay = input.delay ?? 0;
+    this.hitboxMargin = input.hitboxMargin ?? 0;
+    this.reach = input.reach ?? DEFAULT_REACH;
+    this.creativeReach = input.creativeReach ?? DEFAULT_REACH;
+    this.damageMultiplier = input.damageMultiplier ?? 1;
+    this.damageModifier = input.damageModifier ?? 0;
+    this.damageConditions = input.damageConditions;
+    this.dismountConditions = input.dismountConditions;
+    this.knockbackConditions = input.knockbackConditions;
   }
 }
 
@@ -82,14 +82,14 @@ export class KineticWeaponEffectConditions {
   minSpeed: number;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       KineticWeaponEffectConditions,
       never,
       "maxDuration" | "minRelativeSpeed" | "minSpeed"
     >,
   ) {
-    this.maxDuration = props.maxDuration ?? -1;
-    this.minRelativeSpeed = props.minRelativeSpeed ?? 0;
-    this.minSpeed = props.minSpeed ?? 0;
+    this.maxDuration = input.maxDuration ?? -1;
+    this.minRelativeSpeed = input.minRelativeSpeed ?? 0;
+    this.minSpeed = input.minSpeed ?? 0;
   }
 }

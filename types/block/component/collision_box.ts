@@ -3,6 +3,7 @@ import type {
   ComponentNamespace,
   DerivedInputProps,
   InputProps,
+  Vec3,
 } from "@mcbe/types/common";
 
 @Ser({ transparent: "value" })
@@ -14,21 +15,22 @@ export class CollisionBoxBlockComponent implements ComponentNamespace {
     return "minecraft:collision_box";
   }
 
-  constructor(enable: boolean);
-  constructor(props: DerivedInputProps<typeof BoundingBox>);
-  constructor(props: DerivedInputProps<typeof BoundingBox>[]);
   constructor(
-    value:
+    input:
       | boolean
-      | InputProps<BoundingBox, "origin" | "size">
-      | InputProps<BoundingBox, "origin" | "size">[],
+      | DerivedInputProps<typeof BoundingBox>
+      | DerivedInputProps<typeof BoundingBox>[],
   ) {
-    if (typeof value === "boolean") {
-      this.value = value;
-    } else if (Array.isArray(value)) {
-      this.value = value.map((props) => new BoundingBox(props));
+    if (typeof input === "boolean") {
+      this.value = input;
+    } else if (Array.isArray(input)) {
+      this.value = input.map((v) =>
+        v instanceof BoundingBox ? v : new BoundingBox(v)
+      );
     } else {
-      this.value = new BoundingBox(value);
+      this.value = input instanceof BoundingBox
+        ? input
+        : new BoundingBox(input);
     }
   }
 }
@@ -36,13 +38,13 @@ export class CollisionBoxBlockComponent implements ComponentNamespace {
 @Ser()
 export class BoundingBox {
   @Ser({ default: () => [-8, 0, -8] })
-  origin: [number, number, number];
+  origin: Vec3;
 
   @Ser({ default: () => [16, 16, 16] })
-  size: [number, number, number];
+  size: Vec3;
 
-  constructor(props: InputProps<BoundingBox, "origin" | "size">) {
-    this.origin = props.origin;
-    this.size = props.size;
+  constructor(input: InputProps<BoundingBox, "origin" | "size">) {
+    this.origin = input.origin;
+    this.size = input.size;
   }
 }

@@ -11,7 +11,7 @@ export class DisplayNameComponent implements ComponentNamespace {
     return "minecraft:display_name";
   }
 
-  constructor(value: LocalizationText) {
-    this.value = value;
+  constructor(input: LocalizationText) {
+    this.value = input;
   }
 }

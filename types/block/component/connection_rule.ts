@@ -14,12 +14,12 @@ export class ConnectionRuleBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ConnectionRuleBlockComponent,
       "acceptsConnectionsFrom" | "enabledDirections"
     >,
   ) {
-    this.acceptsConnectionsFrom = props.acceptsConnectionsFrom;
-    this.enabledDirections = props.enabledDirections;
+    this.acceptsConnectionsFrom = input.acceptsConnectionsFrom;
+    this.enabledDirections = input.enabledDirections;
   }
 }

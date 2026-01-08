@@ -22,7 +22,7 @@ export class UseAnimationItemComponent implements ComponentNamespace {
     return "minecraft:use_animation";
   }
 
-  constructor(value: ItemUseAnimation) {
-    this.value = value;
+  constructor(input: ItemUseAnimation) {
+    this.value = input;
   }
 }

@@ -5,7 +5,7 @@ import type {
   InputProps,
 } from "@mcbe/types/common";
 
-@Ser()
+@Ser({ transparent: "value" })
 export class DestructibleByExplosionBlockComponent
   implements ComponentNamespace {
   @Ser({ default: () => true })
@@ -15,13 +15,16 @@ export class DestructibleByExplosionBlockComponent
     return "minecraft:destructible_by_explosion";
   }
 
-  constructor(value: boolean);
-  constructor(props: DerivedInputProps<typeof DestructibleByExplosion>);
   constructor(
-    value: boolean | DerivedInputProps<typeof DestructibleByExplosion>,
+    input: boolean | DerivedInputProps<typeof DestructibleByExplosion>,
   ) {
-    if (typeof value === "boolean") this.value = value;
-    else this.value = new DestructibleByExplosion(value);
+    if (typeof input === "boolean") {
+      this.value = input;
+    } else {
+      this.value = input instanceof DestructibleByExplosion
+        ? input
+        : new DestructibleByExplosion(input);
+    }
   }
 }
 
@@ -31,8 +34,8 @@ export class DestructibleByExplosion {
   explosionResistance: number;
 
   constructor(
-    props: InputProps<DestructibleByExplosion, never, "explosionResistance">,
+    input: InputProps<DestructibleByExplosion, never, "explosionResistance">,
   ) {
-    this.explosionResistance = props.explosionResistance ?? 0;
+    this.explosionResistance = input.explosionResistance ?? 0;
   }
 }

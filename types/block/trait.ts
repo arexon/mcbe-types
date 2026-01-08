@@ -21,8 +21,8 @@ export class ConnectionBlockTrait implements ComponentNamespace {
     return "minecraft:connection";
   }
 
-  constructor(props: InputProps<ConnectionBlockTrait, "enabledStates">) {
-    this.enabledStates = props.enabledStates;
+  constructor(input: InputProps<ConnectionBlockTrait, "enabledStates">) {
+    this.enabledStates = input.enabledStates;
   }
 }
 
@@ -35,8 +35,8 @@ export class PlacementPositionBlockTrait implements ComponentNamespace {
     return "minecraft:placement_position";
   }
 
-  constructor(props: InputProps<PlacementPositionBlockTrait, "enabledStates">) {
-    this.enabledStates = props.enabledStates;
+  constructor(input: InputProps<PlacementPositionBlockTrait, "enabledStates">) {
+    this.enabledStates = input.enabledStates;
   }
 }
 
@@ -54,13 +54,13 @@ export class PlacementDirectionBlockTrait implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       PlacementDirectionBlockTrait,
       "enabledStates",
       "yRotationOffset"
     >,
   ) {
-    this.enabledStates = props.enabledStates;
-    this.yRotationOffset = props.yRotationOffset ?? 0;
+    this.enabledStates = input.enabledStates;
+    this.yRotationOffset = input.yRotationOffset ?? 0;
   }
 }

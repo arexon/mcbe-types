@@ -20,14 +20,14 @@ export class FoodItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       FoodItemComponent,
       "canAlwaysEat" | "nutrition" | "saturationModifier" | "usingConvertsTo"
     >,
   ) {
-    this.canAlwaysEat = props.canAlwaysEat;
-    this.nutrition = props.nutrition;
-    this.saturationModifier = props.saturationModifier;
-    this.usingConvertsTo = props.usingConvertsTo;
+    this.canAlwaysEat = input.canAlwaysEat;
+    this.nutrition = input.nutrition;
+    this.saturationModifier = input.saturationModifier;
+    this.usingConvertsTo = input.usingConvertsTo;
   }
 }

@@ -10,7 +10,7 @@ export class LootBlockComponent implements ComponentNamespace {
     return "minecraft:loot";
   }
 
-  constructor(path: string) {
-    this.path = path;
+  constructor(input: string) {
+    this.path = input;
   }
 }

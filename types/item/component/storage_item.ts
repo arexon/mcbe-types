@@ -27,7 +27,7 @@ export class StorageItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       StorageItemComponent,
       | "maxWeightSlot"
       | "weightInStorageItem",
@@ -37,11 +37,11 @@ export class StorageItemComponent implements ComponentNamespace {
       | "maxSlots"
     >,
   ) {
-    this.allowNestedStorageItems = props.allowNestedStorageItems ?? true;
-    this.allowedItems = props.allowedItems ?? [];
-    this.bannedItems = props.bannedItems ?? [];
-    this.maxSlots = props.maxSlots ?? 64;
-    this.maxWeightSlot = props.maxWeightSlot;
-    this.weightInStorageItem = props.weightInStorageItem;
+    this.allowNestedStorageItems = input.allowNestedStorageItems ?? true;
+    this.allowedItems = input.allowedItems ?? [];
+    this.bannedItems = input.bannedItems ?? [];
+    this.maxSlots = input.maxSlots ?? 64;
+    this.maxWeightSlot = input.maxWeightSlot;
+    this.weightInStorageItem = input.weightInStorageItem;
   }
 }

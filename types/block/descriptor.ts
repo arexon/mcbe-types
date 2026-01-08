@@ -14,8 +14,8 @@ export class BlockDescriptorTags {
   @Ser()
   tags: string;
 
-  constructor(props: InputProps<BlockDescriptorTags, "tags">) {
-    this.tags = props.tags;
+  constructor(input: InputProps<BlockDescriptorTags, "tags">) {
+    this.tags = input.tags;
   }
 }
 
@@ -27,8 +27,8 @@ export class BlockDescriptorName {
   @Ser({ default: () => ({}) })
   states: Record<Identifier, BlockState>;
 
-  constructor(props: InputProps<BlockDescriptorName, "name", "states">) {
-    this.name = props.name;
-    this.states = props.states ?? {};
+  constructor(input: InputProps<BlockDescriptorName, "name", "states">) {
+    this.name = input.name;
+    this.states = input.states ?? {};
   }
 }

@@ -17,14 +17,14 @@ export class EntityPlacerItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       EntityPlacerItemComponent,
       "entity",
       "useOn" | "dispenseOn"
     >,
   ) {
-    this.entity = props.entity;
-    this.useOn = props.useOn ?? [];
-    this.dispenseOn = props.dispenseOn ?? [];
+    this.entity = input.entity;
+    this.useOn = input.useOn ?? [];
+    this.dispenseOn = input.dispenseOn ?? [];
   }
 }

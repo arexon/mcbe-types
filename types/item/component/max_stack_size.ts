@@ -10,7 +10,7 @@ export class MaxStackSizeItemComponent implements ComponentNamespace {
     return "minecraft:max_stack_size";
   }
 
-  constructor(value: number) {
-    this.value = value;
+  constructor(input: number) {
+    this.value = input;
   }
 }

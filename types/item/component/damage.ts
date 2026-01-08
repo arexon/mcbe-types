@@ -10,7 +10,7 @@ export class DamageItemComponent implements ComponentNamespace {
     return "minecraft:damage";
   }
 
-  constructor(props: InputProps<DamageItemComponent, "value">) {
-    this.value = props.value;
+  constructor(input: InputProps<DamageItemComponent, "value">) {
+    this.value = input.value;
   }
 }

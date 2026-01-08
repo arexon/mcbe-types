@@ -17,14 +17,14 @@ export class RecordItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       RecordItemComponent,
       "soundEvent",
       "duration" | "comparatorSignal"
     >,
   ) {
-    this.soundEvent = props.soundEvent;
-    this.duration = props.duration ?? 0;
-    this.comparatorSignal = props.comparatorSignal ?? 1;
+    this.soundEvent = input.soundEvent;
+    this.duration = input.duration ?? 0;
+    this.comparatorSignal = input.comparatorSignal ?? 1;
   }
 }

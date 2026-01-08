@@ -10,7 +10,7 @@ export class FrictionBlockComponent implements ComponentNamespace {
     return "minecraft:friction";
   }
 
-  constructor(value: number) {
-    this.value = value;
+  constructor(input: number) {
+    this.value = input;
   }
 }

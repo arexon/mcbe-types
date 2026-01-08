@@ -69,11 +69,11 @@ export class Block {
   })
   permutations: BlockPermutation[];
 
-  constructor(formatVersion: FormatVersion, props: BlockInputProps);
+  constructor(formatVersion: FormatVersion, input: BlockInputProps);
   constructor(
     formatVersion: FormatVersion,
     useBetaFeatures: boolean,
-    props: BlockInputProps,
+    input: BlockInputProps,
   );
   constructor(
     param0: FormatVersion,
@@ -110,8 +110,8 @@ export class BlockPermutation {
   @Ser()
   components: BlockComponents;
 
-  constructor(props: InputProps<BlockPermutation, "condition" | "components">) {
-    this.condition = props.condition;
-    this.components = props.components;
+  constructor(input: InputProps<BlockPermutation, "condition" | "components">) {
+    this.condition = input.condition;
+    this.components = input.components;
   }
 }

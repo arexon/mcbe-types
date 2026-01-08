@@ -10,7 +10,7 @@ export class StackedByDataItemComponent implements ComponentNamespace {
     return "minecraft:stacked_by_data";
   }
 
-  constructor(value: boolean) {
-    this.value = value;
+  constructor(input: boolean) {
+    this.value = input;
   }
 }

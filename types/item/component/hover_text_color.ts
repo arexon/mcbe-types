@@ -10,8 +10,8 @@ export class HoverTextColorItemComponent implements ComponentNamespace {
     return "minecraft:hover_text_color";
   }
 
-  constructor(value: ColorCode) {
-    this.value = value;
+  constructor(input: ColorCode) {
+    this.value = input;
   }
 }
 

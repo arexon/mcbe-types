@@ -11,9 +11,9 @@ export class DamageAbsorptionItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<DamageAbsorptionItemComponent, "absorbableCauses">,
+    input: InputProps<DamageAbsorptionItemComponent, "absorbableCauses">,
   ) {
-    this.absorbableCauses = props.absorbableCauses;
+    this.absorbableCauses = input.absorbableCauses;
   }
 }
 

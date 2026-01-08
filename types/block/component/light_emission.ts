@@ -10,7 +10,7 @@ export class LightEmissionBlockComponent implements ComponentNamespace {
     return "minecraft:light_emission";
   }
 
-  constructor(value: number) {
-    this.value = value;
+  constructor(input: number) {
+    this.value = input;
   }
 }

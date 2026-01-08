@@ -10,7 +10,7 @@ export class AllowOfHandItemComponent implements ComponentNamespace {
     return "minecraft:allow_off_hand";
   }
 
-  constructor(value: boolean) {
-    this.value = value;
+  constructor(input: boolean) {
+    this.value = input;
   }
 }

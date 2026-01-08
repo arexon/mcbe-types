@@ -10,7 +10,7 @@ export class InteractButtonItemComponent implements ComponentNamespace {
     return "minecraft:interact_button";
   }
 
-  constructor(value: boolean | string) {
-    this.value = value;
+  constructor(input: boolean | string) {
+    this.value = input;
   }
 }

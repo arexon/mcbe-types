@@ -15,12 +15,12 @@ export class CraftingTableBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       CraftingTableBlockComponent,
       "craftingTags" | "tableName"
     >,
   ) {
-    this.craftingTags = props.craftingTags;
-    this.tableName = props.tableName;
+    this.craftingTags = input.craftingTags;
+    this.tableName = input.tableName;
   }
 }

@@ -13,9 +13,9 @@ export class EnchantableItemComponent implements ComponentNamespace {
     return "minecraft:enchantable";
   }
 
-  constructor(props: InputProps<EnchantableItemComponent, "slot" | "value">) {
-    this.slot = props.slot;
-    this.value = props.value;
+  constructor(input: InputProps<EnchantableItemComponent, "slot" | "value">) {
+    this.slot = input.slot;
+    this.value = input.value;
   }
 }
 

@@ -10,7 +10,7 @@ export class ShouldDespawnItemComponent implements ComponentNamespace {
     return "minecraft:should_despawn";
   }
 
-  constructor(value: boolean) {
-    this.value = value;
+  constructor(input: boolean) {
+    this.value = input;
   }
 }

@@ -10,7 +10,7 @@ export class SwingDurationItemComponent implements ComponentNamespace {
     return "minecraft:swing_duration";
   }
 
-  constructor(value: number) {
-    this.value = value;
+  constructor(input: number) {
+    this.value = input;
   }
 }

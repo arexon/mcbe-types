@@ -20,10 +20,22 @@ export class RandomOffsetBlockComponent implements ComponentNamespace {
     return "minecraft:random_offset";
   }
 
-  constructor(props: InputProps<RandomOffsetBlockComponent, "x" | "y" | "z">) {
-    this.x = props.x;
-    this.y = props.y;
-    this.z = props.z;
+  constructor(input: InputProps<RandomOffsetBlockComponent, "x" | "y" | "z">) {
+    this.x = input.x instanceof RandomOffset
+      ? input.x
+      : input.x !== undefined
+      ? new RandomOffset(input.x)
+      : undefined;
+    this.y = input.y instanceof RandomOffset
+      ? input.y
+      : input.y !== undefined
+      ? new RandomOffset(input.y)
+      : undefined;
+    this.z = input.z instanceof RandomOffset
+      ? input.z
+      : input.z !== undefined
+      ? new RandomOffset(input.z)
+      : undefined;
   }
 }
 
@@ -35,8 +47,8 @@ export class RandomOffset {
   @Ser()
   steps: number;
 
-  constructor(props: InputProps<RandomOffset, "range" | "steps">) {
-    this.range = props.range;
-    this.steps = props.steps;
+  constructor(input: InputProps<RandomOffset, "range" | "steps">) {
+    this.range = input.range;
+    this.steps = input.steps;
   }
 }

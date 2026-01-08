@@ -17,13 +17,13 @@ export class SwingSoundsItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       SwingSoundsItemComponent,
       "attackCriticalHit" | "attackHit" | "attackMiss"
     >,
   ) {
-    this.attackCriticalHit = props.attackCriticalHit;
-    this.attackHit = props.attackHit;
-    this.attackMiss = props.attackMiss;
+    this.attackCriticalHit = input.attackCriticalHit;
+    this.attackHit = input.attackHit;
+    this.attackMiss = input.attackMiss;
   }
 }

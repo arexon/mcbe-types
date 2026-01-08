@@ -29,14 +29,14 @@ export class PiercingWeaponItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       PiercingWeaponItemComponent,
       never,
       "hitboxMargin" | "reach" | "creativeReach"
     >,
   ) {
-    this.reach = props.reach ?? DEFAULT_REACH;
-    this.creativeReach = props.creativeReach ?? DEFAULT_REACH;
-    this.hitboxMargin = props.hitboxMargin ?? 0;
+    this.reach = input.reach ?? DEFAULT_REACH;
+    this.creativeReach = input.creativeReach ?? DEFAULT_REACH;
+    this.hitboxMargin = input.hitboxMargin ?? 0;
   }
 }

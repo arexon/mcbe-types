@@ -11,8 +11,8 @@ export class EntityFallOnBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<EntityFallOnBlockComponent, "minFallDistance">,
+    input: InputProps<EntityFallOnBlockComponent, "minFallDistance">,
   ) {
-    this.minFallDistance = props.minFallDistance;
+    this.minFallDistance = input.minFallDistance;
   }
 }

@@ -21,7 +21,7 @@ export class ShooterItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ShooterItemComponent,
       never,
       | "ammunition"
@@ -30,10 +30,10 @@ export class ShooterItemComponent implements ComponentNamespace {
       | "scalePowerByDrawDuration"
     >,
   ) {
-    this.ammunition = props.ammunition ?? [];
-    this.chargeOnDraw = props.chargeOnDraw ?? false;
-    this.maxDrawDuration = props.maxDrawDuration ?? 0;
-    this.scalePowerByDrawDuration = props.scalePowerByDrawDuration ?? false;
+    this.ammunition = input.ammunition ?? [];
+    this.chargeOnDraw = input.chargeOnDraw ?? false;
+    this.maxDrawDuration = input.maxDrawDuration ?? 0;
+    this.scalePowerByDrawDuration = input.scalePowerByDrawDuration ?? false;
   }
 }
 
@@ -52,15 +52,15 @@ export class ItemAmmunition {
   searchInventory: boolean;
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       ItemAmmunition,
       "item",
       "useOffhand" | "useInCreative" | "searchInventory"
     >,
   ) {
-    this.item = props.item;
-    this.useOffhand = props.useOffhand ?? false;
-    this.useInCreative = props.useInCreative ?? false;
-    this.searchInventory = props.searchInventory ?? false;
+    this.item = input.item;
+    this.useOffhand = input.useOffhand ?? false;
+    this.useInCreative = input.useInCreative ?? false;
+    this.searchInventory = input.searchInventory ?? false;
   }
 }

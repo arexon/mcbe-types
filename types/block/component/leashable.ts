@@ -1,16 +1,16 @@
 import { Ser } from "@mcbe/serialize";
-import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps, Vec3 } from "@mcbe/types/common";
 
 @Ser()
 export class LeashableBlockComponent implements ComponentNamespace {
   @Ser()
-  offset: [number, number, number];
+  offset: Vec3;
 
   get namespace(): string {
     return "minecraft:leashable";
   }
 
-  constructor(props: InputProps<LeashableBlockComponent, "offset">) {
-    this.offset = props.offset;
+  constructor(input: InputProps<LeashableBlockComponent, "offset">) {
+    this.offset = input.offset;
   }
 }

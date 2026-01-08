@@ -29,15 +29,15 @@ export class WearableItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       WearableItemComponent,
       "slot",
       "hidesPlayerLocation" | "protection" | "dispensable"
     >,
   ) {
-    this.hidesPlayerLocation = props.hidesPlayerLocation ?? false;
-    this.protection = props.protection ?? 0;
-    this.slot = props.slot;
-    this.dispensable = props.dispensable ?? false;
+    this.hidesPlayerLocation = input.hidesPlayerLocation ?? false;
+    this.protection = input.protection ?? 0;
+    this.slot = input.slot;
+    this.dispensable = input.dispensable ?? false;
   }
 }

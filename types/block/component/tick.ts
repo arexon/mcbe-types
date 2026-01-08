@@ -21,9 +21,9 @@ export class TickBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<TickBlockComponent, "intervalRange" | "looping">,
+    input: InputProps<TickBlockComponent, "intervalRange" | "looping">,
   ) {
-    this.intervalRange = props.intervalRange;
-    this.looping = props.looping;
+    this.intervalRange = input.intervalRange;
+    this.looping = input.looping;
   }
 }

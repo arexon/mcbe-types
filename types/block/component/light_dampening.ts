@@ -10,7 +10,7 @@ export class LightDampeningBlockComponent implements ComponentNamespace {
     return "minecraft:light_dampening";
   }
 
-  constructor(value: number) {
-    this.value = value;
+  constructor(input: number) {
+    this.value = input;
   }
 }

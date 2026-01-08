@@ -1,6 +1,15 @@
 import { Ser } from "@mcbe/serialize";
 import type { BlockDescriptor } from "@mcbe/types/block";
-import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
+import type {
+  ComponentNamespace,
+  DerivedInputProps,
+  InputProps,
+} from "@mcbe/types/common";
+
+const mapConditionsFn = (
+  v: DerivedInputProps<typeof PlacementFilterCondition>,
+): PlacementFilterCondition =>
+  v instanceof PlacementFilterCondition ? v : new PlacementFilterCondition(v);
 
 @Ser()
 export class PlacementFilterBlockComponent implements ComponentNamespace {
@@ -12,9 +21,15 @@ export class PlacementFilterBlockComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<PlacementFilterBlockComponent, "conditions">,
+    input:
+      | DerivedInputProps<typeof PlacementFilterCondition>[]
+      | InputProps<PlacementFilterBlockComponent, "conditions">,
   ) {
-    this.conditions = props.conditions;
+    if (Array.isArray(input)) {
+      this.conditions = input.map(mapConditionsFn);
+    } else {
+      this.conditions = input.conditions.map(mapConditionsFn);
+    }
   }
 }
 
@@ -36,13 +51,13 @@ export class PlacementFilterCondition {
   blockFilter: BlockDescriptor[];
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       PlacementFilterCondition,
       never,
       "allowedFaces" | "blockFilter"
     >,
   ) {
-    this.allowedFaces = props.allowedFaces ?? [];
-    this.blockFilter = props.blockFilter ?? [];
+    this.allowedFaces = input.allowedFaces ?? [];
+    this.blockFilter = input.blockFilter ?? [];
   }
 }

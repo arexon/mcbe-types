@@ -11,8 +11,8 @@ export class StorageWeightLimitItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<StorageWeightLimitItemComponent, never, "maxWeightLimit">,
+    input: InputProps<StorageWeightLimitItemComponent, never, "maxWeightLimit">,
   ) {
-    this.maxWeightLimit = props.maxWeightLimit ?? 64;
+    this.maxWeightLimit = input.maxWeightLimit ?? 64;
   }
 }

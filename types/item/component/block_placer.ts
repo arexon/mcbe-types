@@ -19,14 +19,14 @@ export class BlockPlacerItemComponent implements ComponentNamespace {
   }
 
   constructor(
-    props: InputProps<
+    input: InputProps<
       BlockPlacerItemComponent,
       "block",
       "useOn" | "replaceBlockItem"
     >,
   ) {
-    this.block = props.block;
-    this.useOn = props.useOn ?? [];
-    this.replaceBlockItem = props.replaceBlockItem ?? false;
+    this.block = input.block;
+    this.useOn = input.useOn ?? [];
+    this.replaceBlockItem = input.replaceBlockItem ?? false;
   }
 }
