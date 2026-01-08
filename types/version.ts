@@ -7,7 +7,7 @@ export class FormatVersion {
   })
   version: [number, number, number];
 
-  constructor(version: [number, number, number]) {
-    this.version = version;
+  constructor(major: number, minor: number, patch: number) {
+    this.version = [major, minor, patch];
   }
 }
