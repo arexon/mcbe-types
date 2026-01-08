@@ -37,8 +37,8 @@ export class MaterialInstance {
   @Ser({ default: () => true })
   ambientOcclusion: number | boolean;
 
-  @Ser()
-  alphaMaskedTint?: boolean;
+  @Ser({ default: () => false })
+  alphaMaskedTint: boolean;
 
   @Ser({ default: () => true })
   faceDimming: boolean;
@@ -49,7 +49,8 @@ export class MaterialInstance {
   constructor(
     props: InputProps<
       MaterialInstance,
-      "texture" | "alphaMaskedTint",
+      "texture",
+      | "alphaMaskedTint"
       | "renderMethod"
       | "tintMethod"
       | "ambientOcclusion"
