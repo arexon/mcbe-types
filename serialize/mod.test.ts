@@ -144,7 +144,7 @@ Deno.test("toJSON()", async (ctx) => {
   await ctx.step("custom override", async (ctx) => {
     await ctx.step("normal", () => {
       @Ser()
-      class Foo {
+      class AAAAAAAAA {
         @Ser({
           custom: [(v) => ["custom", v], "normal"],
         })
@@ -157,7 +157,7 @@ Deno.test("toJSON()", async (ctx) => {
         normalDefaulted: string | string[] = "foo";
       }
 
-      const v = new Foo();
+      const v = new AAAAAAAAA();
       assertEquals(JSON.stringify(v), `{"normal":["custom","foo"]}`);
 
       v.normalDefaulted = "bar";
