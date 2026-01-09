@@ -1,6 +1,5 @@
 import { Ser } from "@mcbe/serialize";
 import type { InputProps } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 import type { FormatVersion } from "@mcbe/types/version";
 
 @Ser()
@@ -9,7 +8,7 @@ export class BlockCulling {
   formatVersion: FormatVersion;
 
   @Ser({ path: "minecraft:block_culling_rules/description" })
-  identifier: Identifier;
+  identifier: string;
 
   @Ser({ path: "minecraft:block_culling_rules" })
   rules: BlockCullingRule[];

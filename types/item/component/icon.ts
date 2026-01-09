@@ -4,7 +4,6 @@ import type {
   DerivedInputProps,
   InputProps,
 } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 
 @Ser({ transparent: "value" })
 export class IconItemComponent implements ComponentNamespace {
@@ -14,13 +13,13 @@ export class IconItemComponent implements ComponentNamespace {
       return { textures: v };
     }, "normal"],
   })
-  value: Identifier | IconTextures;
+  value: string | IconTextures;
 
   get namespace(): string {
     return "minecraft:icon";
   }
 
-  constructor(input: Identifier | DerivedInputProps<typeof IconTextures>) {
+  constructor(input: string | DerivedInputProps<typeof IconTextures>) {
     if (typeof input === "string") {
       this.value = input;
     } else {
@@ -34,19 +33,19 @@ export class IconItemComponent implements ComponentNamespace {
 @Ser()
 export class IconTextures {
   @Ser()
-  default: Identifier;
+  default: string;
 
   @Ser()
-  dyed?: Identifier;
+  dyed?: string;
 
   @Ser()
-  iconTrim?: Identifier;
+  iconTrim?: string;
 
   @Ser()
-  bundleOpenBack?: Identifier;
+  bundleOpenBack?: string;
 
   @Ser()
-  bundleOpenFront?: Identifier;
+  bundleOpenFront?: string;
 
   constructor(
     input: InputProps<

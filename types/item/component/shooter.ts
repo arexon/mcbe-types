@@ -1,6 +1,5 @@
 import { Ser } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 
 @Ser()
 export class ShooterItemComponent implements ComponentNamespace {
@@ -40,7 +39,7 @@ export class ShooterItemComponent implements ComponentNamespace {
 @Ser()
 export class ItemAmmunition {
   @Ser()
-  item: Identifier;
+  item: string;
 
   @Ser({ default: () => false })
   useOffhand: boolean;

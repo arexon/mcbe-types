@@ -1,12 +1,11 @@
 import { Ser } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 import type { BlockDescriptor } from "@mcbe/types/block";
 
 @Ser()
 export class BlockPlacerItemComponent implements ComponentNamespace {
   @Ser()
-  block: Identifier;
+  block: string;
 
   @Ser({ default: () => [] })
   useOn: BlockDescriptor[];

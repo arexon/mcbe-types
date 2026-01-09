@@ -4,7 +4,6 @@
   "exports": {
     "./block": "./block/mod.ts",
     "./common": "./common/mod.ts",
-    "./identifier": "./identifier.ts",
     "./inventory": "./inventory.ts",
     "./item": "./item/mod.ts",
     "./molang": "./molang.ts",

@@ -1,6 +1,5 @@
 import { Ser } from "@mcbe/serialize";
 import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 import type { Molang } from "@mcbe/types/molang";
 
 @Ser()
@@ -22,7 +21,7 @@ export class RepairableItemComponent implements ComponentNamespace {
 @Ser()
 export class RepairableItemEntry {
   @Ser()
-  items: Identifier[];
+  items: string[];
 
   @Ser()
   repairAmount: number | Molang;

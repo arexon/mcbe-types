@@ -1,11 +1,10 @@
 import { Ser } from "@mcbe/serialize";
 import type { InputProps } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 
-export type BlockState = number | boolean | Identifier;
+export type BlockState = number | boolean | string;
 
 export type BlockDescriptor =
-  | Identifier
+  | string
   | BlockDescriptorName
   | BlockDescriptorTags;
 
@@ -22,10 +21,10 @@ export class BlockDescriptorTags {
 @Ser()
 export class BlockDescriptorName {
   @Ser()
-  name: Identifier;
+  name: string;
 
   @Ser({ default: () => ({}) })
-  states: Record<Identifier, BlockState>;
+  states: Record<string, BlockState>;
 
   constructor(input: InputProps<BlockDescriptorName, "name", "states">) {
     this.name = input.name;

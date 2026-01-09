@@ -1,8 +1,7 @@
 import { Ser } from "@mcbe/serialize";
 import type { InputProps } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 
-export type ItemDescriptor = Identifier | ItemDescriptorTags;
+export type ItemDescriptor = string | ItemDescriptorTags;
 
 @Ser()
 export class ItemDescriptorTags {

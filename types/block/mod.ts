@@ -1,7 +1,6 @@
 import { Ser } from "@mcbe/serialize";
 import { type BlockComponent, BlockTraits } from "@mcbe/types/block";
 import { Components, type InputProps, Range } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 import type { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
 import type { FormatVersion } from "@mcbe/types/version";
@@ -31,7 +30,7 @@ export class Block {
   useBetaFeatures: boolean = false;
 
   @Ser({ path: "minecraft:block/description" })
-  identifier: Identifier;
+  identifier: string;
 
   @Ser({ path: "minecraft:block/description" })
   menuCategory: InventoryMenuCategory;
@@ -49,7 +48,7 @@ export class Block {
         return [key, state];
       }), "normal"],
   })
-  states: Record<Identifier, (number | boolean | string)[] | Range>;
+  states: Record<string, (number | boolean | string)[] | Range>;
 
   @Ser({
     path: "minecraft:block/description",

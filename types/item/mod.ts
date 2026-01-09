@@ -1,6 +1,5 @@
 import { Ser } from "@mcbe/serialize";
 import { Components, type InputProps } from "@mcbe/types/common";
-import type { Identifier } from "@mcbe/types/identifier";
 import type { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { ItemComponent } from "@mcbe/types/item";
 import type { FormatVersion } from "@mcbe/types/version";
@@ -16,7 +15,7 @@ export class Item {
   formatVersion: FormatVersion;
 
   @Ser({ path: "minecraft:item/description" })
-  identifier: Identifier;
+  identifier: string;
 
   @Ser({ path: "minecraft:item/description" })
   menuCategory: InventoryMenuCategory;
