@@ -1,10 +1,10 @@
 import { Ser } from "@mcbe/serialize";
-import type { ComponentNamespace, InputProps, Vec3 } from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 @Ser()
 export class DyeableItemComponent implements ComponentNamespace {
   @Ser()
-  defaultColor: string | Vec3;
+  defaultColor: string;
 
   get namespace(): string {
     return "minecraft:dyeable";
