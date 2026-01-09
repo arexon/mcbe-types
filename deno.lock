@@ -2,7 +2,11 @@
   "version": "5",
   "specifiers": {
     "jsr:@std/assert@^1.0.16": "1.0.16",
+    "jsr:@std/collections@^1.1.3": "1.1.3",
+    "jsr:@std/crypto@^1.0.5": "1.0.5",
+    "jsr:@std/fs@^1.0.21": "1.0.21",
     "jsr:@std/internal@^1.0.12": "1.0.12",
+    "jsr:@std/path@^1.1.4": "1.1.4",
     "jsr:@std/regexp@^1.0.1": "1.0.1",
     "jsr:@std/text@^1.0.16": "1.0.16"
   },
@@ -13,8 +17,27 @@
         "jsr:@std/internal"
       ]
     },
+    "@std/collections@1.1.3": {
+      "integrity": "bf8b0818886df6a32b64c7d3b037a425111f28278d69fd0995aeb62777c986b0"
+    },
+    "@std/crypto@1.0.5": {
+      "integrity": "0dcfbb319fe0bba1bd3af904ceb4f948cde1b92979ec1614528380ed308a3b40"
+    },
+    "@std/fs@1.0.21": {
+      "integrity": "d720fe1056d78d43065a4d6e0eeb2b19f34adb8a0bc7caf3a4dbf1d4178252cd",
+      "dependencies": [
+        "jsr:@std/internal",
+        "jsr:@std/path"
+      ]
+    },
     "@std/internal@1.0.12": {
       "integrity": "972a634fd5bc34b242024402972cd5143eac68d8dffaca5eaa4dba30ce17b027"
+    },
+    "@std/path@1.1.4": {
+      "integrity": "1d2d43f39efb1b42f0b1882a25486647cb851481862dc7313390b2bb044314b5",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
     },
     "@std/regexp@1.0.1": {
       "integrity": "5179d823465085c5480dafb44438466e83c424fadc61ba31f744050ecc0f596d"
@@ -29,6 +52,10 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@^1.0.16",
+      "jsr:@std/collections@^1.1.3",
+      "jsr:@std/crypto@^1.0.5",
+      "jsr:@std/fs@^1.0.21",
+      "jsr:@std/path@^1.1.4",
       "jsr:@std/text@^1.0.16"
     ]
   }
