@@ -47,17 +47,7 @@ export class Components<T extends ComponentNamespace> {
   }
 
   [Symbol.iterator](): Iterator<T> {
-    const propNames = Object.getOwnPropertyNames(this.#value);
-    return {
-      next: (): IteratorResult<T> => {
-        const propName = propNames.pop();
-        if (propName !== undefined) {
-          return { value: this.#value[propName]!, done: false };
-        } else {
-          return { value: undefined, done: true };
-        }
-      },
-    };
+    return Object.values(this.#value)[Symbol.iterator]();
   }
 }
 
