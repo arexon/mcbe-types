@@ -41,7 +41,6 @@ import {
   MaterialInstancesBlockComponent,
 } from "@mcbe/types/block";
 import { Range } from "@mcbe/types/common";
-import { InventoryMenuCategory } from "@mcbe/types/inventory";
 import { FormatVersion } from "@mcbe/types/version";
 import { assertEquals } from "@std/assert";
 
@@ -50,7 +49,7 @@ const variantState = "custom:variant";
 
 const block = new Block(new FormatVersion(1, 21, 130), {
   identifier: "custom:wood",
-  menuCategory: new InventoryMenuCategory({ category: "nature" }),
+  menuCategory: { category: "nature" },
   states: {
     [variantState]: Range.from(variants.length),
   },

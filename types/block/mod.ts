@@ -1,7 +1,12 @@
 import { Ser } from "@mcbe/serialize";
 import { type BlockComponent, BlockTraits } from "@mcbe/types/block";
-import { Components, type InputProps, Range } from "@mcbe/types/common";
-import type { InventoryMenuCategory } from "@mcbe/types/inventory";
+import {
+  Components,
+  type DerivedInputProps,
+  type InputProps,
+  Range,
+} from "@mcbe/types/common";
+import { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
 import type { FormatVersion } from "@mcbe/types/version";
 import { unreachable } from "@std/assert";
@@ -33,7 +38,7 @@ export class Block {
   identifier: string;
 
   @Ser({ path: "minecraft:block/description" })
-  menuCategory: InventoryMenuCategory;
+  menuCategory: DerivedInputProps<typeof InventoryMenuCategory>;
 
   @Ser({
     path: "minecraft:block/description",
@@ -86,7 +91,9 @@ export class Block {
     const props = typeof param1 === "object" ? param1 : param2;
     if (props !== undefined) {
       this.identifier = props.identifier;
-      this.menuCategory = props.menuCategory;
+      this.menuCategory = props.menuCategory instanceof InventoryMenuCategory
+        ? props.menuCategory
+        : new InventoryMenuCategory(props.menuCategory);
       this.states = props.states ?? {};
       this.traits = props.traits ?? new BlockTraits();
       if (Array.isArray(props.components)) {

@@ -1,6 +1,6 @@
 import { Ser } from "@mcbe/serialize";
 import { Components, type InputProps } from "@mcbe/types/common";
-import type { InventoryMenuCategory } from "@mcbe/types/inventory";
+import { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { ItemComponent } from "@mcbe/types/item";
 import type { FormatVersion } from "@mcbe/types/version";
 
@@ -32,7 +32,9 @@ export class Item {
   ) {
     this.formatVersion = formatVersion;
     this.identifier = input.identifier;
-    this.menuCategory = input.menuCategory;
+    this.menuCategory = input.menuCategory instanceof InventoryMenuCategory
+      ? input.menuCategory
+      : new InventoryMenuCategory(input.menuCategory);
     this.components = input.components ?? new ItemComponents();
   }
 }
