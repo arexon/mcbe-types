@@ -94,7 +94,9 @@ export class Block {
       } else {
         this.components = props.components ?? new BlockComponents();
       }
-      this.permutations = props.permutations ?? [];
+      this.permutations = (props.permutations ?? []).map((v) =>
+        v instanceof BlockPermutation ? v : new BlockPermutation(v)
+      );
     } else {
       unreachable();
     }

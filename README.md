@@ -37,7 +37,6 @@ is the library responsible for handling this.
 import {
   Block,
   BlockComponents,
-  BlockPermutation,
   GeometryBlockComponent,
   MaterialInstancesBlockComponent,
 } from "@mcbe/types/block";
@@ -59,16 +58,14 @@ const block = new Block(new FormatVersion(1, 21, 130), {
     new GeometryBlockComponent("minecraft:geometry.full_block"),
   ),
   permutations: [
-    ...variants.entries().map(([i, variant]) =>
-      new BlockPermutation({
-        condition: `q.block_state('${variantState}') == ${i}`,
-        components: new BlockComponents(
-          new MaterialInstancesBlockComponent({
-            "*": { texture: `${variant}_planks` },
-          }),
-        ),
-      })
-    ),
+    ...variants.entries().map(([i, variant]) => ({
+      condition: `q.block_state('${variantState}') == ${i}`,
+      components: new BlockComponents(
+        new MaterialInstancesBlockComponent({
+          "*": { texture: `${variant}_planks` },
+        }),
+      ),
+    })),
   ],
 });
 
