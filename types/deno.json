@@ -10,6 +10,7 @@
     "./version": "./version.ts",
     "./manifest": "./manifest.ts",
     "./uuid": "./uuid.ts",
-    "./packs": "./packs.ts"
+    "./packs": "./packs.ts",
+    "./feature": "./feature/mod.ts"
   }
 }
