@@ -53,18 +53,18 @@ export class SingleBlockFeature implements InstanceResolvable<never> {
     this.identifier = input.identifier;
     if (Array.isArray(input.placesBlock)) {
       this.placesBlock = maybeConstructArray(
-        FeatureBlockWeight,
         input.placesBlock,
+        FeatureBlockWeight,
       );
     } else {
       this.placesBlock = input.placesBlock;
     }
     this.enforcePlacementRules = input.enforcePlacementRules;
     this.enforceSurvivabilityRules = input.enforceSurvivabilityRules;
-    this.mayAttachTo = maybeConstruct(FeatureMayAttachTo, input.mayAttachTo);
+    this.mayAttachTo = maybeConstruct(input.mayAttachTo, FeatureMayAttachTo);
     this.mayNotAttachTo = maybeConstruct(
-      FeatureMayNotAttachTo,
       input.mayNotAttachTo,
+      FeatureMayNotAttachTo,
     );
     this.mayReplace = input.mayReplace;
     this.randomizeRotation = input.randomizeRotation ?? false;

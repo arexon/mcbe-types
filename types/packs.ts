@@ -1,6 +1,12 @@
 // deno-lint-ignore-file style-guide/class-serialization
 
 import { Block } from "@mcbe/types/block";
+import {
+  AggregateFeature,
+  type Feature,
+  FeatureRule,
+  SingleBlockFeature,
+} from "@mcbe/types/feature";
 import { Item } from "@mcbe/types/item";
 import type { Manifest } from "@mcbe/types/manifest";
 import { ensureDir } from "@std/fs";
@@ -8,13 +14,17 @@ import { dirname, join } from "@std/path";
 
 export type BehaviorPackDefinition =
   | Block
-  | Item;
+  | Item
+  | Feature
+  | FeatureRule;
 
 export class BehaviorPack {
   rootPath: string;
 
-  blocks: DefinitionSet<Block> = new DefinitionSet(Block);
-  items: DefinitionSet<Item> = new DefinitionSet(Item);
+  blocks = new DefinitionSet(Block);
+  items = new DefinitionSet(Item);
+  features = new DefinitionSet(AggregateFeature, SingleBlockFeature);
+  featureRules = new DefinitionSet(FeatureRule);
   manifest: Manifest;
 
   constructor(rootPath: string, manifest: Manifest) {
@@ -28,60 +38,75 @@ export class BehaviorPack {
         this.blocks.add(def);
       } else if (def instanceof Item) {
         this.items.add(def);
+      } else if (
+        def instanceof AggregateFeature ||
+        def instanceof SingleBlockFeature
+      ) {
+        this.add(...def.resolveInstances());
+        this.features.add(def);
+      } else if (def instanceof FeatureRule) {
+        this.add(...def.resolveInstances());
+        this.featureRules.add(def);
       }
     }
   }
 
   async save(): Promise<void> {
-    const tasks: Promise<void>[] = [];
+    const tasks: Promise<void>[] = Array.from({
+      length: 1 +
+        this.blocks.size +
+        this.items.size +
+        this.features.size +
+        this.featureRules.size,
+    });
 
     tasks.push(
       writeJsonFile(join(this.rootPath, "manifest.json"), this.manifest),
     );
 
-    tasks.push(
-      ...this.blocks.values().map((def) => {
-        const path = this.#createPath(
-          "blocks",
-          def.identifier,
-          ".block.json",
-        );
-        return writeJsonFile(path, def);
-      }),
-    );
+    for (const def of this.blocks) {
+      const path = this.#createPath("blocks", def.identifier);
+      tasks.push(writeJsonFile(path, def));
+    }
 
-    tasks.push(
-      ...this.items.values().map((def) => {
-        const path = this.#createPath(
-          "items",
-          def.identifier,
-          ".item.json",
-        );
-        return writeJsonFile(path, def);
-      }),
-    );
+    for (const def of this.items) {
+      const path = this.#createPath("items", def.identifier);
+      tasks.push(writeJsonFile(path, def));
+    }
+
+    for (const def of this.features) {
+      const path = this.#createPath("features", def.identifier);
+      tasks.push(writeJsonFile(path, def));
+    }
+
+    for (const def of this.featureRules) {
+      const path = this.#createPath("feature_rules", def.identifier);
+      tasks.push(writeJsonFile(path, def));
+    }
 
     await Promise.all(tasks);
   }
 
-  #createPath(
-    directory: string,
-    identifier: string,
-    suffix: string,
-  ): string {
-    return join(this.rootPath, directory, identifier.split(":")[1] + suffix);
+  #createPath(directory: string, identifier: string): string {
+    return join(
+      this.rootPath,
+      directory,
+      identifier.split(":")[1] + ".json",
+    );
   }
 }
 
-export class DefinitionSet<T extends BehaviorPackDefinition> extends Set<T> {
+export class DefinitionSet<
+  T extends BehaviorPackDefinition,
+  // deno-lint-ignore no-explicit-any
+  Constructors extends (new (...args: any[]) => T)[],
+> extends Set<T> {
   #seen = new Set<string>();
-  // deno-lint-ignore no-explicit-any
-  #ctor: new (...args: any[]) => T;
+  #constructors: Constructors;
 
-  // deno-lint-ignore no-explicit-any
-  constructor(ctor: new (...args: any[]) => T) {
+  constructor(...constructors: Constructors) {
     super();
-    this.#ctor = ctor;
+    this.#constructors = constructors;
   }
 
   override add(...defs: T[]): this {
@@ -108,11 +133,13 @@ export class DefinitionSet<T extends BehaviorPackDefinition> extends Set<T> {
   }
 
   getId(def: T): string {
-    if (def instanceof this.#ctor) {
+    if (this.#constructors.some((ctor) => def instanceof ctor)) {
       return def.identifier;
     }
+    const expectedCtors = this.#constructors
+      .map((ctor) => ctor.name).join(", ");
     throw new TypeError(
-      `Unknown definition: got ${def.constructor.name}, expected ${this.#ctor.name}`,
+      `Unknown definition: got ${def.constructor.name}, expected one of ${expectedCtors}`,
     );
   }
 }

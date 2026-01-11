@@ -1,1 +1,1 @@
-export type Molang = string;
+export type Molang = string | number | boolean;
