@@ -1,15 +1,14 @@
 import { Ser } from "@mcbe/serialize";
-import type { InputProps } from "@mcbe/types/common";
+import type { InputProps, InstanceResolvable } from "@mcbe/types/common";
 import type { FormatVersion } from "@mcbe/types/version";
-import type { FeatureReference } from "@mcbe/types/feature";
-import { resolveInstances } from "../_utils.ts";
+import type { Feature, FeatureReference } from "@mcbe/types/feature";
 
 const path = "minecraft:aggregate_feature";
 
 export type FeatureEarlyOut = "none" | "first_success" | "first_failure";
 
 @Ser()
-export class AggregateFeature {
+export class AggregateFeature implements InstanceResolvable<Feature> {
   @Ser()
   formatVersion: FormatVersion;
 
@@ -18,7 +17,15 @@ export class AggregateFeature {
 
   @Ser({
     path,
-    custom: [resolveInstances, "normal"],
+    custom: [(v) => {
+      for (let i = 0; i < v.length; i++) {
+        const ft = v[i];
+        if (typeof ft === "object" && ft !== null && "identifier" in ft) {
+          v[i] = ft.identifier;
+        }
+      }
+      return v;
+    }, "normal"],
   })
   features: FeatureReference[];
 
@@ -37,5 +44,13 @@ export class AggregateFeature {
     this.identifier = input.identifier;
     this.features = input.features;
     this.earlyOut = input.earlyOut ?? "none";
+  }
+
+  resolveInstances(): Feature[] {
+    const result: Feature[] = [];
+    for (const feature of this.features) {
+      if (typeof feature === "object") result.push(feature);
+    }
+    return result;
   }
 }

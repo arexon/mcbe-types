@@ -1,13 +1,13 @@
 import { Ser } from "@mcbe/serialize";
 import type { BlockDescriptor } from "@mcbe/types/block";
-import type { InputProps } from "@mcbe/types/common";
+import type { InputProps, InstanceResolvable } from "@mcbe/types/common";
 import type { FormatVersion } from "@mcbe/types/version";
-import { maybeConstruct } from "../_utils.ts";
+import { maybeConstruct, maybeConstructArray } from "../_utils.ts";
 
 const path = "minecraft:single_block_feature";
 
 @Ser()
-export class SingleBlockFeature {
+export class SingleBlockFeature implements InstanceResolvable<never> {
   @Ser()
   formatVersion: FormatVersion;
 
@@ -15,9 +15,7 @@ export class SingleBlockFeature {
   identifier: string;
 
   @Ser({ path })
-  placesBlock:
-    | BlockDescriptor
-    | { block: BlockDescriptor; weight: number }[];
+  placesBlock: BlockDescriptor | FeatureBlockWeight[];
 
   @Ser({ path })
   enforcePlacementRules: boolean;
@@ -53,7 +51,14 @@ export class SingleBlockFeature {
   ) {
     this.formatVersion = formatVersion;
     this.identifier = input.identifier;
-    this.placesBlock = input.placesBlock;
+    if (Array.isArray(input.placesBlock)) {
+      this.placesBlock = maybeConstructArray(
+        FeatureBlockWeight,
+        input.placesBlock,
+      );
+    } else {
+      this.placesBlock = input.placesBlock;
+    }
     this.enforcePlacementRules = input.enforcePlacementRules;
     this.enforceSurvivabilityRules = input.enforceSurvivabilityRules;
     this.mayAttachTo = maybeConstruct(FeatureMayAttachTo, input.mayAttachTo);
@@ -63,6 +68,26 @@ export class SingleBlockFeature {
     );
     this.mayReplace = input.mayReplace;
     this.randomizeRotation = input.randomizeRotation ?? false;
+  }
+
+  resolveInstances(): never[] {
+    return [];
+  }
+}
+
+@Ser()
+export class FeatureBlockWeight {
+  @Ser()
+  block: BlockDescriptor;
+
+  @Ser()
+  weight: number;
+
+  constructor(
+    input: InputProps<FeatureBlockWeight, "block" | "weight">,
+  ) {
+    this.block = input.block;
+    this.weight = input.weight;
   }
 }
 

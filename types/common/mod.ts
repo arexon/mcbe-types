@@ -63,3 +63,7 @@ export type InventoryCategory =
   | "items"
   | "construction"
   | "none";
+
+export interface InstanceResolvable<T> {
+  resolveInstances(): T[];
+}

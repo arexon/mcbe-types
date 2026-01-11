@@ -12,14 +12,12 @@ export function maybeConstruct<T extends AnyConstructor>(
     : new constructor(input);
 }
 
-export function resolveInstances(values: unknown[]): unknown[] {
-  for (let i = 0; i < values.length; i++) {
-    const feature = values[i];
-    if (
-      typeof feature === "object" && feature !== null && "identifier" in feature
-    ) {
-      values[i] = feature.identifier;
-    }
+export function maybeConstructArray<T extends AnyConstructor>(
+  constructor: T,
+  input: InstanceType<T>[],
+): InstanceType<T>[] {
+  for (let i = 0; i < input.length; i++) {
+    input[i] = maybeConstruct(constructor, input[i])!;
   }
-  return values;
+  return input;
 }
