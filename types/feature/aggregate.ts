@@ -3,7 +3,7 @@ import type { InputProps, InstanceResolvable } from "@mcbe/types/common";
 import type { FormatVersion } from "@mcbe/types/version";
 import type { Feature, FeatureReference } from "@mcbe/types/feature";
 
-const path = "minecraft:aggregate_feature";
+const PATH = "minecraft:aggregate_feature";
 
 export type FeatureEarlyOut = "none" | "first_success" | "first_failure";
 
@@ -12,11 +12,11 @@ export class AggregateFeature implements InstanceResolvable<Feature> {
   @Ser()
   formatVersion: FormatVersion;
 
-  @Ser({ path: path + "/description" })
+  @Ser({ path: PATH + "/description" })
   identifier: string;
 
   @Ser({
-    path,
+    path: PATH,
     custom: [(v) => {
       for (let i = 0; i < v.length; i++) {
         const ft = v[i];
@@ -29,7 +29,7 @@ export class AggregateFeature implements InstanceResolvable<Feature> {
   })
   features: FeatureReference[];
 
-  @Ser({ path, default: () => "none" })
+  @Ser({ path: PATH, default: () => "none" })
   earlyOut: FeatureEarlyOut;
 
   constructor(

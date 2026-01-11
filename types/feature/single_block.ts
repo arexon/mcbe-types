@@ -4,35 +4,35 @@ import type { InputProps, InstanceResolvable } from "@mcbe/types/common";
 import type { FormatVersion } from "@mcbe/types/version";
 import { maybeConstruct, maybeConstructArray } from "../_utils.ts";
 
-const path = "minecraft:single_block_feature";
+const PATH = "minecraft:single_block_feature";
 
 @Ser()
 export class SingleBlockFeature implements InstanceResolvable<never> {
   @Ser()
   formatVersion: FormatVersion;
 
-  @Ser({ path: path + "/description" })
+  @Ser({ path: PATH + "/description" })
   identifier: string;
 
-  @Ser({ path })
+  @Ser({ path: PATH })
   placesBlock: BlockDescriptor | FeatureBlockWeight[];
 
-  @Ser({ path })
+  @Ser({ path: PATH })
   enforcePlacementRules: boolean;
 
-  @Ser({ path })
+  @Ser({ path: PATH })
   enforceSurvivabilityRules: boolean;
 
-  @Ser({ path })
+  @Ser({ path: PATH })
   mayAttachTo?: FeatureMayAttachTo;
 
-  @Ser({ path })
+  @Ser({ path: PATH })
   mayNotAttachTo?: FeatureMayNotAttachTo;
 
-  @Ser({ path })
+  @Ser({ path: PATH })
   mayReplace?: BlockDescriptor[];
 
-  @Ser({ path, default: () => false })
+  @Ser({ path: PATH, default: () => false })
   randomizeRotation: boolean;
 
   constructor(
