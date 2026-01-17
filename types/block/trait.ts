@@ -1,16 +1,10 @@
 import { Ser } from "@mcbe/serialize";
-import {
-  type ComponentNamespace,
-  Components,
-  type InputProps,
-} from "@mcbe/types/common";
+import type { ComponentNamespace, InputProps } from "@mcbe/types/common";
 
 export type BlockTrait =
   | ConnectionBlockTrait
   | PlacementDirectionBlockTrait
   | PlacementPositionBlockTrait;
-
-export class BlockTraits extends Components<BlockTrait> {}
 
 @Ser()
 export class ConnectionBlockTrait implements ComponentNamespace {

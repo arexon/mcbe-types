@@ -36,7 +36,6 @@ is the library responsible for handling this.
 ```ts
 import {
   Block,
-  BlockComponents,
   GeometryBlockComponent,
   MaterialInstancesBlockComponent,
 } from "@mcbe/types/block";
@@ -49,21 +48,21 @@ const variantState = "custom:variant";
 
 const block = new Block(new FormatVersion(1, 21, 130), {
   identifier: "custom:wood",
-  menuCategory: { category: "nature" },
+  category: "nature",
   states: {
     [variantState]: Range.from(variants.length),
   },
-  components: new BlockComponents(
+  components: [
     new GeometryBlockComponent("minecraft:geometry.full_block"),
-  ),
+  ],
   permutations: [
     ...variants.entries().map(([i, variant]) => ({
       condition: `q.block_state('${variantState}') == ${i}`,
-      components: new BlockComponents(
+      components: [
         new MaterialInstancesBlockComponent({
           "*": { texture: `${variant}_planks` },
         }),
-      ),
+      ],
     })),
   ],
 });
@@ -77,7 +76,7 @@ assertEquals(
         "identifier": "custom:wood",
         "menu_category": { "category": "nature" },
         "states": {
-          "custom:variant": { "value": { "min": 0, "max": 2 } },
+          "custom:variant": { "values": { "min": 0, "max": 2 } },
         },
       },
       "components": {

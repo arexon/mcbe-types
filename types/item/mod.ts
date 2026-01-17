@@ -1,13 +1,11 @@
 import { Ser } from "@mcbe/serialize";
-import { Components, type InputProps } from "@mcbe/types/common";
-import { InventoryMenuCategory } from "@mcbe/types/inventory";
+import type { InputProps, InventoryCategory } from "@mcbe/types/common";
 import type { ItemComponent } from "@mcbe/types/item";
 import type { FormatVersion } from "@mcbe/types/version";
+import { associateBy } from "@std/collections";
 
 export * from "./component/mod.ts";
 export * from "./descriptor.ts";
-
-export class ItemComponents extends Components<ItemComponent> {}
 
 @Ser()
 export class Item {
@@ -17,24 +15,41 @@ export class Item {
   @Ser({ path: "minecraft:item/description" })
   identifier: string;
 
-  @Ser({ path: "minecraft:item/description" })
-  menuCategory: InventoryMenuCategory;
+  @Ser({
+    path: "minecraft:item/description/menu_category",
+    default: () => "none",
+  })
+  category: InventoryCategory;
+
+  @Ser({ path: "minecraft:item/description/menu_category" })
+  group?: string;
+
+  @Ser({
+    path: "minecraft:item/description/menu_category",
+    default: () => false,
+  })
+  isHiddenInCommand: boolean;
 
   @Ser({
     path: "minecraft:item",
-    default: () => new ItemComponents(),
+    default: () => [],
+    custom: [(comps) => associateBy(comps, (comp) => comp.namespace), "normal"],
   })
-  components: ItemComponents;
+  components: ItemComponent[];
 
   constructor(
     formatVersion: FormatVersion,
-    input: InputProps<Item, "identifier" | "menuCategory", "components">,
+    input: InputProps<
+      Item,
+      "identifier" | "group",
+      "category" | "isHiddenInCommand" | "components"
+    >,
   ) {
     this.formatVersion = formatVersion;
     this.identifier = input.identifier;
-    this.menuCategory = input.menuCategory instanceof InventoryMenuCategory
-      ? input.menuCategory
-      : new InventoryMenuCategory(input.menuCategory);
-    this.components = input.components ?? new ItemComponents();
+    this.category = input.category ?? "none";
+    this.group = input.group;
+    this.isHiddenInCommand = input.isHiddenInCommand ?? false;
+    this.components = input.components ?? [];
   }
 }

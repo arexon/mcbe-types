@@ -1,16 +1,14 @@
 import { Ser } from "@mcbe/serialize";
-import { type BlockComponent, BlockTraits } from "@mcbe/types/block";
+import type { BlockComponent, BlockTrait } from "@mcbe/types/block";
 import {
-  Components,
-  type DerivedInputProps,
   type InputProps,
+  type InventoryCategory,
   Range,
 } from "@mcbe/types/common";
-import { InventoryMenuCategory } from "@mcbe/types/inventory";
 import type { Molang } from "@mcbe/types/molang";
 import type { FormatVersion } from "@mcbe/types/version";
 import { unreachable } from "@std/assert";
-import { mapEntries } from "@std/collections";
+import { associateBy, mapEntries } from "@std/collections";
 
 export * from "./client.ts";
 export * from "./component/mod.ts";
@@ -20,11 +18,14 @@ export * from "./trait.ts";
 
 export type BlockInputProps = InputProps<
   Block,
-  "identifier" | "menuCategory",
-  "states" | "traits" | "components" | "permutations"
+  "identifier" | "group",
+  | "category"
+  | "isHiddenInCommand"
+  | "states"
+  | "traits"
+  | "components"
+  | "permutations"
 >;
-
-export class BlockComponents extends Components<BlockComponent> {}
 
 @Ser()
 export class Block {
@@ -37,8 +38,20 @@ export class Block {
   @Ser({ path: "minecraft:block/description" })
   identifier: string;
 
-  @Ser({ path: "minecraft:block/description" })
-  menuCategory: DerivedInputProps<typeof InventoryMenuCategory>;
+  @Ser({
+    default: () => "none",
+    path: "minecraft:block/description/menu_category",
+  })
+  category: InventoryCategory;
+
+  @Ser({ path: "minecraft:block/description/menu_category" })
+  group?: string;
+
+  @Ser({
+    path: "minecraft:block/description/menu_category",
+    default: () => false,
+  })
+  isHiddenInCommand: boolean;
 
   @Ser({
     path: "minecraft:block/description",
@@ -48,7 +61,7 @@ export class Block {
         if (state instanceof Range) {
           // The output conforms to the format.
           // deno-lint-ignore no-explicit-any
-          return [key, Range.customValueObject(state) as any];
+          return [key, Range.customValuesObject(state) as any];
         }
         return [key, state];
       }), "normal"],
@@ -57,15 +70,23 @@ export class Block {
 
   @Ser({
     path: "minecraft:block/description",
-    default: () => new BlockTraits(),
+    default: () => [],
+    custom: [
+      (traits) => {
+        if (typeof traits === "undefined") return traits;
+        return associateBy(traits, (trait) => trait.namespace);
+      },
+      "normal",
+    ],
   })
-  traits: BlockTraits;
+  traits: BlockTrait[];
 
   @Ser({
     path: "minecraft:block",
-    default: () => new BlockComponents(),
+    default: () => [],
+    custom: [(comps) => associateBy(comps, (comp) => comp.namespace), "normal"],
   })
-  components: BlockComponents;
+  components: BlockComponent[];
 
   @Ser({
     path: "minecraft:block",
@@ -91,16 +112,12 @@ export class Block {
     const props = typeof param1 === "object" ? param1 : param2;
     if (props !== undefined) {
       this.identifier = props.identifier;
-      this.menuCategory = props.menuCategory instanceof InventoryMenuCategory
-        ? props.menuCategory
-        : new InventoryMenuCategory(props.menuCategory);
+      this.category = props.category ?? "none";
+      this.group = props.group;
+      this.isHiddenInCommand = props.isHiddenInCommand ?? false;
       this.states = props.states ?? {};
-      this.traits = props.traits ?? new BlockTraits();
-      if (Array.isArray(props.components)) {
-        this.components = new BlockComponents(...props.components);
-      } else {
-        this.components = props.components ?? new BlockComponents();
-      }
+      this.traits = props.traits ?? [];
+      this.components = props.components ?? [];
       this.permutations = (props.permutations ?? []).map((v) =>
         v instanceof BlockPermutation ? v : new BlockPermutation(v)
       );
@@ -115,8 +132,10 @@ export class BlockPermutation {
   @Ser()
   condition: Molang;
 
-  @Ser()
-  components: BlockComponents;
+  @Ser({
+    custom: [(comps) => associateBy(comps, (comp) => comp.namespace), "normal"],
+  })
+  components: BlockComponent[];
 
   constructor(input: InputProps<BlockPermutation, "condition" | "components">) {
     this.condition = input.condition;

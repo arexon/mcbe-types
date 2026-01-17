@@ -50,9 +50,16 @@ export class Range {
     return { min: range.min, max: range.max };
   }
 
-  static customValueObject(
+  static customValuesObject(
     range: Range,
-  ): { value: { min: number; max: number } } {
-    return { value: { min: range.min, max: range.max } };
+  ): { values: { min: number; max: number } } {
+    return { values: { min: range.min, max: range.max } };
   }
 }
+
+export type InventoryCategory =
+  | "nature"
+  | "equipment"
+  | "items"
+  | "construction"
+  | "none";
