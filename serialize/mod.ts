@@ -222,7 +222,7 @@ function generateToJson(metadata: Metadata): string {
 
       if (field.default !== undefined) {
         const isDefault =
-          `equal(${FIELDS_METADATA_VAR}.fields["${field.name}"].default(), ${value})`;
+          `equal(${FIELDS_METADATA_VAR}.fields["${field.name}"].default(), this["${field.name}"])`;
         if (isNotTransparent) {
           transparencyCheck.push(isDefault);
         }

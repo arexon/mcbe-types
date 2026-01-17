@@ -152,7 +152,7 @@ Deno.test("toJSON()", async (ctx) => {
 
         @Ser({
           custom: [(v) => ["custom", v], "normal"],
-          default: () => ["custom", "foo"],
+          default: () => "foo",
         })
         normalDefaulted: string | string[] = "foo";
       }
@@ -231,7 +231,7 @@ Deno.test("toJSON()", async (ctx) => {
 
         @Ser({
           custom: [(v) => ["custom", v], "normal"],
-          default: () => ["custom", "foo"],
+          default: () => "foo",
         })
         custom: string | string[] = "bar";
       }
@@ -257,7 +257,7 @@ Deno.test("toJSON()", async (ctx) => {
 
         @Ser({
           custom: [(v) => ({ merged: v }), "merge"],
-          default: () => ({ merged: false }),
+          default: () => false,
         })
         custom: boolean | { merged: boolean } = false;
       }
